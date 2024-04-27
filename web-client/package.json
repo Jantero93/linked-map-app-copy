@@ -1,0 +1,37 @@
+{
+  "name": "web-client",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "jant",
+    "email": "Githubonly@github.com",
+    "url": "https://github.com/jantero93"
+  },
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-vue": "^9.25.0",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.2",
+    "vuetify": "^3.5.17",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@mdi/font": "^7.4.47",
+    "@typescript-eslint/parser": "^7.7.1",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "eslint": "8.56.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vue-eslint-parser": "^9.4.2",
+    "vue-tsc": "^2.0.6"
+  }
+}
