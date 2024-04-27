@@ -10,24 +10,24 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-vue": "^9.25.0",
+    "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-router": "^4.3.2",
-    "vuetify": "^3.5.17",
-    "vuex": "^4.0.2"
+    "vuetify": "^3.5.17"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
     "@vitejs/plugin-vue": "^5.0.4",
-    "eslint": "8.56.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.25.0",
     "prettier": "^3.2.5",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",

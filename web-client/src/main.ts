@@ -1,26 +1,31 @@
 // Vue
-import { createApp } from "vue";
-import App from "./App.vue";
-import { router } from "./routes";
-import { store } from "./store";
-import "./style.css";
+import { createApp } from 'vue';
+import App from './App.vue';
+import { router } from './routes';
 
 // Vuetify
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
-import { aliases, mdi } from "vuetify/iconsets/mdi";
-import "@mdi/font/css/materialdesignicons.css"; // Ensure you are using css-loader
-import "vuetify/styles";
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import { aliases, mdi } from 'vuetify/iconsets/mdi';
+import '@mdi/font/css/materialdesignicons.css'; // Ensure you are using css-loader
+import 'vuetify/styles';
+import { createPinia } from 'pinia';
+
+const pinia = createPinia();
 
 const vuetify = createVuetify({
   icons: {
-    defaultSet: "mdi",
+    defaultSet: 'mdi',
     aliases,
     sets: { mdi }
   },
   components,
-  directives
+  directives,
+  theme: {
+    defaultTheme: 'light'
+  }
 });
 
-createApp(App).use(router).use(store).use(vuetify).mount("#app");
+// Register services
+createApp(App).use(router).use(pinia).use(vuetify).mount('#app');

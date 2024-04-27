@@ -1,28 +1,59 @@
 <template>
-  <v-app>
-    <h1>Hello App!</h1>
-    <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
-    <nav>
-      <RouterLink to="/">Go to Home</RouterLink>
-      <RouterLink to="/about">Go to About</RouterLink>
-    </nav>
-    <main>
-      <RouterView />
-    </main>
+  <v-app class="app" theme="uiStore.theme">
+    <!-- Top Navigation Bar -->
+    <v-app-bar color="primary" dark>
+      <v-toolbar-title>My Vue App</v-toolbar-title>
+      <v-switch
+        :label="`Theme: ${isDarkSelected ? 'Dark' : 'Light'}`"
+        v-model="isDarkSelected"
+        inset
+      ></v-switch>
+    </v-app-bar>
+
+    <!-- Main Content -->
+    <v-main>
+      <v-container>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+
+    <!-- Footer -->
+    <v-footer app padless>
+      <v-col class="text-center"> © {{ currentYear }} My Company </v-col>
+    </v-footer>
   </v-app>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { useTheme } from 'vuetify';
+import {
+  getFromLocalStorage,
+  setToLocalStorage
+} from './utilities/localStorageHelpers';
+import { LocalStorageKeys } from './utilities/constants';
+
+const theme = useTheme();
+const localStorageTheme =
+  getFromLocalStorage<'dark' | 'light'>(LocalStorageKeys.Theme) ?? 'light';
+const isDarkSelected = ref(localStorageTheme === 'dark');
+
+// Directly bind theme change to `isDarkSelected`
+watch(
+  isDarkSelected,
+  (newValue) => {
+    const newTheme = newValue ? 'dark' : 'light';
+    theme.global.name.value = newTheme;
+    setToLocalStorage(LocalStorageKeys.Theme, newTheme);
+  },
+  { immediate: true }
+);
+
+const currentYear = ref(new Date().getFullYear());
+</script>
+
+<style>
+#app {
+  padding: 100;
 }
 </style>
