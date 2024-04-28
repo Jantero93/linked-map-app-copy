@@ -995,11 +995,11 @@ dotnet_analyzer_diagnostic.severity = warning
 
 dotnet_style_qualification_for_field = true:warning
 
-dotnet_style_qualification_for_property = true:warning
+dotnet_style_qualification_for_property = false:warning
 
-dotnet_style_qualification_for_method = true:warning
+dotnet_style_qualification_for_method = false:warning
 
-dotnet_style_qualification_for_event = true:warning
+dotnet_style_qualification_for_event = false:warning
 
 # Language keywords instead of framework type names for type references
 
@@ -1110,7 +1110,7 @@ csharp_style_expression_bodied_indexers = true:warning
 
 csharp_style_expression_bodied_accessors = true:warning
 
-csharp_style_expression_bodied_lambdas = true:warning
+csharp_style_expression_bodied_lambdas = when_on_single_line:warning
 
 csharp_style_expression_bodied_local_functions = true:warning
 
@@ -1158,7 +1158,7 @@ dotnet_diagnostic.IDE0063.severity = suggestion
 
 # 'using' directive preferences
 
-csharp_using_directive_placement = inside_namespace:warning
+csharp_using_directive_placement = outside_namespace:warning
 
 # Modifier preferences
 
@@ -1191,9 +1191,9 @@ dotnet_remove_unnecessary_suppression_exclusions = none:warning
 
 [*.{cs,csx,cake}]
 
-csharp_style_unused_value_expression_statement_preference = discard_variable:suggestion
+csharp_style_unused_value_expression_statement_preference = unused_local_variable:none
 
-dotnet_diagnostic.IDE0058.severity = suggestion
+dotnet_diagnostic.IDE0058.severity = none
 
 csharp_style_unused_value_assignment_preference = discard_variable:suggestion
 
@@ -1693,3 +1693,9 @@ dotnet_naming_rule.parameters_rule.severity             = warning
 # OTHER DEALINGS IN THE SOFTWARE.
 
 ##########################################
+
+# CA2208: Instantiate argument exceptions correctly
+dotnet_diagnostic.CA2208.severity = none
+
+# CA1848: Use the LoggerMessage delegates
+dotnet_diagnostic.CA1848.severity = none
