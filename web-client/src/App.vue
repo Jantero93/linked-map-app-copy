@@ -1,16 +1,17 @@
 <template>
-  <v-app class="app" theme="uiStore.theme">
-    <!-- Top Navigation Bar -->
-    <v-app-bar color="primary" dark>
+  <v-app id="app" full-height class="app">
+    <!-- Navigation bar -->
+    <v-app-bar border="lg" density="compact" color="primary">
       <v-toolbar-title>My Vue App</v-toolbar-title>
       <v-switch
-        :label="`Theme: ${isDarkSelected ? 'Dark' : 'Light'}`"
-        v-model="isDarkSelected"
+        class="theme-type-text"
+        :label="currentTheme"
         inset
+        @click="toggleTheme"
       ></v-switch>
     </v-app-bar>
 
-    <!-- Main Content -->
+    <!-- Main content -->
     <v-main>
       <v-container>
         <router-view></router-view>
@@ -19,7 +20,7 @@
 
     <!-- Footer -->
     <v-footer app padless>
-      <v-col class="text-center"> © {{ currentYear }} My Company </v-col>
+      <v-col class="text-center">{{ footerText }}</v-col>
     </v-footer>
   </v-app>
 </template>
@@ -29,31 +30,37 @@ import { ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
 import {
   getFromLocalStorage,
-  setToLocalStorage
+  setToLocalStorage,
+  LocalStorageKeys
 } from './utilities/localStorageHelpers';
-import { LocalStorageKeys } from './utilities/constants';
+import { ThemeType } from './theme';
 
 const theme = useTheme();
-const localStorageTheme =
-  getFromLocalStorage<'dark' | 'light'>(LocalStorageKeys.Theme) ?? 'light';
-const isDarkSelected = ref(localStorageTheme === 'dark');
+const currentTheme = ref(getFromLocalStorage<ThemeType>('theme') ?? 'light');
 
-// Directly bind theme change to `isDarkSelected`
 watch(
-  isDarkSelected,
-  (newValue) => {
-    const newTheme = newValue ? 'dark' : 'light';
+  currentTheme,
+  (newTheme: ThemeType) => {
+    currentTheme.value = newTheme;
     theme.global.name.value = newTheme;
     setToLocalStorage(LocalStorageKeys.Theme, newTheme);
   },
   { immediate: true }
 );
 
-const currentYear = ref(new Date().getFullYear());
+const toggleTheme = () => {
+  currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark';
+};
+
+const footerText = ref(`© Jantero93 ${new Date().getFullYear()}`);
 </script>
 
-<style>
+<style scoped>
+:deep(.v-label) {
+  text-transform: capitalize;
+}
+
 #app {
-  padding: 100;
+  padding: 20;
 }
 </style>

@@ -1,6 +1,6 @@
 export const getFromLocalStorage = <T>(key: string): T | null => {
   const item = localStorage.getItem(key);
-  if (!item) return null;
+  if (item === null) return null;
 
   try {
     return JSON.parse(item) as T;
@@ -9,21 +9,25 @@ export const getFromLocalStorage = <T>(key: string): T | null => {
   }
 };
 
-export const setToLocalStorage = (key: string, value: unknown) => {
+export const setToLocalStorage = (key: string, value: unknown): void => {
   const stringified = JSON.stringify(value);
   try {
     if (stringified === undefined) {
-      throw new Error(`Failed to stringy value to local storage: ${value}`);
+      throw new Error(`Failed to stringify value to local storage: ${value}`);
     }
 
     localStorage.setItem(key, stringified);
   } catch (error) {
-    const originalErrorMsg =
+    const errorMsg =
       error instanceof Error ? error.message : 'No specific error message';
-    throw new Error(
-      `Failed to set value to local storage, error: ${originalErrorMsg}`
-    );
+    throw new Error(`Failed to set value to local storage, error: ${errorMsg}`);
   }
 };
 
-export type LocalStorageTheme = 'dark' | 'light';
+export const LocalStorageKeys = {
+  Token: {
+    AccessToken: 'access_token',
+    ExpiresIn: 'expires_in'
+  },
+  Theme: 'theme'
+} as const;

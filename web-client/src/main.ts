@@ -21,10 +21,7 @@ const vuetify = createVuetify({
     sets: { mdi }
   },
   components,
-  directives,
-  theme: {
-    defaultTheme: 'light'
-  }
+  directives
 });
 
 // Register services

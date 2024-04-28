@@ -1,0 +1,12 @@
+.eslintrc.cjs
+.prettierrc
+index.html
+.vscode/
+tsconfig.*
+vite.config.ts
+package-lock.json
+package.json
+README.md
+dist
+build
+node_modules

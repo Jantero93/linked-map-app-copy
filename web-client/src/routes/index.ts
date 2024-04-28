@@ -1,8 +1,13 @@
 import { createMemoryHistory, createRouter } from 'vue-router';
 
+// Views
 import TestView from '../views/TestView.vue';
 import AboutView from '../views/AboutView.vue';
-import { Route } from '../utilities/constants';
+
+export const Route = {
+  Root: '/',
+  About: '/about'
+} as const;
 
 const routes = [
   { path: Route.Root, component: TestView },
