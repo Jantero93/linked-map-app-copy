@@ -4,11 +4,11 @@
     <v-app-bar border="lg" density="compact" color="primary">
       <v-toolbar-title>My Vue App</v-toolbar-title>
       <v-switch
-        class="theme-type-text"
+        class="text-capitalize"
         :label="currentTheme"
         inset
         @click="toggleTheme"
-      ></v-switch>
+      />
     </v-app-bar>
 
     <!-- Main content -->
@@ -19,8 +19,10 @@
     </v-main>
 
     <!-- Footer -->
-    <v-footer app padless>
-      <v-col class="text-center">{{ footerText }}</v-col>
+    <v-footer app>
+      <v-col class="text-center text-md-end">
+        <span class="text-body-1">{{ footerText }}</span>
+      </v-col>
     </v-footer>
   </v-app>
 </template>
@@ -54,13 +56,3 @@ const toggleTheme = () => {
 
 const footerText = ref(`© Jantero93 ${new Date().getFullYear()}`);
 </script>
-
-<style scoped>
-:deep(.v-label) {
-  text-transform: capitalize;
-}
-
-#app {
-  padding: 20;
-}
-</style>
