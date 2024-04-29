@@ -1,8 +1,11 @@
+using System.Data;
 using MapServer.Middlewares;
 using MapServer.OpenIddict;
+using MapServer.Store.Repositories;
 using MapServer.Utilities;
 using MapServer.Utilities.CustomConsole;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
@@ -14,6 +17,8 @@ builder.Logging.ClearProviders();
 builder.Logging.AddProvider(new ConsoleProvider());
 
 // Add services to the container.
+
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -49,6 +54,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 
+app.UseMiddleware<RequestLoggerMiddleware>();
 app.UseMiddleware<SecurityHeaderMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseRouting();
@@ -125,8 +131,12 @@ static void SetOpenIddictIdentityConfiguration(IServiceCollection services)
 static void InjectDependencies(IServiceCollection services)
 {
     // Generic
+    services.AddScoped<IDbConnection>(provider => new SqlConnection(provider.GetRequiredService<IConfiguration>().GetConnectionString("MapApplication")));
     services.AddAutoMapper(typeof(Program));
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+    // Store
+    services.AddScoped<TestRepository>();
 }
 
 static async Task RegisterOpenIddictClientsAsync(WebApplication app)

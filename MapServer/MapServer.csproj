@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="Dapper" Version="2.1.44" />
+    <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="MicroOrm.Dapper.Repositories" Version="1.26.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
@@ -29,9 +29,7 @@
 
   <ItemGroup>
     <Folder Include="ApiModels\Responses\" />
-    <Folder Include="Store\Models\" />
     <Folder Include="Store\Interfaces\" />
-    <Folder Include="Store\Repositories\" />
   </ItemGroup>
 
 </Project>
