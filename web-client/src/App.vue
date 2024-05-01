@@ -1,14 +1,10 @@
 <template>
   <v-app id="app" full-height class="app">
-    <!-- Navigation bar -->
-    <v-app-bar border="lg" density="compact" color="primary">
+    <v-app-bar fixed app border="lg" density="compact" color="primary">
       <v-toolbar-title>My Vue App</v-toolbar-title>
-
-      <!-- Navigation Links -->
       <v-btn to="/">Home</v-btn>
       <v-btn to="/about">About</v-btn>
       <v-btn to="/map">Map</v-btn>
-
       <v-switch
         class="text-capitalize"
         :label="currentTheme"
@@ -16,14 +12,10 @@
         @click="toggleTheme"
       />
     </v-app-bar>
-
-    <!-- Main content -->
-    <v-main>
+    <v-main class="fill-height pa-0 ma-0">
       <router-view></router-view>
     </v-main>
-
-    <!-- Footer -->
-    <v-footer color="primary" app>
+    <v-footer fixed app color="primary">
       <v-col class="text-center text-md-end">
         <span class="text-body-1">{{ footerText }}</span>
       </v-col>
