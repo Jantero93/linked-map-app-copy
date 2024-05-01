@@ -1,7 +1,6 @@
 <template>
   <v-app id="app" full-height class="app">
     <!-- Navigation bar -->
-    <!-- Navigation bar -->
     <v-app-bar border="lg" density="compact" color="primary">
       <v-toolbar-title>My Vue App</v-toolbar-title>
 
@@ -39,8 +38,8 @@ import {
   getFromLocalStorage,
   setToLocalStorage,
   LocalStorageKeys
-} from './utilities/localStorageHelpers';
-import { ThemeType } from './theme';
+} from '@/utilities/localStorageHelpers';
+import { ThemeType } from '@/theme';
 
 const theme = useTheme();
 const currentTheme = ref(getFromLocalStorage<ThemeType>('theme') ?? 'light');

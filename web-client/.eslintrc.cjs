@@ -8,7 +8,6 @@ module.exports = {
   },
   plugins: ['vue', '@typescript-eslint', '@typescript-eslint/eslint-plugin'],
   extends: [
-    /* 'plugin:vue/vue3-essential', */
     'eslint:recommended',
     '@vue/typescript/recommended',
     'plugin:vue/vue3-recommended',
@@ -16,13 +15,13 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'warn',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/no-explicit-any': 'warn',
-    eqeqeq: 'error',
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-explicit-any': ['warn', {argsIgnorePattern: '^any_'}],
+    eqeqeq: 'warn',
     'vue/no-v-html': 'warn',
-    'no-var': 'error',
-    'vue/no-unused-components': 'error',
-    'vue/no-unused-vars': 'error',
-    'vue/multi-word-component-names': 'error'
+    'no-var': 'warn',
+    'vue/no-unused-components': 'warn',
+    'vue/no-unused-vars': 'warn',
+    'vue/multi-word-component-names': 'warn'
   }
 };

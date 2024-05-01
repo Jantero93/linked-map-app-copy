@@ -1,15 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import Route from '@/routing/routes';
 
 // Views
-import TestView from '../views/TestView.vue';
-import AboutView from '../views/AboutView.vue';
-import MapView from '../views/MapView.vue';
-
-export const Route = {
-  Root: '/',
-  About: '/about',
-  Map: '/map'
-} as const;
+import TestView from '@/views/TestView.vue';
+import AboutView from '@/views/AboutView.vue';
+import MapView from '@/views/MapView.vue';
 
 const routes = [
   { path: Route.Root, component: TestView },

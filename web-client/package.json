@@ -10,16 +10,16 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "start": "vite --open",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint --ext .",
     "prettier:write": "prettier --write ."
   },
   "dependencies": {
-    "ol": "^9.1.0",
-    "ol-contextmenu": "^5.4.0",
-    "ol-ext": "^4.0.18",
+    "ol": "9.1.0",
+    "ol-contextmenu": "5.4.0",
+    "ol-ext": "4.0.18",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-router": "^4.3.2",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
+    "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
     "@vitejs/plugin-vue": "^5.0.4",
