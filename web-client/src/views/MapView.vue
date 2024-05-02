@@ -1,11 +1,10 @@
-<!-- MapView.vue -->
 <template>
-  <v-container fluid class="fill-height pa-0 ma-0">
-    <v-row class="fill-height" no-gutters>
-      <v-col cols="3" class="control-panel pa-0 ma-0 fill-height">
+  <v-container class="pa-0 ma-0" fluid>
+    <v-row no-gutters>
+      <v-col cols="3">
         <ControlPanelMapView />
       </v-col>
-      <v-col cols="9" class="pa-0 ma-0 fill-height map-wrapper">
+      <v-col cols="9" class="map-wrapper">
         <OpenLayersMap
           :initial-view="tampereCoordinates"
           :layers="vectorLayers"

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="pa-2 fill-height">
+  <v-card flat class="fill-height">
     <v-card-title>Control Panel</v-card-title>
     <v-card-text>
       <v-btn color="primary">Action 1</v-btn>

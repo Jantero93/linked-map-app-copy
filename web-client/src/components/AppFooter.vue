@@ -1,5 +1,5 @@
 <template>
-  <v-footer fixed app color="primary">
+  <v-footer app fixed color="primary">
     <v-col class="text-center text-md-end">
       <span class="text-body-1">{{ footerText }}</span>
     </v-col>

@@ -1,13 +1,13 @@
 <template>
-  <v-app-bar fixed app border="lg" density="compact" color="primary">
-    <v-toolbar-title>My Vue App</v-toolbar-title>
-    <v-btn to="/">Home</v-btn>
-    <v-btn to="/about">About</v-btn>
-    <v-btn to="/map">Map</v-btn>
+  <v-app-bar class="app-bar-custom" app fixed border="sm" color="primary">
+    <v-toolbar-title text="LinkedIn Copy" />
+    <v-btn text="Home" to="/" />
+    <v-btn text="About" to="/about" />
+    <v-btn text="Map" to="/map" />
     <v-switch
-      class="text-capitalize"
+      class="text-capitalize mx-4"
       :label="currentTheme"
-      inset
+      hide-details
       @click="toggleTheme"
     />
   </v-app-bar>
@@ -40,3 +40,9 @@ const toggleTheme = () => {
   currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark';
 };
 </script>
+
+<style scoped>
+.v-toolbar__content > a {
+  margin: 4px;
+}
+</style>
