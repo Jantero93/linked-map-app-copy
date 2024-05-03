@@ -11,30 +11,30 @@
         <v-form ref="formRef" v-model="valid" @submit.prevent="onSubmit">
           <v-text-field
             v-model="username"
-            :rules="[
-              (v) => v.length >= 3 || 'Username must be at least 3 characters'
-            ]"
             label="Username"
             required
             clearable
+            :rules="[
+              (v) => v.length >= 3 || 'Username must be at least 3 characters'
+            ]"
           />
           <v-text-field
             v-model="password"
-            :rules="[
-              (v) => v.length >= 3 || 'Password must be at least 3 characters'
-            ]"
             label="Password"
             type="password"
             required
             clearable
+            :rules="[
+              (v) => v.length >= 3 || 'Password must be at least 3 characters'
+            ]"
           />
           <v-text-field
             v-model="confirmPassword"
-            :rules="[(v) => v === password || 'Passwords must match']"
             label="Confirm Password"
             type="password"
             required
             clearable
+            :rules="[(v) => v === password || 'Passwords must match']"
           />
           <v-card-actions>
             <v-btn
@@ -50,6 +50,7 @@
               text="Close"
               size="large"
               rounded="sm"
+              :loading="isLoading"
               @click="showDialog = false"
             />
           </v-card-actions>
@@ -60,7 +61,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel, onUpdated } from 'vue';
+import { ref, defineModel, watch } from 'vue';
+import { postRegister } from '@/store/actions/authActions';
+import { useUIStore } from '@/store/stores/uiStore';
+
+const { isLoading } = useUIStore();
 
 const showDialog = defineModel<boolean>({ required: true });
 const valid = ref(false);
@@ -69,22 +74,22 @@ const password = ref('');
 const confirmPassword = ref('');
 const formRef = ref<HTMLFormElement | null>(null);
 
+watch(showDialog, (newVal: boolean) => {
+  if (!newVal) {
+    username.value = '';
+    password.value = '';
+    confirmPassword.value = '';
+  }
+});
+
 const onSubmit = async () => {
   if (formRef.value) {
     formRef.value.validate();
   }
 
   if (valid.value) {
-    // API call logic here
-    showDialog.value = false; // Close the dialog on successful registration
+    await postRegister(username.value, password.value);
+    showDialog.value = false;
   }
 };
-
-onUpdated(() => {
-  if (!showDialog.value) {
-    username.value = '';
-    password.value = '';
-    confirmPassword.value = '';
-  }
-});
 </script>

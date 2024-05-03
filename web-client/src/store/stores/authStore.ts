@@ -3,22 +3,22 @@ import {
   LocalStorageKeys,
   getFromLocalStorage
 } from '@/utilities/localStorageHelpers';
+import { useUIStore } from '@/store/stores/uiStore';
 
 interface AuthState {
   accessToken: string | null;
   expiresIn: Date | null;
-  isLoading: boolean;
-  error: string | null;
+  isRegistrationSuccess: boolean;
 }
 
 export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => initialStateFromLocalStorage(),
-  actions: {},
-  getters: {
-    userToken: ({ accessToken, expiresIn }: AuthState) => ({
-      accessToken,
-      expiresIn
-    })
+  state: (): AuthState => ({
+    ...initialStateFromLocalStorage()
+  }),
+  actions: {
+    setRegistrationSuccess(success: boolean) {
+      this.isRegistrationSuccess = success;
+    }
   }
 });
 
@@ -26,6 +26,8 @@ export const useAuthStore = defineStore('auth', {
  * Gets ID token etc from local storage and initials state
  */
 const initialStateFromLocalStorage = (): AuthState => {
+  const { setError } = useUIStore();
+
   try {
     const accessToken = getFromLocalStorage<string>(
       LocalStorageKeys.Token.AccessToken
@@ -37,18 +39,14 @@ const initialStateFromLocalStorage = (): AuthState => {
     return {
       accessToken,
       expiresIn,
-      isLoading: false,
-      error: null
+      isRegistrationSuccess: !!accessToken && !!expiresIn
     };
   } catch (e) {
+    setError('Failed to get token from local storage');
     return {
       accessToken: null,
-      isLoading: false,
       expiresIn: null,
-      error:
-        e instanceof Error
-          ? e.message
-          : 'Error on getting token from local storage'
+      isRegistrationSuccess: false
     };
   }
 };
