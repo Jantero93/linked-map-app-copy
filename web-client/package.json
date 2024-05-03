@@ -17,6 +17,7 @@
     "prettier:write": "prettier --write ."
   },
   "dependencies": {
+    "moment": "^2.30.1",
     "ol": "9.1.0",
     "ol-contextmenu": "5.4.0",
     "ol-ext": "4.0.18",

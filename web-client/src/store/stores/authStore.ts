@@ -14,7 +14,12 @@ interface AuthState {
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => initialStateFromLocalStorage(),
   actions: {},
-  getters: {}
+  getters: {
+    userToken: ({ accessToken, expiresIn }: AuthState) => ({
+      accessToken,
+      expiresIn
+    })
+  }
 });
 
 /**

@@ -1,5 +1,5 @@
 <template>
-  <div ref="mapContainer" class="map-container" />
+  <div ref="mapContainer" class="h-100 w-100" />
 </template>
 
 <script setup lang="ts">
@@ -59,17 +59,8 @@ watch(
 
     // Remove old layers first & Re-add all new layers
     map?.getLayers().clear();
-    newLayers.forEach((layer) => map?.addLayer(layer));
+    newLayers.forEach((layer) => isLayer(layer) && map?.addLayer(layer));
   },
   { deep: true } //NOTE: Is this needed? Is areLayersEqual function needed or correct? Does this watch work as intended
 );
-
-// Helper functions
 </script>
-
-<style scoped>
-.map-container {
-  width: 100%;
-  height: 100%;
-}
-</style>

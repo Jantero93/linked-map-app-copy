@@ -1,6 +1,7 @@
 <template>
-  <v-app-bar class="app-bar-custom" app fixed border="sm" color="primary">
+  <v-app-bar class="app-bar-custom" app fixed color="primary" border="sm">
     <v-toolbar-title text="LinkedIn Copy" />
+    <v-btn text="Register" @click="showRegisterDialog = true" />
     <v-btn text="Home" to="/" />
     <v-btn text="About" to="/about" />
     <v-btn text="Map" to="/map" />
@@ -10,26 +11,28 @@
       hide-details
       @click="toggleTheme"
     />
+    <RegisterModal v-model="showRegisterDialog" />
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
-import { ThemeType } from '@/theme';
+import { ref, watch } from 'vue';
+import { useTheme } from 'vuetify';
 import {
   getFromLocalStorage,
   setToLocalStorage,
   LocalStorageKeys
 } from '@/utilities/localStorageHelpers';
-import { ref, watch } from 'vue';
-import { useTheme } from 'vuetify';
+import RegisterModal from '@/components/navigationBar/RegisterModal.vue';
+import { ThemeType } from '@/theme';
 
+const showRegisterDialog = ref(false);
 const theme = useTheme();
 const currentTheme = ref(getFromLocalStorage<ThemeType>('theme') ?? 'light');
 
 watch(
   currentTheme,
-  (newTheme: ThemeType) => {
-    currentTheme.value = newTheme;
+  (newTheme) => {
     theme.global.name.value = newTheme;
     setToLocalStorage(LocalStorageKeys.Theme, newTheme);
   },
@@ -40,9 +43,3 @@ const toggleTheme = () => {
   currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark';
 };
 </script>
-
-<style scoped>
-.v-toolbar__content > a {
-  margin: 4px;
-}
-</style>
