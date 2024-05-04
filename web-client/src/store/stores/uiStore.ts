@@ -16,6 +16,9 @@ export const useUIStore = defineStore('ui', {
     },
     setError(msg: string) {
       this.error = msg;
+    },
+    clearError() {
+      this.error = null;
     }
   }
 });

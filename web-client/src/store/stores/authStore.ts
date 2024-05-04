@@ -1,9 +1,14 @@
 import { defineStore } from 'pinia';
 import {
   LocalStorageKeys,
-  getFromLocalStorage
+  getFromLocalStorage,
+  setToLocalStorage
 } from '@/utilities/localStorageHelpers';
 import { useUIStore } from '@/store/stores/uiStore';
+import {
+  addToCurrentUtcTime,
+  convertIsoStringToDate
+} from '@/utilities/dateHeleprs';
 
 interface AuthState {
   accessToken: string | null;
@@ -18,6 +23,17 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     setRegistrationSuccess(success: boolean) {
       this.isRegistrationSuccess = success;
+    },
+    setToken(accessToken: string, expiresIn: number) {
+      const expiresInISODateString = addToCurrentUtcTime(expiresIn);
+
+      const { AccessToken, ExpiresIn } = LocalStorageKeys.Token;
+      setToLocalStorage(AccessToken, accessToken);
+      setToLocalStorage(ExpiresIn, expiresInISODateString);
+
+      this.accessToken = accessToken;
+      this.expiresIn = convertIsoStringToDate(expiresInISODateString);
+      this.isRegistrationSuccess = true;
     }
   }
 });
@@ -27,18 +43,15 @@ export const useAuthStore = defineStore('auth', {
  */
 const initialStateFromLocalStorage = (): AuthState => {
   const { setError } = useUIStore();
+  const { AccessToken, ExpiresIn } = LocalStorageKeys.Token;
 
   try {
-    const accessToken = getFromLocalStorage<string>(
-      LocalStorageKeys.Token.AccessToken
-    );
-    const expiresIn = getFromLocalStorage<Date>(
-      LocalStorageKeys.Token.ExpiresIn
-    );
+    const accessToken = getFromLocalStorage<string>(AccessToken);
+    const expiresIn = getFromLocalStorage<string>(ExpiresIn);
 
     return {
       accessToken,
-      expiresIn,
+      expiresIn: expiresIn === null ? null : convertIsoStringToDate(expiresIn),
       isRegistrationSuccess: !!accessToken && !!expiresIn
     };
   } catch (e) {

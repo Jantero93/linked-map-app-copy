@@ -7,40 +7,26 @@
     opacity="50%"
   >
     <v-sheet>
-      <v-card class="mx-auto pa-8" title="Register">
-        <v-form ref="formRef" v-model="valid" @submit.prevent="onSubmit">
+      <v-card class="mx-auto pa-8" title="Login">
+        <v-form v-model="valid" @submit.prevent="onSubmit">
           <v-text-field
             v-model="username"
             label="Username"
+            :rules="[(v) => !!v || 'Field is required']"
             required
-            clearable
-            :rules="[
-              (v) => v.length >= 3 || 'Username must be at least 3 characters'
-            ]"
           />
           <v-text-field
             v-model="password"
             label="Password"
             type="password"
+            :rules="[(v) => !!v || 'Field is required']"
             required
-            clearable
-            :rules="[
-              (v) => v.length >= 3 || 'Password must be at least 3 characters'
-            ]"
-          />
-          <v-text-field
-            v-model="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            required
-            clearable
-            :rules="[(v) => v === password || 'Passwords must match']"
           />
           <v-card-actions>
             <v-btn
               class="bg-green-darken-1"
               type="submit"
-              text="Register"
+              text="Log in"
               size="large"
               rounded="sm"
             />
@@ -62,8 +48,8 @@
 
 <script setup lang="ts">
 import { ref, defineModel, watch } from 'vue';
-import { postRegister } from '@/store/actions/authActions';
 import { useUIStore } from '@/store/stores/uiStore';
+import { postLogin } from '@/store/actions/authActions';
 
 const { isLoading } = useUIStore();
 
@@ -88,9 +74,9 @@ const onSubmit = async () => {
   }
 
   if (valid.value) {
-    //TODO: Add something to UI if register fails
-    await postRegister(username.value, password.value);
-    showDialog.value = false;
+    const message = await postLogin(username.value, password.value);
+    if (message === 'Login successful') showDialog.value = false;
+    //TODO: Add something to ui if login fails
   }
 };
 </script>
