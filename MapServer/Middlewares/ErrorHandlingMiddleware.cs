@@ -1,7 +1,7 @@
-namespace MapServer.Middlewares;
-
 using Newtonsoft.Json;
 using System.Net.Mime;
+
+namespace MapServer.Middlewares;
 
 public class ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
 {

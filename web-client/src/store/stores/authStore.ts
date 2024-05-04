@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia';
+import { useUIStore } from '@/store/stores/uiStore';
 import {
   LocalStorageKeys,
   getFromLocalStorage,
   setToLocalStorage
 } from '@/utilities/localStorageHelpers';
-import { useUIStore } from '@/store/stores/uiStore';
 import {
   addToCurrentUtcTime,
   convertIsoStringToDate
-} from '@/utilities/dateHeleprs';
+} from '@/utilities/dateHelpers';
 
 interface AuthState {
   accessToken: string | null;
@@ -16,32 +16,7 @@ interface AuthState {
   isRegistrationSuccess: boolean;
 }
 
-export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
-    ...initialStateFromLocalStorage()
-  }),
-  actions: {
-    setRegistrationSuccess(success: boolean) {
-      this.isRegistrationSuccess = success;
-    },
-    setToken(accessToken: string, expiresIn: number) {
-      const expiresInISODateString = addToCurrentUtcTime(expiresIn);
-
-      const { AccessToken, ExpiresIn } = LocalStorageKeys.Token;
-      setToLocalStorage(AccessToken, accessToken);
-      setToLocalStorage(ExpiresIn, expiresInISODateString);
-
-      this.accessToken = accessToken;
-      this.expiresIn = convertIsoStringToDate(expiresInISODateString);
-      this.isRegistrationSuccess = true;
-    }
-  }
-});
-
-/**
- * Gets ID token etc from local storage and initials state
- */
-const initialStateFromLocalStorage = (): AuthState => {
+const getInitialState = (): AuthState => {
   const { setError } = useUIStore();
   const { AccessToken, ExpiresIn } = LocalStorageKeys.Token;
 
@@ -63,3 +38,23 @@ const initialStateFromLocalStorage = (): AuthState => {
     };
   }
 };
+
+export const useAuthStore = defineStore('auth', {
+  state: (): AuthState => getInitialState(),
+  actions: {
+    setRegistrationSuccess(success: boolean) {
+      this.isRegistrationSuccess = success;
+    },
+    setToken(accessToken: string, expiresIn: number) {
+      const expiresInISODateString = addToCurrentUtcTime(expiresIn);
+
+      const { AccessToken, ExpiresIn } = LocalStorageKeys.Token;
+      setToLocalStorage(AccessToken, accessToken);
+      setToLocalStorage(ExpiresIn, expiresInISODateString);
+
+      this.accessToken = accessToken;
+      this.expiresIn = convertIsoStringToDate(expiresInISODateString);
+      this.isRegistrationSuccess = true;
+    }
+  }
+});
