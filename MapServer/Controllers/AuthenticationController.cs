@@ -7,6 +7,9 @@ using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using MapServer.ApiModels.Requests;
 using MapServer.OpenIddict;
+using OpenIddict.Validation.AspNetCore;
+using MapServer.Utilities.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace MapServer.Controllers;
 
@@ -14,59 +17,44 @@ namespace MapServer.Controllers;
 [ApiController]
 public class AuthenticationController(
     UserManager<ApplicationUser> userManager,
+    IOpenIddictTokenManager tokenManager,
     ILogger<AuthenticationController> logger
     ) : ControllerBase
 {
     [HttpPost("~/connect/token")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register()
+    public async Task<IActionResult> Login()
     {
-        logger.LogInformation("OpenIddict Register endpoint");
-        var req = HttpContext.GetOpenIddictServerRequest();
-
-        if (req is null)
+        logger.LogInformation("OpenIddict Login endpoint");
+        var request = HttpContext.GetOpenIddictServerRequest();
+        if (request is null)
         {
-            logger.LogError("OpenIddictServerRequest null");
-            return BadRequest(new OpenIddictResponse
+            logger.LogCritical("OpenIddictServerRequest null");
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new OpenIddictResponse
             {
                 Error = OpenIddictConstants.Errors.InvalidRequest,
-                ErrorDescription = "The OpenID Connect request cannot be retrieved."
+                ErrorDescription = "OpenIddict request cannot be retrieved"
             });
         }
 
-        var reqUsername = req.Username;
-        var reqPassword = req.Password;
-
-        if (!req.IsPasswordGrantType())
-        {
-            logger.LogError("No password grant type for username: {Username}", reqUsername);
-            return BadRequest(new OpenIddictResponse
-            {
-                Error = OpenIddictConstants.Errors.UnsupportedGrantType,
-                ErrorDescription = "The specified grant type is not supported."
-            });
-        }
+        var reqUsername = request.Username;
+        var reqPassword = request.Password;
 
         if (string.IsNullOrEmpty(reqUsername) || string.IsNullOrEmpty(reqPassword))
         {
-            logger.LogError("No password or username on login attempt");
+            logger.LogError("Username or password was empty or null");
             return BadRequest(new OpenIddictResponse
             {
-                Error = OpenIddictConstants.Errors.InvalidRequest,
-                ErrorDescription = "Username or password cannot be empty"
+                Error = OpenIddictConstants.Errors.InvalidGrant,
+                ErrorDescription = "The username or password was null or empty"
             });
         }
 
         var user = await userManager.FindByNameAsync(reqUsername);
-
-        if (user?.UserName is null)
+        if (user?.UserName is null || !await userManager.CheckPasswordAsync(user, reqPassword))
         {
-            return BadRequest($"Not found user with username: {reqUsername}");
-        }
-
-        if (!await userManager.CheckPasswordAsync(user, reqUsername))
-        {
-            logger.LogWarning("Wrong credentials or user does not exists for username: {@Username}", reqUsername);
+            logger.LogWarning("Wrong credentials on login, username: {Username}", reqUsername);
             return BadRequest(new OpenIddictResponse
             {
                 Error = OpenIddictConstants.Errors.InvalidGrant,
@@ -74,25 +62,21 @@ public class AuthenticationController(
             });
         }
 
-        // Create the identity and principal for the token response
         var claims = new List<Claim>
         {
-           new(OpenIddictConstants.Claims.Subject, user.Id.ToString()),
-           new(ClaimsIdentity.DefaultNameClaimType, user.UserName)
+            new(OpenIddictConstants.Claims.Subject, user.Id.ToString()),
+            new(ClaimsIdentity.DefaultNameClaimType, user.UserName)
         };
-
         var identity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
+        principal.SetScopes(new[] { "profile", "email", "openid", "api" });
 
-        principal.SetScopes(new[] { "profile", "email", "openid", "api", "websocket" });
-
-        logger.LogInformation("Trying sign in with user: {Username}", user.UserName);
         return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest req)
+    public async Task<IActionResult> Login([FromBody] RegisterRequest req)
     {
         var userExists = await userManager.FindByNameAsync(req.Username);
 
@@ -113,5 +97,33 @@ public class AuthenticationController(
 
         logger.LogError("Registration failed for user: {UserName}", req.Username);
         return BadRequest(new { Message = "Registration failed" });
+    }
+
+    [HttpPost("logout")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> Logout()
+    {
+        var userId = User.GetUserIdAsString();
+        logger.LogInformation("Signing out user {UserId}", userId);
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            // Fetch all tokens for the user
+            var tokens = await tokenManager.FindBySubjectAsync(userId).ToListAsync();
+
+            // Sequentially revoke each token
+            foreach (var token in tokens)
+            {
+                var result = await tokenManager.TryRevokeAsync(token);
+                if (!result)
+                {
+                    logger.LogWarning("Failed to revoke token {@Token}", token.ToString());
+                }
+            }
+
+            logger.LogInformation("Logged successfully and revoked tokens from user id {UserId}", userId);
+        }
+
+        return Ok(new { Message = "You have been logged out successfully. Please clear your tokens on client-side as well." });
     }
 }

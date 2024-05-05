@@ -1,9 +1,8 @@
-namespace MapServer.OpenIddict;
-
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
 using Microsoft.EntityFrameworkCore;
+
+namespace MapServer.OpenIddict;
 
 // Only for OpenIddict
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)

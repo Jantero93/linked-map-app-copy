@@ -16,16 +16,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddProvider(new ConsoleProvider());
 
+var configuration = builder.Configuration;
+ConfigureAppSettings(configuration);
+
 // Add services to the container.
-
-
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-var configuration = builder.Configuration;
-ConfigureAppSettings(configuration);
 
 SetOpenIddictIdentityConfiguration(builder.Services);
 InjectDependencies(builder.Services);
@@ -57,13 +54,11 @@ app.UseCors("AllowAll");
 app.UseMiddleware<RequestLoggerMiddleware>();
 app.UseMiddleware<SecurityHeaderMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
+
 app.UseRouting();
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
@@ -100,10 +95,6 @@ static void SetOpenIddictIdentityConfiguration(IServiceCollection services)
       .AddEntityFrameworkStores<ApplicationDbContext>()
       .AddDefaultTokenProviders();
 
-    services.AddAuthentication(
-        options => options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
-    );
-
     services.AddOpenIddict()
       .AddCore(options =>
       {
@@ -114,19 +105,33 @@ static void SetOpenIddictIdentityConfiguration(IServiceCollection services)
       .AddServer(options =>
       {
           options.SetTokenEndpointUris("/connect/token");
-          options.UseAspNetCore().EnableTokenEndpointPassthrough().DisableTransportSecurityRequirement();
+
           options.AllowPasswordFlow();
           options.AllowRefreshTokenFlow();
-          options.AddDevelopmentEncryptionCertificate().AddDevelopmentSigningCertificate();
+
+
 
           var tokenLifetime = TimeSpan.FromMinutes(ApplicationSettings.OpenIddictTokenLifetime);
           options.SetAccessTokenLifetime(tokenLifetime);
+          options.AddDevelopmentEncryptionCertificate().AddDevelopmentSigningCertificate();
+
+          options.UseAspNetCore()
+          .EnableTokenEndpointPassthrough()
+          .EnableAuthorizationEndpointPassthrough()
+          .DisableTransportSecurityRequirement();
       })
       .AddValidation(options =>
       {
           options.UseLocalServer();
           options.UseAspNetCore();
+          options.EnableTokenEntryValidation();
       });
+
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+    });
 }
 static void InjectDependencies(IServiceCollection services)
 {
@@ -164,5 +169,4 @@ static async Task RegisterOpenIddictClientsAsync(WebApplication app)
 
         await manager.CreateAsync(descriptor);
     }
-
 }
