@@ -9,6 +9,9 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
+import Layer from 'ol/layer/Layer';
+import LayerRenderer from 'ol/renderer/Layer';
+import { Source } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
 // Helpers
 import { areLayersEqual, isLayer } from '@/openlayers/openlayersUtilities';
@@ -18,7 +21,7 @@ type Props = {
     center: { longitude: number; latitude: number };
     zoom: number;
   };
-  layers: any[];
+  layers: unknown[];
 };
 
 const props = defineProps<Props>();
@@ -55,12 +58,31 @@ onUnmounted(() => {
 watch(
   () => props.layers,
   (newLayers, oldLayers) => {
-    if (areLayersEqual(newLayers, oldLayers)) return;
+    const allLayers = newLayers.concat(oldLayers);
+
+    // Check layer typing
+    if (allLayers.some((l) => !isLayer(l))) {
+      console.error('Layer typing has failed', allLayers);
+      throw new Error(
+        'Check layer typing, layer typing failed in MapComponent watch function'
+      );
+    }
+
+    if (
+      areLayersEqual(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        newLayers as Layer<Source, LayerRenderer<any>>[],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        oldLayers as Layer<Source, LayerRenderer<any>>[]
+      )
+    )
+      return;
 
     // Remove old layers first & Re-add all new layers
     map?.getLayers().clear();
     newLayers.forEach((layer) => isLayer(layer) && map?.addLayer(layer));
   },
-  { deep: true } //NOTE: Is this needed? Is areLayersEqual function needed or correct? Does this watch work as intended
+  //NOTE: Is 'deep' needed? Is areLayersEqual function needed or correct? Does this watch work as intended
+  { deep: true }
 );
 </script>

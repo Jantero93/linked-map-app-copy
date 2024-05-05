@@ -10,11 +10,14 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "start": "vite --open",
+    "dev": "vite --open",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint --ext .",
-    "prettier:write": "prettier --write ."
+    "prettier:check": "prettier --check src/**/*.{vue,js,ts,css,json,html}",
+    "prettier:write": "prettier --write src/**/*.{vue,js,ts,css,json,html}",
+    "eslint:check": "eslint src/**/*.{vue,js,ts} --format stylish && echo Ok",
+    "eslint:fix": "eslint src/**/*.{vue,js,ts} --fix",
+    "tsc:check": "tsc --noEmit --project tsconfig.json && echo Ok"
   },
   "dependencies": {
     "moment": "^2.30.1",

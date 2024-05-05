@@ -16,7 +16,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/no-explicit-any': ['warn', {argsIgnorePattern: '^any_'}],
+    '@typescript-eslint/no-explicit-any': "warn",
     eqeqeq: 'warn',
     'vue/no-v-html': 'warn',
     'no-var': 'warn',

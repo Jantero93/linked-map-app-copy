@@ -1,0 +1,22 @@
+{
+  "cSpell.words": [
+    "EPSG",
+    "injectee",
+    "jant",
+    "materialdesignicons",
+    "padless",
+    "Parens",
+    "pinia"
+  ],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "[html, scss, javascript, typescript, vue, yaml, css, jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "shakram02.bash-beautify"
+  }
+}

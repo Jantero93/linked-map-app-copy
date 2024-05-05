@@ -6,8 +6,8 @@
     <v-btn text="Home" to="/" />
     <v-btn text="Map" to="/map" />
     <v-switch
-      class="text-capitalize mx-4"
       v-model="selectedThemeSwitch"
+      class="text-capitalize mx-4"
       false-value="light"
       true-value="dark"
       :label="selectedThemeSwitch"

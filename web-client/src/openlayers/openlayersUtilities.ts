@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getUid } from 'ol';
 import { Source } from 'ol/source';
 import Layer from 'ol/layer/Layer';
@@ -7,7 +8,7 @@ import LayerRenderer from 'ol/renderer/Layer';
  * Checks have layers same ids
  * @param newLayers Incoming layer(s)
  * @param oldLayers Existing layer(s)
- * @returns {boolean} true if new layers(s) have same id(s)
+ * @returns True if new layers(s) have same id(s)
  */
 export const areLayersEqual = (
   newLayers: Layer<Source, LayerRenderer<any>>[],
@@ -18,7 +19,8 @@ export const areLayersEqual = (
 
 /**
  * Type guard to check is instance OpenLayers Layer
- * @param {any} layer OpenLayers layer (any type)
- * @returns {boolean} Return true if satisfies Layer type
+ * @param {unknown} layer OpenLayers layer (any type)
+ * @returns True if satisfies Layer type
  */
-export const isLayer = (layer: any): layer is Layer => layer instanceof Layer;
+export const isLayer = (layer: unknown): layer is Layer =>
+  layer instanceof Layer;
