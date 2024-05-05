@@ -1,6 +1,5 @@
 .eslintrc.cjs
 .prettierrc
-index.html
 .vscode/
 tsconfig.*
 vite.config.ts
