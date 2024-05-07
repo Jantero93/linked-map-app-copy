@@ -1,8 +1,15 @@
 <template>
   <v-app-bar app fixed color="primary" border="sm">
     <v-toolbar-title text="LinkedIn Copy" />
-    <v-btn text="Login" @click="showLoginDialog = true" />
-    <v-btn text="Register" @click="showRegisterDialog = true" />
+    <!-- Login, register, logout buttons  -->
+    <v-btn
+      v-if="!isLoggedIn"
+      text="Register"
+      @click="showRegisterDialog = true"
+    />
+    <v-btn v-if="!isLoggedIn" text="Login" @click="showLoginDialog = true" />
+    <v-btn v-else text="Logout" @click="postLogout" />
+    <!-- Navigation buttons -->
     <v-btn text="Home" to="/" />
     <v-btn text="Map" to="/map" />
     <v-switch
@@ -20,14 +27,18 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue';
+import RegisterModal from '@/components/navigationBar/RegisterModal.vue';
+import LoginModal from '@/components/navigationBar/LoginModal.vue';
+import { storeToRefs } from 'pinia';
 import { useTheme } from 'vuetify';
 import { ThemeType } from '@/theme';
 import { useUIStore } from '@/store/stores/uiStore';
-import RegisterModal from '@/components/navigationBar/RegisterModal.vue';
-import LoginModal from '@/components/navigationBar/LoginModal.vue';
+import { useAuthStore } from '@/store/stores/authStore';
+import { postLogout } from '@/store/actions/authActions';
 
 const vuetify = useTheme();
 const { appTheme, setAppTheme } = useUIStore();
+const { isLoggedIn } = storeToRefs(useAuthStore());
 
 const selectedThemeSwitch = ref<ThemeType>('light');
 const showRegisterDialog = ref(false);

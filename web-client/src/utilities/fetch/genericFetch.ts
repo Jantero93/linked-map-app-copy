@@ -1,8 +1,11 @@
-import { LocalStorageKeys } from '@/utilities/localStorageHelpers';
+import {
+  TokenLocalStorage,
+  getFromLocalStorage
+} from '@/utilities/localStorageHelpers';
 
 export const get = <T>(url: string): Promise<T> => apiCall(url, 'GET');
 
-export const post = <T>(url: string, payload: unknown): Promise<T> =>
+export const post = <T>(url: string, payload?: unknown): Promise<T> =>
   apiCall(url, 'POST', payload);
 
 export const put = <T>(url: string, payload: unknown): Promise<T> =>
@@ -13,10 +16,10 @@ export const del = <T>(url: string): Promise<T> => apiCall(url, 'DELETE');
 const createGlobalHeaders = (): Record<string, string> => {
   const headers: Record<string, string> = {};
 
-  const accessToken = localStorage.getItem(LocalStorageKeys.Token.AccessToken);
+  const token = getFromLocalStorage<TokenLocalStorage>('Token');
 
-  if (accessToken) {
-    headers.Authorization = `Bearer ${accessToken}`;
+  if (token?.accessToken) {
+    headers.Authorization = `Bearer ${token.accessToken}`;
   }
 
   return headers;
@@ -39,11 +42,15 @@ const apiCall = async <T>(
     config.body = JSON.stringify(data);
   }
 
-  const response = await fetch(url, config);
+  try {
+    const response = await fetch(url, config);
 
-  if (!response.ok) {
-    throw new Error(`API call failed: ${response.statusText}`);
+    if (!response.ok) {
+      throw new Error(`API call failed: ${JSON.stringify(response)}`);
+    }
+    return response.json() as Promise<T>;
+  } catch (e) {
+    console.error(JSON.stringify(e));
+    throw e;
   }
-
-  return response.json() as Promise<T>;
 };

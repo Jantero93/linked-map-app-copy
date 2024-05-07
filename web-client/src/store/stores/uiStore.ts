@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia';
 import {
-  LocalStorageKeys,
+  UserPreferences,
   getFromLocalStorage,
   setToLocalStorage
 } from '@/utilities/localStorageHelpers';
 
-const themeFromLocalStorage =
-  getFromLocalStorage<ThemeType>(LocalStorageKeys.Theme) ?? 'light';
-
 export type ThemeType = 'dark' | 'light';
+
+const themeFromLocalStorage = (): ThemeType => {
+  const userPreferences = getFromLocalStorage<UserPreferences>('Theme');
+  return userPreferences?.theme ?? 'light';
+};
 
 interface UIState {
   isLoading: boolean;
@@ -19,7 +21,7 @@ interface UIState {
 const getInitialState = (): UIState => ({
   isLoading: false,
   error: null,
-  appTheme: themeFromLocalStorage
+  appTheme: themeFromLocalStorage()
 });
 
 export const useUIStore = defineStore('ui', {
@@ -35,7 +37,10 @@ export const useUIStore = defineStore('ui', {
       this.error = null;
     },
     setAppTheme(theme: ThemeType) {
-      setToLocalStorage(LocalStorageKeys.Theme, theme);
+      const preferences: UserPreferences = {
+        theme
+      };
+      setToLocalStorage('Theme', preferences);
       this.appTheme = theme;
     }
   }

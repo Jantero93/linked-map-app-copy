@@ -14,14 +14,14 @@ module.exports = {
     'prettier'
   ],
   rules: {
-    '@typescript-eslint/explicit-module-boundary-types': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/no-explicit-any': "warn",
-    eqeqeq: 'warn',
-    'vue/no-v-html': 'warn',
-    'no-var': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
     'vue/no-unused-components': 'warn',
     'vue/no-unused-vars': 'warn',
-    'vue/multi-word-component-names': 'warn'
+    'vue/no-v-html': 'warn',
+    'vue/multi-word-component-names': 'warn',
+    eqeqeq: 'warn',
+    'no-var': 'warn',
+    'no-warning-comments': 'warn'
   }
 };

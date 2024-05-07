@@ -5,7 +5,7 @@
   "author": {
     "name": "jant",
     "email": "Githubonly@github.com",
-    "url": "https://github.com/jantero93"
+    "url": "https://coming-some-day.com/jantero93"
   },
   "version": "0.0.1",
   "type": "module",
@@ -15,9 +15,9 @@
     "preview": "vite preview",
     "prettier:check": "prettier --check src/**/*.{vue,js,ts,css,json,html}",
     "prettier:write": "prettier --write src/**/*.{vue,js,ts,css,json,html}",
-    "eslint:check": "eslint src/**/*.{vue,js,ts} --format stylish && echo Ok",
+    "eslint:check": "eslint src/**/*.{vue,js,ts}",
     "eslint:fix": "eslint src/**/*.{vue,js,ts} --fix",
-    "tsc:check": "tsc --noEmit --project tsconfig.json && echo Ok"
+    "tsc:check": "tsc --noEmit"
   },
   "dependencies": {
     "moment": "^2.30.1",

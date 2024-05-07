@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
-import { useUIStore } from '@/store/stores/uiStore';
 import {
-  LocalStorageKeys,
   getFromLocalStorage,
-  setToLocalStorage
+  removeFromLocalStorage,
+  setToLocalStorage,
+  TokenLocalStorage
 } from '@/utilities/localStorageHelpers';
 import {
   addToCurrentUtcTime,
+  isTimeBeforeCurrentUtc,
   convertIsoStringToDate
 } from '@/utilities/dateHelpers';
 
@@ -17,12 +18,18 @@ interface AuthState {
 }
 
 const getInitialState = (): AuthState => {
-  const { setError } = useUIStore();
-  const { AccessToken, ExpiresIn } = LocalStorageKeys.Token;
-
   try {
-    const accessToken = getFromLocalStorage<string>(AccessToken);
-    const expiresIn = getFromLocalStorage<string>(ExpiresIn);
+    const token = getFromLocalStorage<TokenLocalStorage>('Token');
+
+    if (token === null) {
+      return {
+        accessToken: null,
+        expiresIn: null,
+        isRegistrationSuccess: false
+      };
+    }
+
+    const { accessToken, expiresIn } = token;
 
     return {
       accessToken,
@@ -30,7 +37,6 @@ const getInitialState = (): AuthState => {
       isRegistrationSuccess: !!accessToken && !!expiresIn
     };
   } catch (e) {
-    setError('Failed to get token from local storage');
     return {
       accessToken: null,
       expiresIn: null,
@@ -41,16 +47,32 @@ const getInitialState = (): AuthState => {
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => getInitialState(),
+  getters: {
+    isLoggedIn: ({ accessToken, expiresIn }: AuthState): boolean => {
+      if (!accessToken || !expiresIn) return false;
+      if (isTimeBeforeCurrentUtc(expiresIn)) return false;
+
+      return true;
+    }
+  },
   actions: {
+    logOut() {
+      this.accessToken = null;
+      this.expiresIn = null;
+      removeFromLocalStorage('Token');
+    },
     setRegistrationSuccess(success: boolean) {
       this.isRegistrationSuccess = success;
     },
     setToken(accessToken: string, expiresIn: number) {
       const expiresInISODateString = addToCurrentUtcTime(expiresIn);
 
-      const { AccessToken, ExpiresIn } = LocalStorageKeys.Token;
-      setToLocalStorage(AccessToken, accessToken);
-      setToLocalStorage(ExpiresIn, expiresInISODateString);
+      const localStorageObject: TokenLocalStorage = {
+        accessToken,
+        expiresIn: expiresInISODateString
+      };
+
+      setToLocalStorage('Token', localStorageObject);
 
       this.accessToken = accessToken;
       this.expiresIn = convertIsoStringToDate(expiresInISODateString);

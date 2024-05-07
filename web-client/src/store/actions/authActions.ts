@@ -64,3 +64,20 @@ export const postLogin = async (
     uiStore.setIsLoading(false);
   }
 };
+
+export const postLogout = async (): Promise<'Logged out'> => {
+  const { logOut } = useAuthStore();
+  const { setIsLoading } = useUIStore();
+
+  setIsLoading(true);
+
+  try {
+    await post(`${API_URL}/authentication/logout`);
+  } catch (e) {
+    console.error(e);
+  }
+
+  logOut();
+  setIsLoading(false);
+  return 'Logged out';
+};
