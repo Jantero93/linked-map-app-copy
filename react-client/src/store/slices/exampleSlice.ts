@@ -1,5 +1,4 @@
-// src/features/example/exampleSlice.ts
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 interface ExampleState {
   value: number;
@@ -10,7 +9,7 @@ const initialState: ExampleState = {
 };
 
 export const exampleSlice = createSlice({
-  name: 'example',
+  name: "example",
   initialState,
   reducers: {
     increment: (state) => {

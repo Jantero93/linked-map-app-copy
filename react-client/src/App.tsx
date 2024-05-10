@@ -1,56 +1,48 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
-import 'ol/ol.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import RoutePath from "@/routing/routes";
+import { Container } from "@mui/material";
+import LandingPage from "@/views/LandingPage";
+import MapPage from "@/views/MapPage";
+import styled from "@emotion/styled";
 
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import OlMap from './components/openlayers/OlMap';
+const NavBar = styled("nav")({
+  height: "100px",
+  backgroundColor: "yellow"
+});
 
-const MyStyledButton = styled(Button)(({ theme }) => ({
-  background: theme.palette.info.dark,
-  border: 0,
-  borderRadius: 3,
-  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  color: 'white',
-  height: 48,
-  padding: '0 30px'
-}));
+const Footer = styled("footer")({
+  height: "50px",
+  backgroundColor: "gray"
+});
 
-function App() {
-  const [count, setCount] = useState(0);
+const MainContainer = styled(Container)({
+  display: "flex",
+  flexDirection: "column",
+  height: "100vh",
+  backgroundColor: "red"
+});
 
+const ContentContainer = styled(Container)({
+  flexGrow: 1,
+  overflow: "auto",
+  display: "flex"
+});
+
+const App = () => {
   return (
-    <>
-      <div>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      {/*     <OlMap /> */}
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <MyStyledButton>Styled Button</MyStyledButton>
-        <div style={{ margin: '20px' }}>
-          <h1>React OpenLayers Map</h1>
-          <OlMap />
-        </div>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <MainContainer disableGutters maxWidth={false}>
+        <NavBar>nav bar coming</NavBar>
+        <ContentContainer disableGutters maxWidth={false}>
+          <Routes>
+            <Route path={RoutePath.LandingPage} element={<LandingPage />} />
+            <Route path={RoutePath.Map} element={<MapPage />} />
+          </Routes>
+        </ContentContainer>
+        <Footer>footer</Footer>
+      </MainContainer>
+    </Router>
   );
-}
+};
 
 export default App;
