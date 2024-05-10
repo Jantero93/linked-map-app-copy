@@ -1,18 +1,15 @@
-namespace MapServer.Utilities.CustomConsole;
-
 using System.Globalization;
 
-public class CustomConsole : ILogger
+namespace MapServer.Utilities.CustomConsole;
+
+
+#pragma warning disable CS9113 // Parameter is unread.
+public class CustomConsole(string name) : ILogger
+#pragma warning restore CS9113 // Parameter is unread.
 {
-    private readonly string _name;
-
-    public CustomConsole(string name)
-    {
-        _name = name;
-    }
-
     IDisposable ILogger.BeginScope<TState>(TState state) => default!;
 
+    //TODO: Remove debug, trace on test/production
     public bool IsEnabled(LogLevel logLevel) => true;
 
     public void Log<TState>(
@@ -54,12 +51,12 @@ public class CustomConsole : ILogger
     private static ConsoleColor GetLogLevelColor(LogLevel logLevel) =>
         logLevel switch
         {
-            LogLevel.Critical => ConsoleColor.Red,
-            LogLevel.Error => ConsoleColor.Red,
-            LogLevel.Warning => ConsoleColor.Yellow,
-            LogLevel.Information => ConsoleColor.Green,
+            LogLevel.Trace => ConsoleColor.DarkGray,
             LogLevel.Debug => ConsoleColor.Blue,
-            LogLevel.Trace => ConsoleColor.DarkBlue,
+            LogLevel.Information => ConsoleColor.Green,
+            LogLevel.Warning => ConsoleColor.DarkYellow,
+            LogLevel.Error => ConsoleColor.DarkRed,
+            LogLevel.Critical => ConsoleColor.Red,
             LogLevel.None => ConsoleColor.Gray,
             _ => ConsoleColor.Gray
         };
@@ -67,13 +64,13 @@ public class CustomConsole : ILogger
     private static string ShortenLogLevel(LogLevel logLevel) =>
         logLevel switch
         {
+            LogLevel.Trace => "TRACE",
+            LogLevel.Debug => "DEBUG",
             LogLevel.Information => "INF",
             LogLevel.Warning => "WARN",
-            LogLevel.Debug => "DEBUG",
-            LogLevel.Trace => "TRACE",
             LogLevel.Error => "ERR",
             LogLevel.Critical => "CRITICAL",
             LogLevel.None => string.Empty,
-            _ => "NULL"
+            _ => "UNDEFINED"
         };
 }
