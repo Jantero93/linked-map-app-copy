@@ -43,7 +43,7 @@ export type LoginResponse = {
 export const postLogin = async (
   username: string,
   password: string
-): Promise<'Login successful' | 'Login failed'> => {
+): Promise<boolean> => {
   const authStore = useAuthStore();
   const uiStore = useUIStore();
 
@@ -56,10 +56,10 @@ export const postLogin = async (
     authStore.setToken(access_token, expires_in);
     uiStore.clearError();
 
-    return 'Login successful';
+    return true;
   } catch (error) {
     uiStore.setError('Login failed');
-    return 'Login failed';
+    return false;
   } finally {
     uiStore.setIsLoading(false);
   }

@@ -12,19 +12,21 @@ import OSM from 'ol/source/OSM';
 import Layer from 'ol/layer/Layer';
 import LayerRenderer from 'ol/renderer/Layer';
 import { Source } from 'ol/source';
-import { fromLonLat } from 'ol/proj';
 // Helpers
 import { areLayersEqual, isLayer } from '@/openlayers/openlayersUtilities';
+import { Coordinate } from 'ol/coordinate';
+import { fromLonLat } from 'ol/proj';
 
-type Props = {
+type OpenLayersMapProps = {
   initialView: {
-    center: { longitude: number; latitude: number };
+    coordinates: Coordinate;
     zoom: number;
   };
   layers: unknown[];
 };
 
-const props = defineProps<Props>();
+const props = defineProps<OpenLayersMapProps>();
+
 const mapContainer = ref<HTMLElement | null>(null);
 let map: Map | null = null;
 
@@ -35,10 +37,7 @@ onMounted(() => {
     target: mapContainer.value,
     layers: [new TileLayer({ source: new OSM() })],
     view: new View({
-      center: fromLonLat([
-        props.initialView.center.longitude,
-        props.initialView.center.latitude
-      ]),
+      center: fromLonLat(props.initialView.coordinates),
       zoom: props.initialView.zoom
     })
   });

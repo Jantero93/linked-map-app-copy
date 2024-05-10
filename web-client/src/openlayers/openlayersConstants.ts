@@ -1,18 +1,15 @@
-type Coordinates = {
-  longitude: number;
-  latitude: number;
-};
+import { Coordinate } from 'ol/coordinate';
 
 const CityCoordinates = {
-  tampere: { longitude: 23.7871, latitude: 61.4761 },
-  helsinki: { longitude: 24.9384, latitude: 60.1699 }
+  Tampere: [23.7871, 61.4761],
+  Helsinki: [24.9384, 60.1699]
 } as const;
 
 /**
  * Return latitude and longitude of the city (precision four decimals)
  * @param city City name
- * @returns {Coordinates} Coordinates of the city
+ * @returns Coordinates of the city on OpenLayers coordinates format
  */
 export const getCityCoordinates = (
   city: keyof typeof CityCoordinates
-): Coordinates => CityCoordinates[city];
+): Coordinate => CityCoordinates[city] as unknown as Coordinate;

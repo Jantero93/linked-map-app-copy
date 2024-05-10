@@ -27,10 +27,10 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue';
+import { useTheme } from 'vuetify';
+import { storeToRefs } from 'pinia';
 import RegisterModal from '@/components/navigationBar/RegisterModal.vue';
 import LoginModal from '@/components/navigationBar/LoginModal.vue';
-import { storeToRefs } from 'pinia';
-import { useTheme } from 'vuetify';
 import { ThemeType } from '@/theme';
 import { useUIStore } from '@/store/stores/uiStore';
 import { useAuthStore } from '@/store/stores/authStore';

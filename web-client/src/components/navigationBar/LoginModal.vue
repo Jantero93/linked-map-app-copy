@@ -8,21 +8,27 @@
   >
     <v-sheet>
       <v-card class="mx-auto pa-8" title="Login">
-        <v-form v-model="valid" @submit.prevent="onSubmit">
+        <v-form ref="formRef" v-model="valid" @submit.prevent="onSubmit">
           <v-text-field
             v-model="username"
             label="Username"
-            :rules="[(v) => !!v || 'Field is required']"
+            :rules="[
+              (v: string) =>
+                (v.length > 0 && v.length < 20) || 'Field is required'
+            ]"
             required
           />
           <v-text-field
             v-model="password"
             label="Password"
             type="password"
-            :rules="[(v) => !!v || 'Field is required']"
+            :rules="[
+              (v: string) =>
+                (v.length > 0 && v.length < 20) || 'Field is required'
+            ]"
             required
           />
-          <v-card-actions>
+          <v-card-actions class="d-flex">
             <v-btn
               class="bg-green-darken-1"
               type="submit"
@@ -30,15 +36,18 @@
               size="large"
               rounded="sm"
             />
-            <v-spacer />
             <v-btn
               class="bg-red-darken-1"
               text="Close"
               size="large"
               rounded="sm"
-              :loading="isLoading"
-              @click="showDialog = false"
+              :loading="storeIsLoading"
+              @click="closeDialog"
             />
+
+            <span v-show="storeError" class="mx-auto text-red font-weight-bold">
+              {{ storeError }}
+            </span>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -47,36 +56,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel, watch } from 'vue';
+import { ref, defineModel, nextTick } from 'vue';
+import { VForm } from 'vuetify/lib/components/index.mjs';
 import { useUIStore } from '@/store/stores/uiStore';
 import { postLogin } from '@/store/actions/authActions';
+import { storeToRefs } from 'pinia';
 
-const { isLoading } = useUIStore();
+const uiStore = useUIStore();
+const { isLoading: storeIsLoading, error: storeError } =
+  storeToRefs(useUIStore());
 
 const showDialog = defineModel<boolean>({ required: true });
 const valid = ref(false);
 const username = ref('');
 const password = ref('');
-const confirmPassword = ref('');
-const formRef = ref<HTMLFormElement | null>(null);
+const formRef = ref<InstanceType<typeof VForm> | null>(null);
 
-watch(showDialog, (newVal: boolean) => {
-  if (!newVal) {
-    username.value = '';
-    password.value = '';
-    confirmPassword.value = '';
+const clearFormAndErrors = async () => {
+  username.value = password.value = '';
+
+  await nextTick();
+
+  if (formRef.value) {
+    formRef.value.resetValidation();
   }
-});
+  uiStore.clearError();
+};
+
+const closeDialog = async () => {
+  showDialog.value = false;
+  await clearFormAndErrors();
+};
 
 const onSubmit = async () => {
-  if (formRef.value) {
-    formRef.value.validate();
-  }
+  const isInputValid = (await formRef.value?.validate())?.valid;
+  if (!isInputValid) return;
 
-  if (valid.value) {
-    const message = await postLogin(username.value, password.value);
-    if (message === 'Login successful') showDialog.value = false;
-    //TODO: Add something to ui if login fails
+  const isSuccess = await postLogin(username.value, password.value);
+  if (isSuccess) {
+    closeDialog();
   }
 };
 </script>
