@@ -42,10 +42,10 @@ const ThemedAppBar = styled(AppBar)(({ theme }) => ({
 }));
 
 const ModalButton = styled(({ ...otherProps }: ButtonProps) => (
-  <Button {...otherProps} variant="outlined" />
+  <Button {...otherProps} />
 ))(({ theme }) => ({
-  color: theme.palette.info.main,
-  backgroundColor: theme.palette.info.contrastText,
+  color: theme.palette.info.contrastText,
+  backgroundColor: theme.palette.info.main,
   margin: "0px 10px 0px 10px",
 }));
 

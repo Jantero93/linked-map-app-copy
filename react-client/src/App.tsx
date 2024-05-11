@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RoutePath from "@/routing/routes";
 import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
-import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
+import styled from "@emotion/styled";
 import { createModeTheme } from "@/theme/theme";
 import { getSelectedTheme } from "@/store/slices/uiSlice";
 import NavigationBar from "@/components/navigationBar/NavigationBar";
 import MapPage from "@/views/MapPage";
 import LandingPage from "@/views/LandingPage";
+import "typeface-roboto";
 
 // Styled components for layout with Flexbox
 const MainContainer = styled(Box)({
