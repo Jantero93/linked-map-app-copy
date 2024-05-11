@@ -1,6 +1,6 @@
 const RoutePath = {
   LandingPage: "/",
-  Map: "/map"
+  MapPage: "/map",
 } as const;
 
 export default RoutePath;

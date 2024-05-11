@@ -5,7 +5,7 @@ interface ExampleState {
 }
 
 const initialState: ExampleState = {
-  value: 0
+  value: 0,
 };
 
 export const exampleSlice = createSlice({
@@ -20,8 +20,8 @@ export const exampleSlice = createSlice({
     },
     incrementByAmount: (state, action: { payload: number }) => {
       state.value += action.payload;
-    }
-  }
+    },
+  },
 });
 
 // Action creators are generated for each case reducer function

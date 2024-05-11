@@ -1,47 +1,53 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RoutePath from "@/routing/routes";
-import { Container } from "@mui/material";
-import LandingPage from "@/views/LandingPage";
-import MapPage from "@/views/MapPage";
+import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import styled from "@emotion/styled";
+import { useSelector } from "react-redux";
+import { createModeTheme } from "@/theme/theme";
+import { getSelectedTheme } from "@/store/slices/uiSlice";
+import NavigationBar from "@/components/navigationBar/NavigationBar";
+import MapPage from "@/views/MapPage";
+import LandingPage from "@/views/LandingPage";
 
-const NavBar = styled("nav")({
-  height: "100px",
-  backgroundColor: "yellow"
+// Styled components for layout with Flexbox
+const MainContainer = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  minHeight: "100vh",
+});
+
+const PageContainer = styled(Box)({
+  flexGrow: 1,
 });
 
 const Footer = styled("footer")({
-  height: "50px",
-  backgroundColor: "gray"
-});
-
-const MainContainer = styled(Container)({
-  display: "flex",
-  flexDirection: "column",
-  height: "100vh",
-  backgroundColor: "red"
-});
-
-const ContentContainer = styled(Container)({
-  flexGrow: 1,
-  overflow: "auto",
-  display: "flex"
+  height: "50px", // Fixed height for the footer
+  backgroundColor: "gray",
 });
 
 const App = () => {
+  //TODO: Implement save to local storage, if none there use os preferences
+  // @ts-expect-error This will be used later
+  const _prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const currentTheme = useSelector(getSelectedTheme);
+
   return (
-    <Router>
-      <MainContainer disableGutters maxWidth={false}>
-        <NavBar>nav bar coming</NavBar>
-        <ContentContainer disableGutters maxWidth={false}>
-          <Routes>
-            <Route path={RoutePath.LandingPage} element={<LandingPage />} />
-            <Route path={RoutePath.Map} element={<MapPage />} />
-          </Routes>
-        </ContentContainer>
-        <Footer>footer</Footer>
-      </MainContainer>
-    </Router>
+    <ThemeProvider theme={createModeTheme(currentTheme)}>
+      <CssBaseline /> {/* Normalize the default browser CSS */}
+      <Router>
+        <MainContainer>
+          <NavigationBar />
+          <PageContainer component="main">
+            <Routes>
+              <Route path={RoutePath.LandingPage} element={<LandingPage />} />
+              <Route path={RoutePath.MapPage} element={<MapPage />} />
+            </Routes>
+          </PageContainer>
+          <Footer />
+        </MainContainer>
+      </Router>
+    </ThemeProvider>
   );
 };
 
