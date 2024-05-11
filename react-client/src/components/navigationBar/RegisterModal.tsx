@@ -10,6 +10,8 @@ import {
   TextFieldProps,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useAppDispatch } from "@/store/store";
+import { registerUser } from "@/store/actions/authActions";
 
 const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
   <TextField {...otherProps} fullWidth variant="outlined" />
@@ -41,6 +43,8 @@ const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
     confirmPassword: "",
   });
 
+  const dispatch = useAppDispatch();
+
   const isFormValid = () => {
     const validateField = (condition: boolean, message: string) =>
       condition ? "" : message;
@@ -70,7 +74,7 @@ const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
 
     if (!isFormValid()) return;
 
-    console.log("Form is valid");
+    dispatch(registerUser({ username, password }));
   };
 
   const closeDialog = () => handleModalOpen(false);

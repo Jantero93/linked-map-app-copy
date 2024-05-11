@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
 import { ThemeType } from "@/theme/theme";
 
@@ -6,12 +6,16 @@ interface UiState {
   selectedTheme: ThemeType;
   isLoading: boolean;
   error: string | null;
+  openSnackbar: boolean;
+  snackbarText: string | null;
 }
 
 const initialState: UiState = {
   selectedTheme: "dark",
   isLoading: false,
   error: null,
+  openSnackbar: false,
+  snackbarText: null,
 };
 
 export const exampleSlice = createSlice({
@@ -27,15 +31,40 @@ export const exampleSlice = createSlice({
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    setError: (state, actions: PayloadAction<string>) => {
-      state.error = actions.payload;
+    setError: (state, actions: PayloadAction<{ message: string }>) => {
+      state.error = actions.payload.message;
+    },
+    setSnackbarText: (state, actions: PayloadAction<string>) => {
+      state.snackbarText = actions.payload;
+      state.openSnackbar = true;
+    },
+    clearSnackbar: (state) => {
+      state.snackbarText = null;
+      state.openSnackbar = false;
     },
   },
 });
 
-export const { clearError, setTheme, setIsLoading, setError } =
-  exampleSlice.actions;
+export const {
+  clearError,
+  setTheme,
+  setIsLoading,
+  setError,
+  setSnackbarText,
+  clearSnackbar,
+} = exampleSlice.actions;
 
 export const getSelectedTheme = (s: RootState) => s.ui.selectedTheme;
+
+const snackbarOpen = (s: RootState) => s.ui.openSnackbar;
+const snackbarMessage = (s: RootState) => s.ui.snackbarText;
+
+export const getSnackbarState = createSelector(
+  [snackbarOpen, snackbarMessage],
+  (snackbarOpen, snackbarMessage) => ({
+    snackbarOpen,
+    snackbarMessage,
+  })
+);
 
 export default exampleSlice.reducer;
