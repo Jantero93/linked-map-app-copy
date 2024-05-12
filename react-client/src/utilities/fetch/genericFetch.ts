@@ -49,12 +49,12 @@ const apiCall = async <T>(
 
     if (!response.ok) {
       const errResMsg = (await response.json()) as unknown as ErrorApiResponse;
-      console.error("API call failed, reason:", errResMsg.message);
+      console.warn("API call failed, reason:", errResMsg.message);
       throw new Error(errResMsg.message);
     }
     return response.json() as Promise<T>;
   } catch (e) {
-    console.error("Exception in genericFetch method", e);
+    console.warn("Exception in genericFetch method", e);
     throw e;
   }
 };

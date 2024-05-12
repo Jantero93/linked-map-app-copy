@@ -46,7 +46,7 @@ export function getFromLocalStorage<T>(
 }
 
 /**
- * Saves a non-primitive value to local storage after stringifying it.
+ * Saves a non-primitive value to local storage after stringify it.
  * @param key The key under which to store the item.
  * @param value The value to store, must be non-primitive.
  * @throws Will throw an error if JSON.stringify fails.

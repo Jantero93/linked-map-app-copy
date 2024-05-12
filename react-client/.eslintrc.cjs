@@ -16,7 +16,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     eqeqeq: "warn",
-    "no-console": ["warn", { allow: ["error"] }],
+    "no-console": ["warn", { allow: ["error", "warn"] }],
     "no-var": "warn",
     "no-warning-comments": "warn",
     "@typescript-eslint/no-unused-vars": [
@@ -27,6 +27,5 @@ module.exports = {
         caughtErrorsIgnorePattern: "^_",
       },
     ],
-    /*   "@typescript-eslint/no-explicit-any": "warn" */
   },
 };

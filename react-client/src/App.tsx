@@ -1,17 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RoutePath from "@/routing/routes";
-import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import styled from "@emotion/styled";
 import { createModeTheme } from "@/theme/theme";
-import { getSelectedTheme } from "@/store/slices/uiSlice";
 import CommonSnackBar from "@/components/CommonSnackBar";
 import NavigationBar from "@/components/navigationBar/NavigationBar";
 import MapPage from "@/views/MapPage";
 import LandingPage from "@/views/LandingPage";
 
 import "typeface-roboto";
-import { useThemeManagement } from "./hooks/useThemeManagement";
+import { useThemeManagement } from "@/hooks/useThemeManagement";
 
 // Styled components for layout with Flexbox
 const MainContainer = styled(Box)({
@@ -25,7 +23,7 @@ const PageContainer = styled(Box)({
 });
 
 const Footer = styled("footer")({
-  height: "50px", // Fixed height for the footer
+  height: "50px",
   backgroundColor: "gray",
 });
 

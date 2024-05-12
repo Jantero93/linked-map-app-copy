@@ -21,9 +21,9 @@ import {
 import RoutePath from "@/routing/routes";
 import { getSelectedTheme, setTheme } from "@/store/slices/uiSlice";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "@/store/store";
 import LoginModal from "@/components/navigationBar/LoginModal";
 import RegisterModal from "@/components/navigationBar/RegisterModal";
+import { useAppDispatch } from "@/hooks/useStoreHooks";
 
 // Combine LinkProps from MUI and RouterLink
 type StyledLinkProps = MuiLinkProps &

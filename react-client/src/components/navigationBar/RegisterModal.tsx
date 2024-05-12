@@ -10,11 +10,11 @@ import {
   TextFieldProps,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useAppDispatch } from "@/store/store";
 import { registerUser } from "@/store/actions/authActions";
 import { validateInput } from "@/utilities/validators";
 
 import { Nullable } from "@/utilities/commonTypes";
+import { useAppDispatch } from "@/hooks/useStoreHooks";
 
 const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
   <TextField {...otherProps} fullWidth variant="outlined" required />

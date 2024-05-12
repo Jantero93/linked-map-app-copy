@@ -35,14 +35,14 @@ export const loginApi = async (
 
     if (!response.ok) {
       const errResMsg = (await response.json()) as unknown as ErrorApiResponse;
-      console.error("API call failed, reason:", errResMsg.message);
+      console.warn("API call failed, reason:", errResMsg.message);
       throw new Error(errResMsg.message);
     }
 
     const data = (await response.json()) as LoginResponse;
     return data;
   } catch (e) {
-    console.error("Exception in login fetch", e);
+    console.warn("Exception in login fetch", e);
     throw e;
   }
 };

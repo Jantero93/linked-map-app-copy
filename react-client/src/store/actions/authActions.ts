@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { post } from "@/utilities/fetch/genericFetch";
 import { API_URL } from "@/utilities/env";
 import { loginApi } from "@/utilities/fetch/loginFetch";
-import { RejectedValue } from "../store";
+import { RejectedActionPayload } from "../store";
 
 export type UserCredentials = {
   username: string;
@@ -18,12 +18,12 @@ export const registerUser = createAsyncThunk(
         req
       );
     } catch (e) {
-      const rejectedValue: RejectedValue = {
+      const rejectedPayload: RejectedActionPayload = {
         errorDescription:
           e instanceof Error ? e.message : "Request could not reach server",
       };
 
-      return thunkAPI.rejectWithValue(rejectedValue);
+      return thunkAPI.rejectWithValue(rejectedPayload);
     }
   }
 );
@@ -35,7 +35,7 @@ export const loginUser = createAsyncThunk(
       const { username, password } = req;
       return await loginApi(username, password);
     } catch (e) {
-      const rejectedValue: RejectedValue = {
+      const rejectedValue: RejectedActionPayload = {
         errorDescription:
           e instanceof Error ? e.message : "Request could not reach server",
       };

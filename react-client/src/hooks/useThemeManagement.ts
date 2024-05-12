@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useMediaQuery } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setTheme, getSelectedTheme } from "@/store/slices/uiSlice";
 import {
   LocalStorageTheme,
   getFromLocalStorage,
 } from "@/utilities/localStorageHelpers";
 import { ThemeType } from "@/theme/theme";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 
 /**
  * General hook to initialize theme from saved preferences or user's os preferences

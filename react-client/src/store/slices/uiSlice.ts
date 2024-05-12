@@ -16,7 +16,6 @@ interface UiState {
 }
 
 const initialState: UiState = {
-  //FIXME: Should here be dark fallback or in the hook
   selectedTheme: getThemeFromLocalStorage() ?? "dark",
   isLoading: false,
   error: null,
@@ -78,10 +77,7 @@ export const getSnackbarState = createSelector(
 // Helpers
 function getThemeFromLocalStorage(): ThemeType | null {
   const storageTheme = getFromLocalStorage<LocalStorageTheme>("Theme");
-
-  if (storageTheme?.theme === null) return null;
-
-  return storageTheme?.theme as ThemeType;
+  return storageTheme?.theme ?? null;
 }
 
 function saveThemeLocalStorage(theme: ThemeType): void {

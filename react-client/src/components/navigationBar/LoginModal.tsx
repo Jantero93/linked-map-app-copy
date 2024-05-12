@@ -10,10 +10,10 @@ import {
   TextFieldProps,
 } from "@mui/material";
 import { useState } from "react";
-import { useAppDispatch } from "@/store/store";
 import { validateInput } from "@/utilities/validators";
 import { Nullable } from "@/utilities/commonTypes";
 import { loginUser } from "@/store/actions/authActions";
+import { useAppDispatch } from "@/hooks/useStoreHooks";
 
 const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
   <TextField {...otherProps} fullWidth variant="outlined" />
