@@ -1,24 +1,35 @@
-import { Middleware, UnknownAction } from "@reduxjs/toolkit";
+import { Middleware } from "@reduxjs/toolkit";
 import { setSnackbarText } from "@/store/slices/uiSlice";
-import { store } from "../store";
+import { RejectedValue, store } from "../store";
 
-interface ActionWithStringPayload extends UnknownAction {
-  payload?: string;
+interface ActionWithRejectedValue {
+  type: string;
+  payload?: RejectedValue;
 }
 
-const isActionWithPayload = (
+const isActionWithRejectedValue = (
   action: unknown
-): action is ActionWithStringPayload =>
-  (action as UnknownAction).type !== undefined &&
-  (typeof action as unknown as ActionWithStringPayload).payload !== "string";
+): action is ActionWithRejectedValue => {
+  return (
+    typeof action === "object" &&
+    action !== null &&
+    "type" in action &&
+    "payload" in action &&
+    typeof (action as ActionWithRejectedValue).payload === "object" &&
+    (action as ActionWithRejectedValue).payload !== null &&
+    "errorDescription" in (action as ActionWithRejectedValue).payload!
+  );
+};
 
 const errorHandlingMiddleware: Middleware =
   (_store) => (next) => (action: unknown) => {
-    const isCorrectAction = isActionWithPayload(action);
+    const isCorrectAction = isActionWithRejectedValue(action);
 
     if (isCorrectAction && action.type.endsWith("/rejected")) {
       store.dispatch(
-        setSnackbarText(action.payload ?? "Error on request to server")
+        setSnackbarText(
+          action.payload?.errorDescription ?? "Error on request to server"
+        )
       );
     }
 

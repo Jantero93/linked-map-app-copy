@@ -1,8 +1,9 @@
-import { useAppDispatch, useAppSelector } from "@/store/store";
 import Snackbar from "@mui/material/Snackbar";
-import { clearSnackbar, getSnackbarState } from "@/store/slices/uiSlice";
 import { Slide } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { clearSnackbar, getSnackbarState } from "@/store/slices/uiSlice";
 
+// Info: Extract on own component if more use cases than Snackbar
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SlideTransition = (props: any) => <Slide {...props} direction="up" />;
 

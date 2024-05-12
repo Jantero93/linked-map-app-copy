@@ -10,6 +10,7 @@ using MapServer.OpenIddict;
 using OpenIddict.Validation.AspNetCore;
 using MapServer.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using MapServer.ApiModels.Responses;
 
 namespace MapServer.Controllers;
 
@@ -31,10 +32,9 @@ public class AuthenticationController(
         {
             logger.LogCritical("OpenIddictServerRequest null");
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new OpenIddictResponse
+            return StatusCode(StatusCodes.Status500InternalServerError, new RequestFailedResponse
             {
-                Error = OpenIddictConstants.Errors.InvalidRequest,
-                ErrorDescription = "OpenIddict request cannot be retrieved"
+                Message = "OpenIddict request cannot be retrieved"
             });
         }
 
@@ -44,10 +44,9 @@ public class AuthenticationController(
         if (string.IsNullOrEmpty(reqUsername) || string.IsNullOrEmpty(reqPassword))
         {
             logger.LogError("Username or password was empty or null");
-            return BadRequest(new OpenIddictResponse
+            return BadRequest(new RequestFailedResponse
             {
-                Error = OpenIddictConstants.Errors.InvalidGrant,
-                ErrorDescription = "The username or password was null or empty"
+                Message = "The username or password was null or empty"
             });
         }
 
@@ -55,10 +54,9 @@ public class AuthenticationController(
         if (user?.UserName is null || !await userManager.CheckPasswordAsync(user, reqPassword))
         {
             logger.LogWarning("Wrong credentials on login, username: {Username}", reqUsername);
-            return BadRequest(new OpenIddictResponse
+            return BadRequest(new RequestFailedResponse
             {
-                Error = OpenIddictConstants.Errors.InvalidGrant,
-                ErrorDescription = "The username or password is incorrect."
+                Message = "The username or password is incorrect."
             });
         }
 
@@ -83,7 +81,7 @@ public class AuthenticationController(
         if (userExists is not null)
         {
             logger.LogError("Tried register with existing username: {Username}", req.Username);
-            return BadRequest(new { Message = "Username exists already" });
+            return BadRequest(new RequestFailedResponse { Message = "Username exists already" });
         }
 
         var user = new ApplicationUser { UserName = req.Username };
@@ -96,7 +94,7 @@ public class AuthenticationController(
         }
 
         logger.LogError("Registration failed for user: {UserName}", req.Username);
-        return BadRequest(new { Message = "Registration failed" });
+        return BadRequest(new RequestFailedResponse { Message = "Registration failed" });
     }
 
     [HttpPost("logout")]

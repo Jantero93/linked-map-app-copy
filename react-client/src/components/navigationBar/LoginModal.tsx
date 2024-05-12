@@ -1,32 +1,112 @@
+import { styled } from "@mui/material/styles";
 import {
   Button,
+  ButtonProps,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
+  TextField,
+  TextFieldProps,
 } from "@mui/material";
+import { useState } from "react";
+import { useAppDispatch } from "@/store/store";
+import { validateInput } from "@/utilities/validators";
+import { Nullable } from "@/utilities/commonTypes";
+import { loginUser } from "@/store/actions/authActions";
+
+const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
+  <TextField {...otherProps} fullWidth variant="outlined" />
+))(({ theme }) => ({
+  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(2),
+}));
+
+const FormButton = styled(({ ...otherProps }: ButtonProps) => (
+  <Button {...otherProps} variant="contained" fullWidth />
+))(({ theme: _theme }) => ({}));
+
+const PaddedForm = styled("form")(({ theme }) => ({
+  padding: theme.spacing(1),
+}));
 
 interface Props {
   isOpen: boolean;
   handleModalOpen: (open: boolean) => void;
 }
 
+type FormErrors = Nullable<typeof initializedValidationErrors>;
+
+const initializedValidationErrors = {
+  username: "",
+  password: "",
+};
+
 const LoginModal = ({ isOpen, handleModalOpen }: Props) => {
-  const closeDialog = () => handleModalOpen(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<FormErrors>(initializedValidationErrors);
+
+  const dispatch = useAppDispatch();
+
+  const isFormValid = () => {
+    const newErrors = {
+      password: validateInput(password.length > 0, "Password required"),
+      username: validateInput(username.length > 0, "Username required"),
+    };
+
+    setErrors({ ...newErrors });
+
+    return Object.values(newErrors).every((e) => e === null);
+  };
+
+  const resetInputs = () => {
+    setUsername("");
+    setPassword("");
+    setErrors({ ...initializedValidationErrors });
+  };
+
+  const closeDialog = () => {
+    resetInputs();
+    handleModalOpen(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!isFormValid()) return;
+
+    dispatch(loginUser({ username, password }));
+  };
 
   return (
     <Dialog open={isOpen} onClose={closeDialog}>
-      <DialogTitle>Login</DialogTitle>
-      <DialogContent>
-        <DialogContentText>Login form goes here.</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={closeDialog}>Cancel</Button>
-        <Button onClick={() => console.log("login button clicked")}>
-          Login
-        </Button>
-      </DialogActions>
+      <PaddedForm onSubmit={handleSubmit}>
+        <DialogTitle>Login</DialogTitle>
+        <DialogContent>
+          <StyledTextField
+            label="Username"
+            value={username}
+            error={!!errors.username}
+            helperText={errors.username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <StyledTextField
+            label="Password"
+            type="password"
+            value={password}
+            error={!!errors.password}
+            helperText={errors.password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <FormButton type="submit">Log in</FormButton>
+          <FormButton color="error" onClick={closeDialog}>
+            Cancel
+          </FormButton>
+        </DialogActions>
+      </PaddedForm>
     </Dialog>
   );
 };

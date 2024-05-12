@@ -12,9 +12,12 @@ import {
 import { styled } from "@mui/material/styles";
 import { useAppDispatch } from "@/store/store";
 import { registerUser } from "@/store/actions/authActions";
+import { validateInput } from "@/utilities/validators";
+
+import { Nullable } from "@/utilities/commonTypes";
 
 const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
-  <TextField {...otherProps} fullWidth variant="outlined" />
+  <TextField {...otherProps} fullWidth variant="outlined" required />
 ))(({ theme }) => ({
   marginBottom: theme.spacing(1),
   marginTop: theme.spacing(2),
@@ -33,40 +36,41 @@ interface Props {
   handleModalOpen: (open: boolean) => void;
 }
 
+const initializedValidationErrors = {
+  username: "",
+  password: "",
+  confirmPassword: "",
+};
+
+type FormErrors = Nullable<typeof initializedValidationErrors>;
+
 const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [errors, setErrors] = useState<FormErrors>(initializedValidationErrors);
 
   const dispatch = useAppDispatch();
 
   const isFormValid = () => {
-    const validateField = (condition: boolean, message: string) =>
-      condition ? "" : message;
-
-    const newErrors = {
-      username: validateField(
+    const newErrors: FormErrors = {
+      username: validateInput(
         username.length >= 3,
         "Username must be at least 3 characters."
       ),
-      password: validateField(
+      password: validateInput(
         password.length >= 6,
         "Password must be at least 6 characters."
       ),
-      confirmPassword: validateField(
-        password === confirmPassword,
+      confirmPassword: validateInput(
+        password === confirmPassword && confirmPassword.length >= 6,
         "Passwords do not match."
       ),
     };
 
     setErrors({ ...newErrors });
 
-    return Object.values(newErrors).every((e) => e === "");
+    return Object.values(newErrors).every((e) => e === null);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -77,7 +81,17 @@ const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
     dispatch(registerUser({ username, password }));
   };
 
-  const closeDialog = () => handleModalOpen(false);
+  const resetInputs = () => {
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
+    setErrors({ ...initializedValidationErrors });
+  };
+
+  const closeDialog = () => {
+    resetInputs();
+    handleModalOpen(false);
+  };
 
   return (
     <Dialog open={isOpen} onClose={closeDialog}>

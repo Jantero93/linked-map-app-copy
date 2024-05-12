@@ -25,7 +25,7 @@ const createGlobalHeaders = (): Record<string, string> => {
   return headers;
 };
 
-type ErrorApiResponse = { message: string };
+export type ErrorApiResponse = { message: string };
 
 const apiCall = async <T>(
   url: string,
@@ -54,7 +54,7 @@ const apiCall = async <T>(
     }
     return response.json() as Promise<T>;
   } catch (e) {
-    console.error("Error in api call", e);
+    console.error("Exception in genericFetch method", e);
     throw e;
   }
 };

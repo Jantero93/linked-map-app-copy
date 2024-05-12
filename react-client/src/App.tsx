@@ -5,11 +5,12 @@ import { useAppSelector } from "@/store/store";
 import styled from "@emotion/styled";
 import { createModeTheme } from "@/theme/theme";
 import { getSelectedTheme } from "@/store/slices/uiSlice";
+import CommonSnackBar from "@/components/CommonSnackBar";
 import NavigationBar from "@/components/navigationBar/NavigationBar";
 import MapPage from "@/views/MapPage";
 import LandingPage from "@/views/LandingPage";
+
 import "typeface-roboto";
-import CommonSnackBar from "./components/CommonSnackBar";
 
 // Styled components for layout with Flexbox
 const MainContainer = styled(Box)({

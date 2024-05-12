@@ -3,6 +3,7 @@ import {
   OPENIDDICT_GRANT_TYPE,
   API_LOGIN_URL,
 } from "@/utilities/env";
+import { ErrorApiResponse } from "@/utilities/fetch/genericFetch";
 
 export type LoginResponse = {
   access_token: string;
@@ -33,17 +34,15 @@ export const loginApi = async (
     });
 
     if (!response.ok) {
-      console.error(`Http error in sign in: ${await response.text()}`);
-      throw new Error(`HTTP error! status: ${response.statusText}`);
+      const errResMsg = (await response.json()) as unknown as ErrorApiResponse;
+      console.error("API call failed, reason:", errResMsg.message);
+      throw new Error(errResMsg.message);
     }
 
     const data = (await response.json()) as LoginResponse;
     return data;
-  } catch (error) {
-    console.error(
-      "There was an error with the login request",
-      JSON.stringify(error)
-    );
-    throw error;
+  } catch (e) {
+    console.error("Exception in login fetch", e);
+    throw e;
   }
 };

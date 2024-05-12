@@ -29,7 +29,6 @@
 
 
   <ItemGroup>
-    <Folder Include="ApiModels\Responses\" />
     <Folder Include="Store\Interfaces\" />
   </ItemGroup>
 
