@@ -1,3 +1,6 @@
+import { ThemeType } from "@/theme/theme";
+// Common types related to local storage
+
 type Primitive = null | undefined | boolean | number | bigint | string | symbol;
 
 /**
@@ -13,6 +16,8 @@ export interface TokenLocalStorage {
    */
   expiresIn: string;
 }
+
+export type LocalStorageTheme = { theme: ThemeType };
 
 /**
  * Enum for local storage keys to prevent accidental overriding and ensure consistency.
@@ -31,6 +36,7 @@ export function getFromLocalStorage<T>(
   key: keyof typeof LocalStorageKeys
 ): T | null {
   const item = localStorage.getItem(key);
+
   try {
     return item ? (JSON.parse(item) as T) : null;
   } catch {

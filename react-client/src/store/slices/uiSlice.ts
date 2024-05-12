@@ -1,6 +1,11 @@
 import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
 import { ThemeType } from "@/theme/theme";
+import {
+  LocalStorageTheme,
+  getFromLocalStorage,
+  setToLocalStorage,
+} from "@/utilities/localStorageHelpers";
 
 interface UiState {
   selectedTheme: ThemeType;
@@ -11,7 +16,8 @@ interface UiState {
 }
 
 const initialState: UiState = {
-  selectedTheme: "dark",
+  //FIXME: Should here be dark fallback or in the hook
+  selectedTheme: getThemeFromLocalStorage() ?? "dark",
   isLoading: false,
   error: null,
   openSnackbar: false,
@@ -27,6 +33,8 @@ export const exampleSlice = createSlice({
     },
     setTheme: (state, action: PayloadAction<ThemeType>) => {
       state.selectedTheme = action.payload;
+      // Save to local storage
+      saveThemeLocalStorage(action.payload);
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
@@ -56,9 +64,9 @@ export const {
 
 export const getSelectedTheme = (s: RootState) => s.ui.selectedTheme;
 
+// Create object typesSelector for snackbar
 const snackbarOpen = (s: RootState) => s.ui.openSnackbar;
 const snackbarMessage = (s: RootState) => s.ui.snackbarText;
-
 export const getSnackbarState = createSelector(
   [snackbarOpen, snackbarMessage],
   (snackbarOpen, snackbarMessage) => ({
@@ -66,5 +74,22 @@ export const getSnackbarState = createSelector(
     snackbarMessage,
   })
 );
+
+// Helpers
+function getThemeFromLocalStorage(): ThemeType | null {
+  const storageTheme = getFromLocalStorage<LocalStorageTheme>("Theme");
+
+  if (storageTheme?.theme === null) return null;
+
+  return storageTheme?.theme as ThemeType;
+}
+
+function saveThemeLocalStorage(theme: ThemeType): void {
+  const themeObject: LocalStorageTheme = {
+    theme,
+  };
+
+  setToLocalStorage("Theme", themeObject);
+}
 
 export default exampleSlice.reducer;

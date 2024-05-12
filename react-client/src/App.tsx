@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RoutePath from "@/routing/routes";
 import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import styled from "@emotion/styled";
 import { createModeTheme } from "@/theme/theme";
 import { getSelectedTheme } from "@/store/slices/uiSlice";
@@ -11,6 +11,7 @@ import MapPage from "@/views/MapPage";
 import LandingPage from "@/views/LandingPage";
 
 import "typeface-roboto";
+import { useThemeManagement } from "./hooks/useThemeManagement";
 
 // Styled components for layout with Flexbox
 const MainContainer = styled(Box)({
@@ -29,11 +30,7 @@ const Footer = styled("footer")({
 });
 
 const App = () => {
-  //TODO: Implement save to local storage, if none there use os preferences
-  // @ts-expect-error This will be used later
-  const _prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
-  const currentTheme = useAppSelector(getSelectedTheme);
+  const currentTheme = useThemeManagement();
 
   return (
     <ThemeProvider theme={createModeTheme(currentTheme)}>
