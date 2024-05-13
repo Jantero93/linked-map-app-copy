@@ -1,6 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+// Reducers
 import exampleReducer from "@/store/slices/exampleSlice";
 import uiReducer from "@/store/slices/uiSlice";
+import authReducer from "@/store/slices/authSlice";
+
+// Middleware
 import showSnackbarRejectedActionMiddleware from "@/store/middleware/showSnackBarRejectedActionMiddleware";
 
 /**
@@ -17,6 +21,7 @@ export const store = configureStore({
   reducer: {
     example: exampleReducer,
     ui: uiReducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(showSnackbarRejectedActionMiddleware),

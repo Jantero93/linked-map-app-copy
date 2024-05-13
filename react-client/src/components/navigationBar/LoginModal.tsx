@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Button,
@@ -9,11 +10,10 @@ import {
   TextField,
   TextFieldProps,
 } from "@mui/material";
-import { useState } from "react";
 import { validateInput } from "@/utilities/validators";
 import { Nullable } from "@/utilities/commonTypes";
 import { loginUser } from "@/store/actions/authActions";
-import { useAppDispatch } from "@/hooks/useStoreHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 
 const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
   <TextField {...otherProps} fullWidth variant="outlined" />
@@ -47,7 +47,23 @@ const LoginModal = ({ isOpen, handleModalOpen }: Props) => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>(initializedValidationErrors);
 
+  const { loggedIn } = useAppSelector((s) => s.auth);
   const dispatch = useAppDispatch();
+
+  const resetInputs = useCallback(() => {
+    setUsername("");
+    setPassword("");
+    setErrors({ ...initializedValidationErrors });
+  }, []);
+
+  const closeDialog = useCallback(() => {
+    resetInputs();
+    handleModalOpen(false);
+  }, [handleModalOpen, resetInputs]);
+
+  useEffect(() => {
+    if (loggedIn) closeDialog();
+  }, [loggedIn, closeDialog]);
 
   const isFormValid = () => {
     const newErrors = {
@@ -58,17 +74,6 @@ const LoginModal = ({ isOpen, handleModalOpen }: Props) => {
     setErrors({ ...newErrors });
 
     return Object.values(newErrors).every((e) => e === null);
-  };
-
-  const resetInputs = () => {
-    setUsername("");
-    setPassword("");
-    setErrors({ ...initializedValidationErrors });
-  };
-
-  const closeDialog = () => {
-    resetInputs();
-    handleModalOpen(false);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

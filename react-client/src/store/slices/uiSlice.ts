@@ -6,6 +6,7 @@ import {
   getFromLocalStorage,
   setToLocalStorage,
 } from "@/utilities/localStorageHelpers";
+import { FALLBACK_THEME } from "@/utilities/env";
 
 interface UiState {
   selectedTheme: ThemeType;
@@ -16,7 +17,7 @@ interface UiState {
 }
 
 const initialState: UiState = {
-  selectedTheme: getThemeFromLocalStorage() ?? "dark",
+  selectedTheme: getThemeFromLocalStorage() ?? FALLBACK_THEME,
   isLoading: false,
   error: null,
   openSnackbar: false,

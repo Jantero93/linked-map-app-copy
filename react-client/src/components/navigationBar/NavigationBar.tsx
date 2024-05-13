@@ -24,6 +24,8 @@ import { useSelector } from "react-redux";
 import LoginModal from "@/components/navigationBar/LoginModal";
 import RegisterModal from "@/components/navigationBar/RegisterModal";
 import { useAppDispatch } from "@/hooks/useStoreHooks";
+import { isUserLoggedIn } from "@/store/slices/authSlice";
+import { logoutUser } from "@/store/actions/authActions";
 
 // Combine LinkProps from MUI and RouterLink
 type StyledLinkProps = MuiLinkProps &
@@ -49,13 +51,7 @@ const ModalButton = styled(({ ...otherProps }: ButtonProps) => (
   margin: "0px 10px 0px 10px",
 }));
 
-const LinkContainer = styled(Box)(() => ({
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-}));
-
-const ControllerContainer = styled(Box)(() => ({
+const NavigationSection = styled(Box)(() => ({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
@@ -67,20 +63,34 @@ const NavigationBar = () => {
 
   const dispatch = useAppDispatch();
   const currentTheme = useSelector(getSelectedTheme);
+  const isUserLogged = useSelector(isUserLoggedIn);
 
   const handleLoginModal = (open: boolean) => setOpenLogin(open);
   const handleRegisterModal = (open: boolean) => setOpenRegister(open);
+  const handleLogout = () => dispatch(logoutUser());
 
   const handleThemeChange = () => {
     const newTheme: ThemeType = currentTheme === "dark" ? "light" : "dark";
     dispatch(setTheme(newTheme));
   };
 
+  const renderActionButtonBasedIsUserLogged = (): JSX.Element =>
+    isUserLogged ? (
+      <ModalButton onClick={handleLogout}>Logout</ModalButton>
+    ) : (
+      <>
+        <ModalButton onClick={() => handleLoginModal(true)}>Login</ModalButton>
+        <ModalButton onClick={() => handleRegisterModal(true)}>
+          Register
+        </ModalButton>
+      </>
+    );
+
   return (
     <Container fixed>
       <ThemedAppBar color="default">
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <LinkContainer>
+          <NavigationSection>
             <Typography variant="h6" component="h1">
               LinkedIn Copy
             </Typography>
@@ -98,20 +108,15 @@ const NavigationBar = () => {
             >
               MapView
             </StyledLink>
-          </LinkContainer>
-          <ControllerContainer>
-            <ModalButton onClick={() => handleLoginModal(true)}>
-              Login
-            </ModalButton>
-            <ModalButton onClick={() => handleRegisterModal(true)}>
-              Register
-            </ModalButton>
+          </NavigationSection>
+          <NavigationSection>
+            {renderActionButtonBasedIsUserLogged()}
             <Switch
               checked={currentTheme === "dark"}
               onChange={handleThemeChange}
             />
             <DarkModeOutlinedIcon color="action" />
-          </ControllerContainer>
+          </NavigationSection>
         </Toolbar>
       </ThemedAppBar>
 

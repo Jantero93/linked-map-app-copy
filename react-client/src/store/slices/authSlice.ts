@@ -1,11 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, registerUser } from "@/store/actions/authActions";
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "@/store/actions/authActions";
 import {
   LocalStorageKeys,
   TokenLocalStorage,
+  removeFromLocalStorage,
   setToLocalStorage,
 } from "@/utilities/localStorageHelpers";
 import { utcTimeWitAddedSeconds } from "@/utilities/dateHelpers";
+import { RootState } from "../store";
 
 type AuthState = {
   loading: boolean;
@@ -68,8 +74,34 @@ const authSlice = createSlice({
       state.loading = false;
       state.loggedIn = true;
     });
+    // Logout
+    builder.addCase(logoutUser.pending, (state) => {
+      state.error = null;
+      state.loading = true;
+      state.loggedIn = false;
+      state.error = null;
+    });
+    builder.addCase(logoutUser.rejected, (state, action) => {
+      state.error = action.error.message ?? "Error on logging out";
+      state.accessToken = null;
+      state.accessTokenExpiresDate = null;
+      state.loading = false;
+      state.accessTokenExpiresDate = null;
+      clearAuthInfoLocalStorage();
+    });
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      state.accessToken = null;
+      state.accessTokenExpiresDate = null;
+      state.error = null;
+      state.loading = false;
+      state.loggedIn = false;
+
+      clearAuthInfoLocalStorage();
+    });
   },
 });
+
+export const isUserLoggedIn = (s: RootState) => s.auth.loggedIn;
 
 // Helper
 const setAuthInfoToLocalStorage = (
@@ -87,5 +119,9 @@ const setAuthInfoToLocalStorage = (
 
   return localStorageAuth;
 };
+
+function clearAuthInfoLocalStorage(): void {
+  removeFromLocalStorage("Token");
+}
 
 export default authSlice.reducer;
