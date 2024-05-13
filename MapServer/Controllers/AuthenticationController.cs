@@ -109,6 +109,7 @@ public class AuthenticationController(
             // Fetch all tokens for the user
             var tokens = await tokenManager.FindBySubjectAsync(userId).ToListAsync();
 
+
             // Sequentially revoke each token
             foreach (var token in tokens)
             {

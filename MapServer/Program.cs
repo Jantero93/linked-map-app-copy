@@ -61,7 +61,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+using var scope = app.Services.CreateScope();
+
+var tokenRevocationService = scope.ServiceProvider.GetRequiredService<TokenRevocationService>();
+await tokenRevocationService.StartAsync(CancellationToken.None);
+
 app.Run();
+
+
 
 static void ConfigureAppSettings(ConfigurationManager configuration)
 {
@@ -139,6 +146,7 @@ static void InjectDependencies(IServiceCollection services)
     services.AddScoped<IDbConnection>(provider => new SqlConnection(provider.GetRequiredService<IConfiguration>().GetConnectionString("MapApplication")));
     services.AddAutoMapper(typeof(Program));
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    services.AddScoped<TokenRevocationService>();
 
     // Store
     services.AddScoped<TestRepository>();
