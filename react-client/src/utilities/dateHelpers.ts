@@ -3,7 +3,7 @@ import moment from "moment";
 /**
  * Creates ISO string of current utc time added with seconds from function parameter
  * @param seconds Seconds to be added to current utc time
- * @returns ISO string
+ * @returns ISO string with added seconds
  */
 export const utcTimeWitAddedSeconds = (seconds: number): string =>
   moment().utc().add(seconds, "seconds").toISOString();

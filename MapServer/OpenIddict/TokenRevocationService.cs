@@ -10,6 +10,7 @@ public class TokenRevocationService(ILogger<TokenRevocationService> logger, Appl
         while (!stoppingToken.IsCancellationRequested)
         {
             logger.LogInformation("Attempting to delete revoked tokens from database");
+
             await RevokeExpiredTokens(stoppingToken);
             await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
         }
@@ -20,13 +21,16 @@ public class TokenRevocationService(ILogger<TokenRevocationService> logger, Appl
         try
         {
             var revokedTokens = await context.OpenIddictTokens
+             .AsNoTracking()
              .Where(x => x.Status == OpenIddictConstants.Statuses.Revoked)
              .ToListAsync(cancellationToken);
 
             logger.LogDebug("Deleting count of {Count} of revoked tokens", revokedTokens.Count);
 
             context.RemoveRange(revokedTokens);
+
             await context.SaveChangesAsync(cancellationToken);
+
             logger.LogInformation("Successfully removed tokens with 'Revoked' status");
         }
         catch

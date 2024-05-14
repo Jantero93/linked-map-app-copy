@@ -1,134 +1,140 @@
-import React, { useState } from "react";
+import { Form as FinalForm, Field as FinalField } from "react-final-form";
 import {
   Button,
-  ButtonProps,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
-  TextFieldProps,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { registerUser } from "@/store/actions/authActions";
-import { validateInput } from "@/utilities/validators";
-
-import { Nullable } from "@/utilities/commonTypes";
 import { useAppDispatch } from "@/hooks/useStoreHooks";
 
-const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
-  <TextField {...otherProps} fullWidth variant="outlined" required />
-))(({ theme }) => ({
+const StyledTextField = styled(TextField)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   marginTop: theme.spacing(2),
+  width: "100%",
 }));
 
-const FormButton = styled(({ ...otherProps }: ButtonProps) => (
-  <Button {...otherProps} variant="contained" fullWidth />
-))(({ theme: _theme }) => ({}));
+const FormButton = styled(Button)(({ theme: _theme }) => ({
+  width: "100%",
+  variant: "contained",
+}));
 
 const PaddedForm = styled("form")(({ theme }) => ({
   padding: theme.spacing(1),
 }));
+
+// Define the field and form values
+interface FieldConfig {
+  label: string;
+  type: string;
+  validate: (
+    value: string,
+    allValues: Partial<FormValues>
+  ) => string | undefined;
+}
+
+// Configuration for the fields
+const fieldsConfiguration: Record<string, FieldConfig> = {
+  username: {
+    label: "Username",
+    type: "text",
+    validate: (value) =>
+      value.length >= 3 ? undefined : "Username must be at least 3 characters",
+  },
+  password: {
+    label: "Password",
+    type: "password",
+    validate: (value) =>
+      value.length >= 6 ? undefined : "Password must be at least 6 characters",
+  },
+  confirmPassword: {
+    label: "Confirm Password",
+    type: "password",
+    validate: (value, allValues) =>
+      value === allValues.password ? undefined : "Passwords must match",
+  },
+};
+
+// Infer the FormValues type from the fields configuration
+type FormValues = Record<keyof typeof fieldsConfiguration, string>;
+
+// Type for the form errors
+type FormErrors = Partial<Record<keyof FormValues, string>>;
 
 interface Props {
   isOpen: boolean;
   handleModalOpen: (open: boolean) => void;
 }
 
-const initializedValidationErrors = {
-  username: "",
-  password: "",
-  confirmPassword: "",
-};
-
-type FormErrors = Nullable<typeof initializedValidationErrors>;
-
 const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState<FormErrors>(initializedValidationErrors);
-
   const dispatch = useAppDispatch();
 
-  const isFormValid = () => {
-    const newErrors: FormErrors = {
-      username: validateInput(
-        username.length >= 3,
-        "Username must be at least 3 characters."
-      ),
-      password: validateInput(
-        password.length >= 6,
-        "Password must be at least 6 characters."
-      ),
-      confirmPassword: validateInput(
-        password === confirmPassword && confirmPassword.length >= 6,
-        "Passwords do not match."
-      ),
-    };
+  const validate = (values: Partial<FormValues>) => {
+    const errors: Partial<FormValues> = {};
 
-    setErrors({ ...newErrors });
+    for (const fieldName in fieldsConfiguration) {
+      const field = fieldsConfiguration[fieldName];
+      const value = values[fieldName] || "";
+      const error = field.validate(value, values);
+      if (error) {
+        errors[fieldName] = error;
+      }
+    }
 
-    return Object.values(newErrors).every((e) => e === null);
+    return errors;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const closeDialog = () => handleModalOpen(false);
 
-    if (!isFormValid()) return;
-
-    dispatch(registerUser({ username, password }));
-  };
-
-  const resetInputs = () => {
-    setUsername("");
-    setPassword("");
-    setConfirmPassword("");
-    setErrors({ ...initializedValidationErrors });
-  };
-
-  const closeDialog = () => {
-    resetInputs();
+  const onSubmit = async ({ username, password }: FormValues) => {
+    await dispatch(registerUser({ username, password }));
     handleModalOpen(false);
   };
 
   return (
     <Dialog open={isOpen} onClose={closeDialog}>
-      <PaddedForm onSubmit={handleSubmit}>
-        <DialogTitle>Register new user</DialogTitle>
-        <DialogContent>
-          <StyledTextField
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            error={!!errors.username}
-            helperText={errors.username}
-          />
-          <StyledTextField
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={!!errors.password}
-            helperText={errors.password}
-          />
-          <StyledTextField
-            label="Confirm Password"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword}
-          />
-        </DialogContent>
-        <DialogActions>
-          <FormButton type="submit">Register</FormButton>
-          <FormButton color="error" onClick={closeDialog}>
-            Cancel
-          </FormButton>
-        </DialogActions>
-      </PaddedForm>
+      <FinalForm<FormValues>
+        onSubmit={onSubmit}
+        validate={validate}
+        render={({ handleSubmit, submitting, pristine }) => (
+          <PaddedForm onSubmit={handleSubmit}>
+            <DialogTitle>Register new user</DialogTitle>
+            <DialogContent>
+              {Object.keys(fieldsConfiguration).map((fieldName) => (
+                <FinalField
+                  key={fieldName}
+                  name={fieldName}
+                  type={fieldsConfiguration[fieldName].type}
+                >
+                  {({ input, meta }) => (
+                    <StyledTextField
+                      label={fieldsConfiguration[fieldName].label}
+                      inputProps={input}
+                      type={fieldsConfiguration[fieldName].type}
+                      /* error={meta.error && meta.touched} */
+
+                      helperText={
+                        meta.error && meta.touched ? meta.error : null
+                      }
+                    />
+                  )}
+                </FinalField>
+              ))}
+            </DialogContent>
+            <DialogActions>
+              <FormButton type="submit" disabled={submitting || pristine}>
+                Register
+              </FormButton>
+              <FormButton color="error" onClick={closeDialog}>
+                Cancel
+              </FormButton>
+            </DialogActions>
+          </PaddedForm>
+        )}
+      />
     </Dialog>
   );
 };
