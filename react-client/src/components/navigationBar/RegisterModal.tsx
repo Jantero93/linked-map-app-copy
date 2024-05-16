@@ -62,7 +62,6 @@ const fieldsConfiguration: Record<string, FieldConfig> = {
 type FormValues = Record<keyof typeof fieldsConfiguration, string>;
 
 // Type for the form errors
-type FormErrors = Partial<Record<keyof FormValues, string>>;
 
 interface Props {
   isOpen: boolean;
@@ -114,8 +113,7 @@ const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
                       label={fieldsConfiguration[fieldName].label}
                       inputProps={input}
                       type={fieldsConfiguration[fieldName].type}
-                      /* error={meta.error && meta.touched} */
-
+                      error={meta.error && meta.touched}
                       helperText={
                         meta.error && meta.touched ? meta.error : null
                       }

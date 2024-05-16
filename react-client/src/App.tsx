@@ -10,6 +10,7 @@ import LandingPage from "@/views/LandingPage";
 
 import "typeface-roboto";
 import { useThemeManagement } from "@/hooks/useThemeManagement";
+import useCheckAuthToken from "@/hooks/useCheckAuthToken";
 
 // Styled components for layout with Flexbox
 const MainContainer = styled(Box)({
@@ -28,6 +29,7 @@ const Footer = styled("footer")({
 });
 
 const App = () => {
+  useCheckAuthToken();
   const currentTheme = useThemeManagement();
 
   return (

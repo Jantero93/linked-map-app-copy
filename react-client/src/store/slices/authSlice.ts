@@ -1,17 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  forceLogoutUser,
   loginUser,
   logoutUser,
   registerUser,
 } from "@/store/actions/authActions";
-import {
-  LocalStorageKeys,
-  TokenLocalStorage,
-  removeFromLocalStorage,
-  setToLocalStorage,
-} from "@/utilities/localStorageHelpers";
-import { utcTimeWitAddedSeconds } from "@/utilities/dateHelpers";
-import { RootState } from "../store";
+import { RootState } from "@/store/store";
+import LocalStorageService from "@/services/LocalStorageService";
 
 type AuthState = {
   loading: boolean;
@@ -62,11 +57,11 @@ const authSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state, action) => {
       if (!action.payload) return;
 
-      const { access_token, expires_in } = action.payload;
-      const { accessToken, expiresIn } = setAuthInfoToLocalStorage(
-        access_token,
-        expires_in
-      );
+      const { accessToken, expiresIn } =
+        LocalStorageService.setAuthInfoToLocalStorage(
+          action.payload.access_token,
+          action.payload.expires_in
+        );
 
       state.accessTokenExpiresDate = expiresIn;
       state.accessToken = accessToken;
@@ -78,25 +73,28 @@ const authSlice = createSlice({
     builder.addCase(logoutUser.pending, (state) => {
       state.error = null;
       state.loading = true;
-      state.loggedIn = false;
-      state.error = null;
     });
     builder.addCase(logoutUser.rejected, (state, action) => {
-      state.error = action.error.message ?? "Error on logging out";
-      state.accessToken = null;
-      state.accessTokenExpiresDate = null;
-      state.loading = false;
-      state.accessTokenExpiresDate = null;
-      clearAuthInfoLocalStorage();
+      setCommonLogoutState(
+        state,
+        action.error.message ?? "Error on logging out"
+      );
     });
     builder.addCase(logoutUser.fulfilled, (state) => {
-      state.accessToken = null;
-      state.accessTokenExpiresDate = null;
+      setCommonLogoutState(state);
+    });
+    builder.addCase(forceLogoutUser.pending, (state) => {
       state.error = null;
-      state.loading = false;
-      state.loggedIn = false;
-
-      clearAuthInfoLocalStorage();
+      state.loading = true;
+    });
+    builder.addCase(forceLogoutUser.rejected, (state, action) => {
+      setCommonLogoutState(
+        state,
+        action.error.message ?? "Error on logging out"
+      );
+    });
+    builder.addCase(forceLogoutUser.fulfilled, (state) => {
+      setCommonLogoutState(state);
     });
   },
 });
@@ -104,24 +102,14 @@ const authSlice = createSlice({
 export const isUserLoggedIn = (s: RootState) => s.auth.loggedIn;
 
 // Helper
-const setAuthInfoToLocalStorage = (
-  accessToken: string,
-  expiresIn: number
-): TokenLocalStorage => {
-  const expiresInUtcIsoString = utcTimeWitAddedSeconds(expiresIn);
+const setCommonLogoutState = (state: AuthState, error?: string) => {
+  state.accessToken = null;
+  state.accessTokenExpiresDate = null;
+  state.error ? error : null;
+  state.loading = false;
+  state.loggedIn = false;
 
-  const localStorageAuth: TokenLocalStorage = {
-    accessToken,
-    expiresIn: expiresInUtcIsoString,
-  };
-
-  setToLocalStorage(LocalStorageKeys.Token, localStorageAuth);
-
-  return localStorageAuth;
+  LocalStorageService.clearAuthInfoLocalStorage();
 };
-
-function clearAuthInfoLocalStorage(): void {
-  removeFromLocalStorage("Token");
-}
 
 export default authSlice.reducer;

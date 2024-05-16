@@ -1,7 +1,7 @@
 import {
   TokenLocalStorage,
   getFromLocalStorage,
-} from "@/utilities/localStorageHelpers";
+} from "@/services/basicLocalStorageActions";
 
 export const get = <T>(url: string): Promise<T> => apiCall(url, "GET");
 

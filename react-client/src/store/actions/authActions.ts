@@ -2,8 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { post } from "@/utilities/fetch/genericFetch";
 import { API_URL } from "@/utilities/env";
 import { loginApi } from "@/utilities/fetch/loginFetch";
-import { RejectedActionPayload } from "../store";
-import { setSnackbarText } from "../slices/uiSlice";
+import { RejectedActionPayload } from "@/store/store";
+import { setSnackbarText } from "@/store/slices/uiSlice";
 
 export type UserCredentials = {
   username: string;
@@ -46,20 +46,48 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// Logouts
+
+//Helper
+const performLogout = async (successMessage: string) => {
+  try {
+    const response = await post(API_URL + "/authentication/logout");
+    setSnackbarText(successMessage);
+    return response;
+  } catch (e) {
+    const rejectedValue: RejectedActionPayload = {
+      errorDescription:
+        e instanceof Error ? e.message : "Request could not reach server",
+    };
+    throw rejectedValue;
+  }
+};
+
+// Logout actions
 export const logoutUser = createAsyncThunk(
   "user-logout",
   async (_, { rejectWithValue }) => {
     try {
-      return await post(API_URL + "/authentication/logout");
-    } catch (e) {
-      const rejectedValue: RejectedActionPayload = {
-        errorDescription:
-          e instanceof Error ? e.message : "Request could not reach server",
-      };
-
+      return await performLogout(
+        "Logged out successfully and cleared session data"
+      );
+    } catch (rejectedValue) {
       return rejectWithValue(rejectedValue);
-    } finally {
-      setSnackbarText("Logged out successfully and cleared seassion data");
+    }
+  }
+);
+
+export const forceLogoutUser = createAsyncThunk(
+  "user-force-logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await performLogout(
+        "Session expired. Please log in again to continue"
+      );
+    } catch (rejectedValue) {
+      return rejectWithValue(
+        "Session expired. Please log in again to continue"
+      );
     }
   }
 );

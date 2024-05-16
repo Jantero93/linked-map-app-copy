@@ -4,7 +4,7 @@ import { setTheme, getSelectedTheme } from "@/store/slices/uiSlice";
 import {
   LocalStorageTheme,
   getFromLocalStorage,
-} from "@/utilities/localStorageHelpers";
+} from "@/services/basicLocalStorageActions";
 import { ThemeType } from "@/theme/theme";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 

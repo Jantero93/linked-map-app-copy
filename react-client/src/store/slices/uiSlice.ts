@@ -5,7 +5,7 @@ import {
   LocalStorageTheme,
   getFromLocalStorage,
   setToLocalStorage,
-} from "@/utilities/localStorageHelpers";
+} from "@/services/basicLocalStorageActions";
 import { FALLBACK_THEME } from "@/utilities/env";
 
 interface UiState {
