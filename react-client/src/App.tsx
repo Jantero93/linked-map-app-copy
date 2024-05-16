@@ -37,7 +37,7 @@ const App = () => {
       {/* Resets browsers default css e.g. styling for <a> elements */}
       <CssBaseline />
       <Router>
-        <MainContainer>
+        <MainContainer component="nav">
           <NavigationBar />
           <PageContainer component="main">
             <Routes>

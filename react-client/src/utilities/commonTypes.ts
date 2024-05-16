@@ -17,15 +17,3 @@ export type Nullable<T> = {
 export type NullableProperty<T, K extends keyof T> = {
   [P in keyof T]: P extends K ? T[P] | null : T[P];
 };
-
-/**
- * TypeScript's primitive types
- */
-export type Primitive =
-  | null
-  | undefined
-  | boolean
-  | number
-  | bigint
-  | string
-  | symbol;

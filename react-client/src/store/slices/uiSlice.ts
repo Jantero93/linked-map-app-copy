@@ -1,12 +1,8 @@
 import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
 import { ThemeType } from "@/theme/theme";
-import {
-  LocalStorageTheme,
-  getFromLocalStorage,
-  setToLocalStorage,
-} from "@/services/basicLocalStorageActions";
 import { FALLBACK_THEME } from "@/utilities/env";
+import LocalStorageService from "@/services/LocalStorageService";
 
 interface UiState {
   selectedTheme: ThemeType;
@@ -77,16 +73,12 @@ export const getSnackbarState = createSelector(
 
 // Helpers
 function getThemeFromLocalStorage(): ThemeType | null {
-  const storageTheme = getFromLocalStorage<LocalStorageTheme>("Theme");
-  return storageTheme?.theme ?? null;
+  const storageTheme = LocalStorageService.getThemeFromLocalStorage();
+  return storageTheme ?? null;
 }
 
 function saveThemeLocalStorage(theme: ThemeType): void {
-  const themeObject: LocalStorageTheme = {
-    theme,
-  };
-
-  setToLocalStorage("Theme", themeObject);
+  LocalStorageService.setThemeToLocalStorage({ theme });
 }
 
 export default exampleSlice.reducer;

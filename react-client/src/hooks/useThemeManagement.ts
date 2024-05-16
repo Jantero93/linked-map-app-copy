@@ -1,12 +1,9 @@
 import { useEffect } from "react";
 import { useMediaQuery } from "@mui/material";
 import { setTheme, getSelectedTheme } from "@/store/slices/uiSlice";
-import {
-  LocalStorageTheme,
-  getFromLocalStorage,
-} from "@/services/basicLocalStorageActions";
 import { ThemeType } from "@/theme/theme";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
+import LocalStorageService from "@/services/LocalStorageService";
 
 /**
  * General hook to initialize theme from saved preferences or user's os preferences
@@ -19,10 +16,8 @@ export const useThemeManagement = (): ThemeType => {
   const currentTheme = useAppSelector(getSelectedTheme);
 
   useEffect(() => {
-    const storageTheme = getFromLocalStorage<LocalStorageTheme>("Theme");
-
-    const effectiveTheme =
-      storageTheme?.theme ?? (prefersDarkMode ? "dark" : "light");
+    const storageTheme = LocalStorageService.getThemeFromLocalStorage();
+    const effectiveTheme = storageTheme ?? (prefersDarkMode ? "dark" : "light");
 
     dispatch(setTheme(effectiveTheme));
   }, [dispatch, prefersDarkMode]);

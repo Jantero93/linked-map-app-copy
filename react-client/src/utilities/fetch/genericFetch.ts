@@ -1,7 +1,4 @@
-import {
-  TokenLocalStorage,
-  getFromLocalStorage,
-} from "@/services/basicLocalStorageActions";
+import LocalStorageService from "@/services/LocalStorageService";
 
 export const get = <T>(url: string): Promise<T> => apiCall(url, "GET");
 
@@ -16,7 +13,7 @@ export const del = <T>(url: string): Promise<T> => apiCall(url, "DELETE");
 const createGlobalHeaders = (): Record<string, string> => {
   const headers: Record<string, string> = {};
 
-  const token = getFromLocalStorage<TokenLocalStorage>("Token");
+  const token = LocalStorageService.getTokenFromLocalStorage();
 
   if (token?.accessToken) {
     headers.Authorization = `Bearer ${token.accessToken}`;
