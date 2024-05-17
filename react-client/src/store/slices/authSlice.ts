@@ -4,6 +4,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  setUserLoggedIn,
 } from "@/store/actions/authActions";
 import { RootState } from "@/store/store";
 import LocalStorageService from "@/services/LocalStorageService";
@@ -67,6 +68,9 @@ const authSlice = createSlice({
       state.accessToken = accessToken;
       state.error = null;
       state.loading = false;
+      state.loggedIn = true;
+    });
+    builder.addCase(setUserLoggedIn, (state) => {
       state.loggedIn = true;
     });
     // Logout

@@ -1,8 +1,12 @@
 import { useEffect } from "react";
 import { RootState } from "@/store/store";
-import { logoutUser } from "@/store/actions/authActions";
-import { isTimeBeforeCurrentUtc } from "@/utilities/dateHelpers";
+import { logoutUser, setUserLoggedIn } from "@/store/actions/authActions";
+import {
+  isTimeAfterCurrentUtc,
+  isTimeBeforeCurrentUtc,
+} from "@/utilities/dateHelpers";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
+import LocalStorageService from "@/services/LocalStorageService";
 
 /**
  * Checks every two minutes or useEffect trigger is auth token expired.
@@ -20,18 +24,36 @@ const useCheckAuthToken = () => {
 
       const isTokenExpired = isTimeBeforeCurrentUtc(accessTokenExpiresDate);
 
-      if (isTokenExpired) {
+      // Force logout if token expired and user logged in
+      if (isTokenExpired && loggedIn) {
         dispatch(logoutUser());
       }
     };
 
-    if (loggedIn) {
-      checkTokenValidity();
-      const twoMinutes = 120 * 1_000;
-      const interval = setInterval(checkTokenValidity, twoMinutes);
+    checkTokenValidity();
 
-      return () => clearInterval(interval);
-    }
+    const twoMinutes = 120 * 1_000;
+    const interval = setInterval(checkTokenValidity, twoMinutes);
+
+    return () => clearInterval(interval);
+  }, [loggedIn, accessTokenExpiresDate, dispatch]);
+
+  // Check should log in user on app initialization
+  useEffect(() => {
+    const checkShouldLogInUser = () => {
+      const expiresIn =
+        LocalStorageService.getTokenFromLocalStorage()?.expiresIn;
+
+      if (expiresIn === null || expiresIn === undefined) return;
+
+      const isTokenValid = isTimeAfterCurrentUtc(expiresIn);
+
+      if (isTokenValid && !loggedIn) {
+        dispatch(setUserLoggedIn());
+      }
+    };
+
+    checkShouldLogInUser();
   }, [loggedIn, accessTokenExpiresDate, dispatch]);
 };
 

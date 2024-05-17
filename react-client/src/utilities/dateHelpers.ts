@@ -15,3 +15,11 @@ export const utcTimeWitAddedSeconds = (seconds: number): string =>
  */
 export const isTimeBeforeCurrentUtc = (date: string | Date): boolean =>
   moment(date).isBefore(moment().utc());
+
+/**
+ * Checks is given time after current utc time
+ * @param date ISO string or Javascript Date
+ * @returns true if given parameter is after current utc time
+ */
+export const isTimeAfterCurrentUtc = (date: string | Date): boolean =>
+  moment(date).isAfter(moment().utc());

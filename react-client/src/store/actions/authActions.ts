@@ -1,4 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { post } from "@/utilities/fetch/genericFetch";
 import { API_URL } from "@/utilities/env";
 import { loginApi } from "@/utilities/fetch/loginFetch";
@@ -45,6 +45,8 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const setUserLoggedIn = createAction("user-set-logged-in");
 
 // Logouts
 

@@ -13,7 +13,8 @@ interface UiState {
 }
 
 const initialState: UiState = {
-  selectedTheme: getThemeFromLocalStorage() ?? FALLBACK_THEME,
+  selectedTheme:
+    LocalStorageService.getThemeFromLocalStorage() ?? FALLBACK_THEME,
   isLoading: false,
   error: null,
   openSnackbar: false,
@@ -29,8 +30,7 @@ export const exampleSlice = createSlice({
     },
     setTheme: (state, action: PayloadAction<ThemeType>) => {
       state.selectedTheme = action.payload;
-      // Save to local storage
-      saveThemeLocalStorage(action.payload);
+      LocalStorageService.setThemeToLocalStorage({ theme: action.payload });
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
@@ -59,26 +59,5 @@ export const {
 } = exampleSlice.actions;
 
 export const getSelectedTheme = (s: RootState) => s.ui.selectedTheme;
-
-// Create object typesSelector for snackbar
-const snackbarOpen = (s: RootState) => s.ui.openSnackbar;
-const snackbarMessage = (s: RootState) => s.ui.snackbarText;
-export const getSnackbarState = createSelector(
-  [snackbarOpen, snackbarMessage],
-  (snackbarOpen, snackbarMessage) => ({
-    snackbarOpen,
-    snackbarMessage,
-  })
-);
-
-// Helpers
-function getThemeFromLocalStorage(): ThemeType | null {
-  const storageTheme = LocalStorageService.getThemeFromLocalStorage();
-  return storageTheme ?? null;
-}
-
-function saveThemeLocalStorage(theme: ThemeType): void {
-  LocalStorageService.setThemeToLocalStorage({ theme });
-}
 
 export default exampleSlice.reducer;
