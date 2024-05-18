@@ -1,0 +1,2 @@
+# Ignore vue folder from statistics. Tt is not developed at the moment and probably will not be in future
+web-client/* linguist-vendored
