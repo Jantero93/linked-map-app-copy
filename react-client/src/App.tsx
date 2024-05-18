@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import { createModeTheme } from "@/theme/theme";
 import CommonSnackBar from "@/components/CommonSnackBar";
 import AppNavigationBar from "@/components/navigationBar/AppNavigationBar";
+import AppFooterBar from "@/components/AppFooterBar";
 import MapPage from "@/views/MapPage";
 import LandingPage from "@/views/LandingPage";
 
@@ -23,21 +24,15 @@ const PageContainer = styled(Box)({
   flexGrow: 1,
 });
 
-const Footer = styled("footer")({
-  height: "50px",
-  backgroundColor: "gray",
-});
-
 const App = () => {
   useCheckAuthToken();
   const currentTheme = useThemeManagement();
 
   return (
     <ThemeProvider theme={createModeTheme(currentTheme)}>
-      {/* Resets browsers default css e.g. styling for <a> elements */}
       <CssBaseline />
       <Router>
-        <MainContainer component="nav">
+        <MainContainer component="div">
           <AppNavigationBar />
           <PageContainer component="main">
             <Routes>
@@ -45,7 +40,7 @@ const App = () => {
               <Route path={RoutePath.MapPage} element={<MapPage />} />
             </Routes>
           </PageContainer>
-          <Footer />
+          <AppFooterBar />
         </MainContainer>
       </Router>
       <CommonSnackBar />

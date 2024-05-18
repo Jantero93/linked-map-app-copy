@@ -1,9 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Button,
-  ButtonProps,
-  Container,
   Link,
   Toolbar,
   Typography,
@@ -25,11 +23,12 @@ import RegisterModal from "@/components/navigationBar/RegisterModal";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import { logoutUser } from "@/store/actions/authActions";
 
-// Combine LinkProps from MUI and RouterLink
 type StyledLinkProps = MuiLinkProps &
   Omit<RouterLinkProps, "to"> & { to: string };
 
-const StyledLink = styled(Link)<StyledLinkProps>(({ theme }) => ({
+const StyledLink = styled(({ ...props }: StyledLinkProps) => (
+  <Link {...props} component={RouterLink} underline="hover" />
+))(({ theme }) => ({
   marginLeft: theme.spacing(2),
   color: theme.palette.primary.main,
   fontFamily: theme.typography.fontFamily,
@@ -37,13 +36,12 @@ const StyledLink = styled(Link)<StyledLinkProps>(({ theme }) => ({
 }));
 
 const ThemedAppBar = styled(AppBar)(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
   fontFamily: theme.typography.fontFamily,
+  boxShadow: `${theme.shadows[2]}, 0 4px 6px -1px rgba(0, 0, 0, 0.2)`,
+  position: "relative",
 }));
 
-const ModalButton = styled(({ ...otherProps }: ButtonProps) => (
-  <Button {...otherProps} />
-))(({ theme }) => ({
+const ModalButton = styled(Button)(({ theme }) => ({
   color: theme.palette.info.contrastText,
   backgroundColor: theme.palette.info.main,
   margin: "0px 10px 0px 10px",
@@ -55,7 +53,7 @@ const NavigationSection = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-const AppNavigationBar = () => {
+const AppNavigationBar: React.FC = () => {
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
 
@@ -89,38 +87,26 @@ const AppNavigationBar = () => {
   };
 
   return (
-    <Container fixed>
-      <ThemedAppBar color="default">
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <NavigationSection>
-            <Typography variant="h6" component="h1">
-              LinkedIn Copy
-            </Typography>
-            <StyledLink
-              to={RoutePath.LandingPage}
-              component={RouterLink}
-              underline="hover"
-            >
-              Home
-            </StyledLink>
-            <StyledLink
-              to={RoutePath.MapPage}
-              component={RouterLink}
-              underline="hover"
-            >
-              MapView
-            </StyledLink>
-          </NavigationSection>
-          <NavigationSection>
-            {renderActionButtonBasedIsUserLogged()}
-            <Switch
-              checked={selectedTheme === "dark"}
-              onChange={handleThemeChange}
-            />
-            <DarkModeOutlinedIcon color="action" />
-          </NavigationSection>
-        </Toolbar>
-      </ThemedAppBar>
+    <>
+      <Box component="nav">
+        <ThemedAppBar>
+          <Toolbar sx={{ justifyContent: "space-between" }}>
+            <NavigationSection>
+              <Typography variant="h6">LinkedIn Copy</Typography>
+              <StyledLink to={RoutePath.LandingPage}>Home</StyledLink>
+              <StyledLink to={RoutePath.MapPage}>MapView</StyledLink>
+            </NavigationSection>
+            <NavigationSection>
+              {renderActionButtonBasedIsUserLogged()}
+              <Switch
+                checked={selectedTheme === "dark"}
+                onChange={handleThemeChange}
+              />
+              <DarkModeOutlinedIcon color="action" />
+            </NavigationSection>
+          </Toolbar>
+        </ThemedAppBar>
+      </Box>
 
       {/* Modals */}
       <LoginModal isOpen={openLogin} handleModalOpen={handleLoginModal} />
@@ -128,7 +114,7 @@ const AppNavigationBar = () => {
         isOpen={openRegister}
         handleModalOpen={handleRegisterModal}
       />
-    </Container>
+    </>
   );
 };
 
