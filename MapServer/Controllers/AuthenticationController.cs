@@ -11,11 +11,13 @@ using OpenIddict.Validation.AspNetCore;
 using MapServer.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MapServer.ApiModels.Responses;
+using System.Net.Mime;
 
 namespace MapServer.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
+[Produces(MediaTypeNames.Application.Json)]
 public class AuthenticationController(
     UserManager<ApplicationUser> userManager,
     IOpenIddictTokenManager tokenManager,
@@ -65,9 +67,12 @@ public class AuthenticationController(
             new(OpenIddictConstants.Claims.Subject, user.Id.ToString()),
             new(ClaimsIdentity.DefaultNameClaimType, user.UserName)
         };
+
         var identity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        var scopes = new[] { "profile", "email", "openid", "api" };
+
         var principal = new ClaimsPrincipal(identity);
-        principal.SetScopes(new[] { "profile", "email", "openid", "api" });
+        principal.SetScopes(scopes);
 
         return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }

@@ -11,6 +11,19 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh", "@typescript-eslint"],
   rules: {
+    "no-restricted-imports": [
+      "error",
+      {
+        paths: [
+          {
+            name: "react-redux",
+            importNames: ["useDispatch", "useSelector"],
+            message:
+              "Use 'useAppDispatch/useAppSelector' from 'hooks' instead.",
+          },
+        ],
+      },
+    ],
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },

@@ -1,5 +1,10 @@
 import LocalStorageService from "@/services/LocalStorageService";
 
+const Headers = {
+  Authorization: "Authorization",
+  "Content-Type": "Content-Type",
+} as const;
+
 export const get = <T>(url: string): Promise<T> => apiCall(url, "GET");
 
 export const post = <T>(url: string, payload?: unknown): Promise<T> =>
@@ -10,13 +15,13 @@ export const put = <T>(url: string, payload: unknown): Promise<T> =>
 
 export const del = <T>(url: string): Promise<T> => apiCall(url, "DELETE");
 
-const createGlobalHeaders = (): Record<string, string> => {
-  const headers: Record<string, string> = {};
+const createGlobalHeaders = () => {
+  const headers: HeadersInit = {};
 
   const token = LocalStorageService.getTokenFromLocalStorage();
 
   if (token?.accessToken) {
-    headers.Authorization = `Bearer ${token.accessToken}`;
+    headers[Headers.Authorization] = `Bearer ${token.accessToken}`;
   }
 
   return headers;
@@ -29,12 +34,16 @@ const apiCall = async <T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   data?: unknown
 ): Promise<T> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5_000);
+
   const config: RequestInit = {
     method,
     headers: {
-      "Content-Type": "application/json",
+      [Headers["Content-Type"]]: "application/json",
       ...createGlobalHeaders(),
     },
+    signal: controller.signal,
   };
 
   if (["POST", "PUT"].includes(method) && data !== undefined) {
@@ -43,6 +52,7 @@ const apiCall = async <T>(
 
   try {
     const response = await fetch(url, config);
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errResMsg = (await response.json()) as unknown as ErrorApiResponse;
@@ -50,8 +60,17 @@ const apiCall = async <T>(
       throw new Error(errResMsg.message);
     }
     return response.json() as Promise<T>;
-  } catch (e) {
-    console.warn("Exception in genericFetch method", e);
+  } catch (e: unknown) {
+    if (!(e instanceof Error)) {
+      console.warn("API call failed, reason:", e);
+    }
+
+    if ((e as Error).name === "AbortError") {
+      console.warn("API call aborted due to timeout");
+    }
+
+    console.warn("Exception in apiCall method", (e as Error).message);
+
     throw e;
   }
 };

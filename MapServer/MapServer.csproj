@@ -27,6 +27,11 @@
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Migrations\**\*.cs">
+      <NoWarn>ALL</NoWarn>
+    </Compile>
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Store\Interfaces\" />

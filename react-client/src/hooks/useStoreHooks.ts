@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import { AppDispatch, RootState } from "@/store/store";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 

@@ -18,7 +18,7 @@ const CommonSnackBar = () => {
   return (
     <Snackbar
       open={openSnackbar}
-      autoHideDuration={4000}
+      autoHideDuration={4_000}
       onClose={handleClose}
       message={snackbarText}
       anchorOrigin={{ horizontal: "center", vertical: "bottom" }}

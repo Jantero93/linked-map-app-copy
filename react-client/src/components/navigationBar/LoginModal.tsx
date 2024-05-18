@@ -47,7 +47,7 @@ const LoginModal = ({ isOpen, handleModalOpen }: Props) => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>(initializedValidationErrors);
 
-  const { loggedIn } = useAppSelector((s) => s.auth);
+  const { isLoggedIn: loggedIn } = useAppSelector((s) => s.auth);
   const dispatch = useAppDispatch();
 
   const resetInputs = useCallback(() => {

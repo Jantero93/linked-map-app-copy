@@ -14,7 +14,7 @@ import LocalStorageService from "@/services/LocalStorageService";
  */
 const useCheckAuthToken = () => {
   const dispatch = useAppDispatch();
-  const { loggedIn, accessTokenExpiresDate } = useAppSelector(
+  const { isLoggedIn: loggedIn, accessTokenExpiresDate } = useAppSelector(
     (state: RootState) => state.auth
   );
 

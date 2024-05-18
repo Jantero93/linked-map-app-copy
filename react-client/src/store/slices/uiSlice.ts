@@ -1,5 +1,4 @@
-import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "@/store/store";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ThemeType } from "@/theme/theme";
 import { FALLBACK_THEME } from "@/utilities/env";
 import LocalStorageService from "@/services/LocalStorageService";
@@ -57,7 +56,5 @@ export const {
   setSnackbarText,
   clearSnackbar,
 } = exampleSlice.actions;
-
-export const getSelectedTheme = (s: RootState) => s.ui.selectedTheme;
 
 export default exampleSlice.reducer;

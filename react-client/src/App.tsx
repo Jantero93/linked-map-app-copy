@@ -4,7 +4,7 @@ import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import styled from "@emotion/styled";
 import { createModeTheme } from "@/theme/theme";
 import CommonSnackBar from "@/components/CommonSnackBar";
-import NavigationBar from "@/components/navigationBar/NavigationBar";
+import AppNavigationBar from "@/components/navigationBar/AppNavigationBar";
 import MapPage from "@/views/MapPage";
 import LandingPage from "@/views/LandingPage";
 
@@ -38,7 +38,7 @@ const App = () => {
       <CssBaseline />
       <Router>
         <MainContainer component="nav">
-          <NavigationBar />
+          <AppNavigationBar />
           <PageContainer component="main">
             <Routes>
               <Route path={RoutePath.LandingPage} element={<LandingPage />} />

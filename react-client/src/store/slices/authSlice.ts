@@ -6,13 +6,12 @@ import {
   registerUser,
   setUserLoggedIn,
 } from "@/store/actions/authActions";
-import { RootState } from "@/store/store";
 import LocalStorageService from "@/services/LocalStorageService";
 
 type AuthState = {
   loading: boolean;
   error: string | null;
-  loggedIn: boolean;
+  isLoggedIn: boolean;
   accessTokenExpiresDate: string | null;
   accessToken: string | null;
 };
@@ -20,7 +19,7 @@ type AuthState = {
 const initialState: AuthState = {
   loading: false,
   error: null,
-  loggedIn: false,
+  isLoggedIn: false,
   accessTokenExpiresDate: null,
   accessToken: null,
 };
@@ -46,13 +45,13 @@ const authSlice = createSlice({
     builder.addCase(loginUser.pending, (state) => {
       state.error = null;
       state.loading = true;
-      state.loggedIn = false;
+      state.isLoggedIn = false;
       state.accessTokenExpiresDate = null;
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.error = action.error.message ?? "Error on login";
       state.loading = false;
-      state.loggedIn = false;
+      state.isLoggedIn = false;
       state.accessTokenExpiresDate = null;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
@@ -68,10 +67,10 @@ const authSlice = createSlice({
       state.accessToken = accessToken;
       state.error = null;
       state.loading = false;
-      state.loggedIn = true;
+      state.isLoggedIn = true;
     });
     builder.addCase(setUserLoggedIn, (state) => {
-      state.loggedIn = true;
+      state.isLoggedIn = true;
     });
     // Logout
     builder.addCase(logoutUser.pending, (state) => {
@@ -103,15 +102,13 @@ const authSlice = createSlice({
   },
 });
 
-export const isUserLoggedIn = (s: RootState) => s.auth.loggedIn;
-
 // Helper
 const setCommonLogoutState = (state: AuthState, error?: string) => {
   state.accessToken = null;
   state.accessTokenExpiresDate = null;
-  state.error ? error : null;
+  state.error = error ?? null;
   state.loading = false;
-  state.loggedIn = false;
+  state.isLoggedIn = false;
 
   LocalStorageService.clearAuthInfoLocalStorage();
 };

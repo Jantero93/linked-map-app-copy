@@ -20,6 +20,11 @@
 
 root = true
 
+# Ignores / supresses
+
+# Suppress all IDE warnings for files in the Migrations folder
+[Migrations/**/*.cs]
+dotnet_diagnostic.IDE*.severity = none
 
 # All Files
 

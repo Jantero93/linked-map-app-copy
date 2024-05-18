@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMediaQuery } from "@mui/material";
-import { setTheme, getSelectedTheme } from "@/store/slices/uiSlice";
+import { setTheme } from "@/store/slices/uiSlice";
 import { ThemeType } from "@/theme/theme";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import LocalStorageService from "@/services/LocalStorageService";
@@ -13,7 +13,7 @@ import LocalStorageService from "@/services/LocalStorageService";
 export const useThemeManagement = (): ThemeType => {
   const dispatch = useAppDispatch();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const currentTheme = useAppSelector(getSelectedTheme);
+  const currentTheme = useAppSelector((s) => s.ui.selectedTheme);
 
   useEffect(() => {
     const storageTheme = LocalStorageService.getThemeFromLocalStorage();

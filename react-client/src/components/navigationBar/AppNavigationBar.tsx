@@ -19,12 +19,10 @@ import {
   LinkProps as RouterLinkProps,
 } from "react-router-dom";
 import RoutePath from "@/routing/routes";
-import { getSelectedTheme, setTheme } from "@/store/slices/uiSlice";
-import { useSelector } from "react-redux";
+import { setTheme } from "@/store/slices/uiSlice";
 import LoginModal from "@/components/navigationBar/LoginModal";
 import RegisterModal from "@/components/navigationBar/RegisterModal";
-import { useAppDispatch } from "@/hooks/useStoreHooks";
-import { isUserLoggedIn } from "@/store/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import { logoutUser } from "@/store/actions/authActions";
 
 // Combine LinkProps from MUI and RouterLink
@@ -57,27 +55,30 @@ const NavigationSection = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-const NavigationBar = () => {
+const AppNavigationBar = () => {
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
 
+  const { selectedTheme } = useAppSelector((s) => s.ui);
+  const { isLoggedIn: loggedIn } = useAppSelector((s) => s.auth);
+
   const dispatch = useAppDispatch();
-  const currentTheme = useSelector(getSelectedTheme);
-  const isUserLogged = useSelector(isUserLoggedIn);
 
   const handleLoginModal = (open: boolean) => setOpenLogin(open);
   const handleRegisterModal = (open: boolean) => setOpenRegister(open);
   const handleLogout = () => dispatch(logoutUser());
 
   const handleThemeChange = () => {
-    const newTheme: ThemeType = currentTheme === "dark" ? "light" : "dark";
+    const newTheme: ThemeType = selectedTheme === "dark" ? "light" : "dark";
     dispatch(setTheme(newTheme));
   };
 
-  const renderActionButtonBasedIsUserLogged = (): JSX.Element =>
-    isUserLogged ? (
-      <ModalButton onClick={handleLogout}>Logout</ModalButton>
-    ) : (
+  const renderActionButtonBasedIsUserLogged = (): JSX.Element => {
+    if (loggedIn) {
+      return <ModalButton onClick={handleLogout}>Logout</ModalButton>;
+    }
+
+    return (
       <>
         <ModalButton onClick={() => handleLoginModal(true)}>Login</ModalButton>
         <ModalButton onClick={() => handleRegisterModal(true)}>
@@ -85,6 +86,7 @@ const NavigationBar = () => {
         </ModalButton>
       </>
     );
+  };
 
   return (
     <Container fixed>
@@ -112,7 +114,7 @@ const NavigationBar = () => {
           <NavigationSection>
             {renderActionButtonBasedIsUserLogged()}
             <Switch
-              checked={currentTheme === "dark"}
+              checked={selectedTheme === "dark"}
               onChange={handleThemeChange}
             />
             <DarkModeOutlinedIcon color="action" />
@@ -130,4 +132,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default AppNavigationBar;
