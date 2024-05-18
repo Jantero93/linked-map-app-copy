@@ -27,9 +27,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: react-client/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/react-client/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/react-client/package-lock.json') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-node-${{ github.sha }}
 
       - name: Install dependencies for React client
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -64,9 +64,9 @@ jobs:
           path: |
             ~/.nuget/packages
             ~/.local/share/NuGet/Cache
-          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}
+          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-dotnet-
+            ${{ runner.os }}-dotnet-${{ github.sha }}
 
       - name: Install dependencies for .NET API
         run: dotnet restore
