@@ -54,8 +54,14 @@ app.Run();
 
 static void ConfigureAppSettings(ConfigurationManager configuration)
 {
+    ApplicationSettings.Environment = GetRequiredConfiguration<string>(configuration, "ASPNETCORE_ENVIRONMENT");
+
+    var connectionStringKey = ApplicationSettings.Environment is "CI"
+        ? "ConnectionString:MapApplicationSqlAuth"
+        : "ConnectionStrings:MapApplication";
+
     ApplicationSettings.ConnectionString = GetRequiredConfiguration<string>(
-        configuration, "ConnectionStrings:MapApplication"
+        configuration, connectionStringKey
     );
     ApplicationSettings.OpenIddictTokenLifetime = GetRequiredConfiguration<int>(configuration, "OpenIddictTokenLifetime");
     ApplicationSettings.OpenIddictClientId = GetRequiredConfiguration<string>(configuration, "OpenIddictClientId");
@@ -66,3 +72,4 @@ static T GetRequiredConfiguration<T>(IConfiguration configuration, string key)
     var value = configuration[key] ?? throw new ArgumentNullException($"No value found for key: {key}");
     return configuration.GetValue<T>(key)!;
 }
+

@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "prettier:check": "prettier --check src/**/*.{jsx,tsx,js,ts,css,json,html}",
     "prettier:write": "prettier --write src/**/*.{jsx,tsx,js,ts,css,json,html}",
-    "eslint:check": "eslint src/**/*.{jsx,tsx,js,ts}",
+    "eslint:check": "eslint src/**/*.{jsx,tsx,js,ts} --max-warnings 0",
     "eslint:fix": "eslint src/**/*.{jsx,tsx,js,ts} --fix",
     "tsc:check": "tsc --noEmit"
   },
