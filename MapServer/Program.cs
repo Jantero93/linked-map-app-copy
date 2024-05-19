@@ -1,13 +1,22 @@
 using MapServer;
 using MapServer.Middlewares;
 using MapServer.Utilities;
+using MapServer.Utilities.Constants;
 using MapServer.Utilities.CustomConsole;
 
 var builder = WebApplication.CreateBuilder(args);
+var env = builder.Environment.EnvironmentName;
 
 /* Add custom logging */
-builder.Logging.ClearProviders();
-builder.Logging.AddProvider(new ConsoleProvider());
+if (env is EnvironmentNames.Development)
+{
+    builder.Logging.ClearProviders();
+    builder.Logging.AddProvider(new ConsoleProvider());
+}
+else
+{
+    builder.Logging.AddConsole();
+}
 
 var configuration = builder.Configuration;
 ConfigureAppSettings(configuration);
@@ -51,11 +60,8 @@ app.MapControllers();
 
 app.Run();
 
-
 static void ConfigureAppSettings(ConfigurationManager configuration)
 {
-    ApplicationSettings.Environment = GetRequiredConfiguration<string>(configuration, "ASPNETCORE_ENVIRONMENT");
-
     ApplicationSettings.ConnectionString = GetRequiredConfiguration<string>(
         configuration, "ConnectionStrings:MapApplication"
     );

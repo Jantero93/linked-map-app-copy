@@ -1,15 +1,17 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace MapServer.Utilities.CustomConsole;
 
-
-#pragma warning disable CS9113 // Parameter is unread.
-public class CustomConsole(string name) : ILogger
-#pragma warning restore CS9113 // Parameter is unread.
+public partial class CustomConsole(string name) : ILogger
 {
+    public string Name { get; init; } = name;
+    private const ConsoleColor ObjectMessageColor = ConsoleColor.Cyan;
+    private const ConsoleColor TimeStampColor = ConsoleColor.Green;
+    private const ConsoleColor DefaultLogMessageColor = ConsoleColor.Gray;
+
     IDisposable ILogger.BeginScope<TState>(TState state) => default!;
 
-    //TODO: Remove debug, trace on test/production
     public bool IsEnabled(LogLevel logLevel) => true;
 
     public void Log<TState>(
@@ -17,8 +19,7 @@ public class CustomConsole(string name) : ILogger
         EventId eventId,
         TState state,
         Exception? exception,
-        Func<TState, Exception?,
-        string> formatter
+        Func<TState, Exception?, string> formatter
     )
     {
         if (!IsEnabled(logLevel))
@@ -28,24 +29,50 @@ public class CustomConsole(string name) : ILogger
 
         lock (Console.Out)
         {
-            var defaultMessageColor = ConsoleColor.Gray;
+            Console.Write('[');
 
-            Console.Write("[");
-
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = TimeStampColor;
             Console.Write($"{DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture)}");
 
-            Console.ForegroundColor = defaultMessageColor;
+            Console.ForegroundColor = DefaultLogMessageColor;
             Console.Write("] ");
 
             Console.ForegroundColor = GetLogLevelColor(logLevel);
             Console.Write($"{ShortenLogLevel(logLevel)}: ");
 
-            Console.ForegroundColor = defaultMessageColor;
-            Console.WriteLine(formatter(state, exception));
+            Console.ForegroundColor = DefaultLogMessageColor;
+
+            var message = formatter(state, exception);
+            WriteColoredMessage(message);
 
             Console.Out.Flush();
         }
+    }
+
+    private static void WriteColoredMessage(string message)
+    {
+        var regex = ObjectAndArrayFinderRegex();
+        var matches = regex.Matches(message);
+        var lastIndex = 0;
+
+        foreach (var match in matches.Cast<Match>())
+        {
+            Console.ForegroundColor = DefaultLogMessageColor;
+            Console.Write(message[lastIndex..match.Index]);
+
+            Console.ForegroundColor = ObjectMessageColor;
+            Console.Write(match.Value);
+
+            lastIndex = match.Index + match.Length;
+        }
+
+        Console.ForegroundColor = DefaultLogMessageColor;
+        if (lastIndex < message.Length)
+        {
+            Console.Write(message[lastIndex..]);
+        }
+
+        Console.WriteLine();
     }
 
     private static ConsoleColor GetLogLevelColor(LogLevel logLevel) =>
@@ -53,9 +80,9 @@ public class CustomConsole(string name) : ILogger
         {
             LogLevel.Trace => ConsoleColor.DarkGray,
             LogLevel.Debug => ConsoleColor.Blue,
-            LogLevel.Information => ConsoleColor.Green,
-            LogLevel.Warning => ConsoleColor.DarkYellow,
-            LogLevel.Error => ConsoleColor.DarkRed,
+            LogLevel.Information => ConsoleColor.Cyan,
+            LogLevel.Warning => ConsoleColor.Yellow,
+            LogLevel.Error => ConsoleColor.Red,
             LogLevel.Critical => ConsoleColor.Red,
             LogLevel.None => ConsoleColor.Gray,
             _ => ConsoleColor.Gray
@@ -73,4 +100,9 @@ public class CustomConsole(string name) : ILogger
             LogLevel.None => string.Empty,
             _ => "UNDEFINED"
         };
+
+
+
+    [GeneratedRegex(@"{[^{}]*}|\[[^\[\]]*\]")]
+    private static partial Regex ObjectAndArrayFinderRegex();
 }
