@@ -56,12 +56,8 @@ static void ConfigureAppSettings(ConfigurationManager configuration)
 {
     ApplicationSettings.Environment = GetRequiredConfiguration<string>(configuration, "ASPNETCORE_ENVIRONMENT");
 
-    var connectionStringKey = ApplicationSettings.Environment is "CI"
-        ? "ConnectionString:MapApplicationSqlAuth"
-        : "ConnectionStrings:MapApplication";
-
     ApplicationSettings.ConnectionString = GetRequiredConfiguration<string>(
-        configuration, connectionStringKey
+        configuration, "ConnectionStrings:MapApplication"
     );
     ApplicationSettings.OpenIddictTokenLifetime = GetRequiredConfiguration<int>(configuration, "OpenIddictTokenLifetime");
     ApplicationSettings.OpenIddictClientId = GetRequiredConfiguration<string>(configuration, "OpenIddictClientId");
