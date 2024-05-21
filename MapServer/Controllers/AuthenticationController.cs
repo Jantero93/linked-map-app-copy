@@ -7,7 +7,6 @@ using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using MapServer.ApiModels.Requests;
 using MapServer.OpenIddict;
-using OpenIddict.Validation.AspNetCore;
 using MapServer.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MapServer.ApiModels.Responses;
@@ -18,6 +17,7 @@ namespace MapServer.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
+[ProducesErrorResponseType(typeof(RequestFailedResponse))]
 public class AuthenticationController(
     UserManager<ApplicationUser> userManager,
     IOpenIddictTokenManager tokenManager,
@@ -103,31 +103,33 @@ public class AuthenticationController(
     }
 
     [HttpPost("logout")]
-    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Logout()
     {
         var userId = User.GetUserIdAsString();
         logger.LogInformation("Signing out user {UserId}", userId);
 
-        if (!string.IsNullOrEmpty(userId))
+        if (string.IsNullOrEmpty(userId))
         {
-            // Fetch all tokens for the user
-            var tokens = await tokenManager.FindBySubjectAsync(userId).ToListAsync();
-
-
-            // Sequentially revoke each token
-            foreach (var token in tokens)
+            return StatusCode(StatusCodes.Status500InternalServerError, new RequestFailedResponse
             {
-                var result = await tokenManager.TryRevokeAsync(token);
-                if (!result)
-                {
-                    logger.LogWarning("Failed to revoke token {@Token}", token.ToString());
-                }
-            }
-
-            logger.LogInformation("Logged successfully and revoked tokens from user id {UserId}", userId);
+                Message = "Logout failed"
+            });
         }
 
-        return Ok(new { Message = "You have been logged out successfully. Please clear your tokens on client-side as well." });
+        var tokens = await tokenManager.FindBySubjectAsync(userId).ToListAsync();
+
+        foreach (var token in tokens)
+        {
+            var result = await tokenManager.TryRevokeAsync(token);
+            if (!result)
+            {
+                logger.LogWarning("Failed to revoke token {@Token}", token.ToString());
+            }
+        }
+
+        logger.LogInformation("Logged successfully and revoked tokens from user id {UserId}", userId);
+
+        return NoContent();
     }
 }

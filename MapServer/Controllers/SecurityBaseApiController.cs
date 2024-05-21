@@ -1,13 +1,14 @@
 using System.Net.Mime;
+using MapServer.ApiModels.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Validation.AspNetCore;
 
 namespace MapServer.Controllers;
 
 [ApiController]
+[Authorize]
 [Produces(MediaTypeNames.Application.Json)]
-[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-public class SecurityBaseApiController : ControllerBase
+[ProducesErrorResponseType(typeof(RequestFailedResponse))]
+public abstract class SecurityBaseApiController : ControllerBase
 {
 }

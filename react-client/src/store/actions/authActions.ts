@@ -51,10 +51,10 @@ export const setUserLoggedIn = createAction("user-set-logged-in");
 // Logouts
 
 //Helper
-const performLogout = async (successMessage: string) => {
+const performLogout = async () => {
   try {
     const response = await post(API_URL + "/authentication/logout");
-    setSnackbarText(successMessage);
+    setSnackbarText("Logged out successfully");
     return response;
   } catch (e) {
     const rejectedValue: RejectedActionPayload = {
@@ -70,9 +70,7 @@ export const logoutUser = createAsyncThunk(
   "user-logout",
   async (_, { rejectWithValue }) => {
     try {
-      return await performLogout(
-        "Logged out successfully and cleared session data"
-      );
+      return await performLogout();
     } catch (rejectedValue) {
       return rejectWithValue(rejectedValue);
     }
@@ -83,9 +81,7 @@ export const forceLogoutUser = createAsyncThunk(
   "user-force-logout",
   async (_, { rejectWithValue }) => {
     try {
-      return await performLogout(
-        "Session expired. Please log in again to continue"
-      );
+      return await performLogout();
     } catch (rejectedValue) {
       return rejectWithValue(
         "Session expired. Please log in again to continue"

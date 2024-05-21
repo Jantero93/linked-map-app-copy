@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   AppBar,
   Button,
@@ -30,7 +30,7 @@ const StyledLink = styled(({ ...props }: StyledLinkProps) => (
   <Link {...props} component={RouterLink} underline="hover" />
 ))(({ theme }) => ({
   marginLeft: theme.spacing(2),
-  color: theme.palette.primary.main,
+  color: theme.palette.info.dark,
   fontFamily: theme.typography.fontFamily,
   fontWeight: theme.typography.fontWeightRegular,
 }));
@@ -39,6 +39,8 @@ const ThemedAppBar = styled(AppBar)(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   boxShadow: `${theme.shadows[2]}, 0 4px 6px -1px rgba(0, 0, 0, 0.2)`,
   position: "relative",
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.primary.main,
 }));
 
 const ModalButton = styled(Button)(({ theme }) => ({
@@ -53,12 +55,12 @@ const NavigationSection = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-const AppNavigationBar: React.FC = () => {
+const AppNavigationBar = () => {
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
 
   const { selectedTheme } = useAppSelector((s) => s.ui);
-  const { isLoggedIn: loggedIn } = useAppSelector((s) => s.auth);
+  const { isLoggedIn } = useAppSelector((s) => s.auth);
 
   const dispatch = useAppDispatch();
 
@@ -72,7 +74,7 @@ const AppNavigationBar: React.FC = () => {
   };
 
   const renderActionButtonBasedIsUserLogged = (): JSX.Element => {
-    if (loggedIn) {
+    if (isLoggedIn) {
       return <ModalButton onClick={handleLogout}>Logout</ModalButton>;
     }
 
@@ -108,7 +110,6 @@ const AppNavigationBar: React.FC = () => {
         </ThemedAppBar>
       </Box>
 
-      {/* Modals */}
       <LoginModal isOpen={openLogin} handleModalOpen={handleLoginModal} />
       <RegisterModal
         isOpen={openRegister}
