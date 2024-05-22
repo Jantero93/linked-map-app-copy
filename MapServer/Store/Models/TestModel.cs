@@ -9,7 +9,7 @@ public record TestModel
 {
     [Key]
     [Identity]
-    public Guid Id { get; init; }
+    public required Guid Id { get; init; }
 
     public int? NumberValue { get; init; }
 

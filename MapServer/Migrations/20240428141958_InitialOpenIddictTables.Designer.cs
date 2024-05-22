@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MapServer.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(OpenIddictContext))]
     [Migration("20240428141958_InitialOpenIddictTables")]
     partial class InitialOpenIddictTables
     {

@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies for React client
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm ci --silent --no-progress
 
       - name: Run ESLint check
         run: npm run eslint:check
@@ -62,7 +62,7 @@ jobs:
           path: |
             ~/.nuget/packages
             ~/.local/share/NuGet/Cache
-          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}
+          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}-${{ hashFiles('**/MapServer/obj/project.assets.json') }}
           restore-keys: |
             ${{ runner.os }}-dotnet-
 
@@ -71,12 +71,11 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
-      - name: Install dependencies
-        if: steps.cache-dotnet.outputs.cache-hit != 'true'
-        run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore --verbosity quiet
 
       - name: Set environment variables
         run: echo "ASPNETCORE_ENVIRONMENT=CI" >> $GITHUB_ENV
 
-      - name: Build .NET API
+      - name: Build MapServer API
         run: dotnet build --configuration Release --no-restore

@@ -1,5 +1,6 @@
 using MapServer;
 using MapServer.Middlewares;
+using MapServer.OpenIddict;
 using MapServer.Utilities;
 using MapServer.Utilities.Constants;
 using MapServer.Utilities.CustomConsole;

@@ -5,8 +5,7 @@ using OpenIddict.EntityFrameworkCore.Models;
 
 namespace MapServer.OpenIddict;
 
-// Only for OpenIddict
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
+public class OpenIddictContext(DbContextOptions<OpenIddictContext> options) : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<OpenIddictEntityFrameworkCoreToken<Guid>> OpenIddictTokens { get; set; }
 
