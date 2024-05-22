@@ -9,10 +9,7 @@ public class RequestLoggerMiddleware(RequestDelegate next, ILogger<RequestLogger
         var method = context.Request.Method;
         var path = context.Request.Path;
 
-        List<string> testLoggerObject = ["moro", "test", "jotain"];
-        logger.LogError("This is test log, request object: {@TestObject}", testLoggerObject);
-
-        logger.LogWarning("Request Method: {RequestMethod}, Request Path: {RequestPath}", method, path);
+        logger.LogTrace("Request Method: {RequestMethod}, Request Path: {RequestPath}", method, path);
 
         var queryParamsDict = context.Request.Query.ToDictionary(q => q.Key, q => q.Value.ToString());
         if (queryParamsDict.Count > 0)
@@ -28,7 +25,7 @@ public class RequestLoggerMiddleware(RequestDelegate next, ILogger<RequestLogger
 
         if (headersDict.Count > 0)
         {
-            logger.LogDebug("Headers: {@Headers}", headersDict);
+            logger.LogTrace("Headers: {@Headers}", headersDict);
         }
 
         await next(context);

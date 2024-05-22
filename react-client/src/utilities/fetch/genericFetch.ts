@@ -59,7 +59,18 @@ const apiCall = async <T>(
       console.warn("API call failed, reason:", errResMsg.message);
       throw new Error(errResMsg.message);
     }
-    return response.json() as Promise<T>;
+
+    const contentType = response.headers.get(Headers["Content-Type"]);
+
+    if (contentType?.includes("application/json")) {
+      return response.json() as Promise<T>;
+    }
+
+    if (response.status === 204 || response.status === 205) {
+      return {} as T;
+    }
+
+    return {} as T;
   } catch (e: unknown) {
     if (!(e instanceof Error)) {
       console.warn("API call failed, reason:", e);
