@@ -9,12 +9,14 @@ type LocalStorageKey = keyof typeof LocalStorageKeys;
  * @param key The key corresponding to the item in local storage.
  * @returns The parsed value as type T, or null if not found or parsing fails.
  */
-export const getFromLocalStorage = <T>(key: LocalStorageKey): T | null => {
+export const getFromLocalStorage = <T>(
+  key: LocalStorageKey
+): NonPrimitive<T> | null => {
   const item = localStorage.getItem(key);
   if (!item) return null;
 
   try {
-    return JSON.parse(item) as T;
+    return JSON.parse(item) as NonPrimitive<T>;
   } catch {
     console.error(`Error parsing the local storage item "${key}".`);
     return null;
@@ -44,6 +46,5 @@ export const setToLocalStorage = <T>(
  * Removes one or more items from local storage.
  * @param keys The keys of the items to remove.
  */
-export const removeFromLocalStorage = (...keys: LocalStorageKey[]): void => {
-  keys.forEach((key) => localStorage.removeItem(key));
-};
+export const removeFromLocalStorage = (...keys: LocalStorageKey[]): void =>
+  keys.forEach(localStorage.removeItem);

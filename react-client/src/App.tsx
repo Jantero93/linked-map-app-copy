@@ -18,6 +18,7 @@ const MainContainer = styled(Box)({
   display: "flex",
   flexDirection: "column",
   minHeight: "100vh",
+  minWidth: "100vw",
 });
 
 const PageContainer = styled(Box)({

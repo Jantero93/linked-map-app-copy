@@ -16,7 +16,6 @@ namespace MapServer.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Produces(MediaTypeNames.Application.Json)]
 [ProducesErrorResponseType(typeof(RequestFailedResponse))]
 public class AuthenticationController(
     UserManager<ApplicationUser> userManager,
@@ -26,6 +25,9 @@ public class AuthenticationController(
 {
     [HttpPost("~/connect/token")]
     [AllowAnonymous]
+    [Consumes(MediaTypeNames.Application.FormUrlEncoded)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesDefaultResponseType(typeof(OpenIddictLoginResponse))]
     public async Task<IActionResult> Login()
     {
         logger.LogInformation("OpenIddict Login endpoint");
@@ -79,6 +81,7 @@ public class AuthenticationController(
 
     [HttpPost("register")]
     [AllowAnonymous]
+    [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Login([FromBody] RegisterRequest req)
     {
         var userExists = await userManager.FindByNameAsync(req.Username);
@@ -104,6 +107,7 @@ public class AuthenticationController(
 
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
         var userId = User.GetUserIdAsString();
@@ -119,16 +123,27 @@ public class AuthenticationController(
 
         var tokens = await tokenManager.FindBySubjectAsync(userId).ToListAsync();
 
-        foreach (var token in tokens)
+        tokens.ForEach(async token =>
         {
+            var tokenStatus = await tokenManager.GetStatusAsync(token);
+            var tokenExpirationDate = await tokenManager.GetExpirationDateAsync(token);
+
             var result = await tokenManager.TryRevokeAsync(token);
+
             if (!result)
             {
                 logger.LogWarning("Failed to revoke token {@Token}", token.ToString());
             }
-        }
 
-        logger.LogInformation("Logged successfully and revoked tokens from user id {UserId}", userId);
+            var timeMonthAgo = DateTime.UtcNow.AddMonths(-1);
+            var isTokenOlderThanMonth = tokenExpirationDate < timeMonthAgo;
+
+            if (tokenStatus is OpenIddictConstants.Statuses.Revoked && isTokenOlderThanMonth)
+            {
+                await tokenManager.DeleteAsync(token);
+                logger.LogInformation("Deleting {Token} for userId: {UserId}", token, userId);
+            }
+        });
 
         return NoContent();
     }
