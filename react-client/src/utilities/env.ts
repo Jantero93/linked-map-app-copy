@@ -15,6 +15,7 @@ export const API_URL = getEnv("VITE_API_URL");
 export const API_LOGIN_URL = getEnv("VITE_API_LOGIN_URL");
 export const OPENIDDICT_CLIENT_ID = getEnv("VITE_OPENIDDICT_CLIENT_ID");
 export const OPENIDDICT_GRANT_TYPE = getEnv("VITE_OPENIDDICT_GRANT_TYPE");
+export const GEOCODING_API_KEY = getEnv("VITE_GEOCODING_API_KEY");
 export const IS_DEV_ENV = import.meta.env.DEV;
 export const IS_PROD_ENV = import.meta.env.PROD;
 export const FALLBACK_THEME: ThemeType = "dark";
