@@ -4,7 +4,7 @@ import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
-import { fromLonLat, toLonLat } from "ol/proj";
+import { fromLonLat } from "ol/proj";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Style, Icon } from "ol/style";
@@ -47,11 +47,11 @@ const OlMap = () => {
       view: initialView,
     });
 
-    mapObj.current.on("click", (event) => {
+    mapObj.current.on("click", async (event) => {
       const coordinates = event.coordinate;
-      const lonLat = toLonLat(coordinates);
-      // eslint-disable-next-line no-console
-      console.log(`Longitude: ${lonLat[0]}, Latitude: ${lonLat[1]}`);
+      //const lonLat = toLonLat(coordinates);
+
+      /* await GeocodingService.getStreetNameFromLonLat(lonLat[0], lonLat[1]); */
 
       const iconFeature = new Feature({
         geometry: new Point(coordinates),

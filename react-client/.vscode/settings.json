@@ -12,11 +12,14 @@
   },
   "cSpell.words": [
     "fontsource",
+    "Hervanta",
+    "Kaijantie",
     "Neue",
     "openapi",
     "Parens",
     "Robota",
-    "Roboto"
+    "Roboto",
+    "Tutkijankatu"
   ],
   "better-comments.tags": [
     {
@@ -55,5 +58,8 @@
       "color": "#FF8C00",
       "backgroundColor": "transparent"
     }
-  ]
+  ],
+  "[shellscript]": {
+    "editor.defaultFormatter": "shakram02.bash-beautify"
+  }
 }
