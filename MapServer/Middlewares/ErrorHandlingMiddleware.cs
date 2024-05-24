@@ -13,7 +13,7 @@ public class ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandling
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Unhandled exception occurred.");
+            logger.LogError("Unhandled exception occurred Exception: {@Exception}", ex);
             var result = JsonConvert.SerializeObject(new { Message = "Uncaught internal server error" });
 
             context.Response.ContentType = MediaTypeNames.Application.Json;
