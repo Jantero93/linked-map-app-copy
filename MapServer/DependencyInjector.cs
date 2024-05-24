@@ -15,5 +15,6 @@ public static class DependencyInjector
 
         // Store
         services.AddScoped<TestRepository>();
+        services.AddScoped<LocationRepository>();
     }
 }
