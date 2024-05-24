@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MicroOrm.Dapper.Repositories.Attributes;
 
 namespace MapServer.Store.Models;
 
@@ -8,14 +7,17 @@ namespace MapServer.Store.Models;
 public record Location
 {
     [Key]
-    [Identity]
-    public required Guid Id { get; init; }
+    public required string Street { get; init; }
+
+    [Key]
+    public required string StreetNumber { get; init; }
+
     [Required]
     public required decimal Longitude { get; init; }
+
     [Required]
     public required decimal Latitude { get; init; }
-    public string? Street { get; init; }
-    public string? RoadNumber { get; init; }
+
     public string? Suburban { get; init; }
     public string? City { get; init; }
     public string? PostalCode { get; init; }
