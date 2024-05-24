@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.SqlClient;
+using MapServer.Data.Repositories;
 using MapServer.Store.Repositories;
 
 namespace MapServer;
@@ -16,5 +17,6 @@ public static class DependencyInjector
         // Store
         services.AddScoped<TestRepository>();
         services.AddScoped<LocationRepository>();
+        services.AddScoped<CompanyRepository>();
     }
 }
