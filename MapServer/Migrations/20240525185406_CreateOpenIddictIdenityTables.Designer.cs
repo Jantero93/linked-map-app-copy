@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MapServer.Migrations
 {
     [DbContext(typeof(OpenIddictContext))]
-    [Migration("20240428141958_InitialOpenIddictTables")]
-    partial class InitialOpenIddictTables
+    [Migration("20240525185406_CreateOpenIddictIdenityTables")]
+    partial class CreateOpenIddictIdenityTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,7 @@ namespace MapServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("openiddict")
+                .UseCollation("Finnish_Swedish_CI_AS")
                 .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 

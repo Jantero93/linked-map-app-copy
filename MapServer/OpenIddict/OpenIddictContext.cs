@@ -12,6 +12,7 @@ public class OpenIddictContext(DbContextOptions<OpenIddictContext> options) : Id
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.UseCollation("Finnish_Swedish_CI_AS");
         builder.HasDefaultSchema("openiddict");
         builder.UseOpenIddict<Guid>();
     }
