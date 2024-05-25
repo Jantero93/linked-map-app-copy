@@ -1,5 +1,4 @@
-#pragma warning disable
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MapServer.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialOpenIddictTables : Migration
+    public partial class CreateOpenIddictIdenityTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

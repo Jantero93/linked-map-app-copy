@@ -11,13 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MapServer.Migrations
 {
     [DbContext(typeof(OpenIddictContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    partial class OpenIddictContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("openiddict")
+                .UseCollation("Finnish_Swedish_CI_AS")
                 .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
