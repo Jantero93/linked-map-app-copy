@@ -12,8 +12,11 @@ IF NOT EXISTS (
   Description VARCHAR(1023) NULL,
   StartDate DATE NOT NULL,
   EndDate DATE NULL,
+  PartTime BIT NOT NULL,
   CompanyId UNIQUEIDENTIFIER NOT NULL,
-  CONSTRAINT FK_WorkExperience_Company FOREIGN KEY (CompanyId) REFERENCES WORK.Company(Id)
+  UserId UNIQUEIDENTIFIER NOT NULL,
+  CONSTRAINT FK_WorkExperience_Company FOREIGN KEY (CompanyId) REFERENCES WORK.Company(Id),
+  CONSTRAINT FK_WorkExperience_AspNetUsers FOREIGN KEY (UserId) REFERENCES OPENIDDICT.AspNetUsers(Id)
 );
 
 END

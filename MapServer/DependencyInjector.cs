@@ -14,9 +14,10 @@ public static class DependencyInjector
         services.AddAutoMapper(typeof(Program));
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-        // Store
+        // Repositories
         services.AddScoped<TestRepository>();
         services.AddScoped<LocationRepository>();
         services.AddScoped<CompanyRepository>();
+        services.AddScoped<WorkExperienceRepository>();
     }
 }
