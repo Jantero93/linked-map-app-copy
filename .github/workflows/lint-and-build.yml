@@ -62,9 +62,9 @@ jobs:
           path: |
             ~/.nuget/packages
             ~/.local/share/NuGet/Cache
-          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}-${{ hashFiles('**/MapServer/obj/project.assets.json') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
-            ${{ runner.os }}-dotnet-
+            ${{ runner.os }}-net
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
