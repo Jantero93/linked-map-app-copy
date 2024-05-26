@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -339,7 +339,7 @@ namespace MapServer.Migrations
                 name: "IX_OpenIddictAuthorizations_ApplicationId_Status_Subject_Type",
                 schema: "openiddict",
                 table: "OpenIddictAuthorizations",
-                columns: new[] { "ApplicationId", "Status", "Subject", "Type" });
+                columns: ["ApplicationId", "Status", "Subject", "Type"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictScopes_Name",
@@ -353,7 +353,7 @@ namespace MapServer.Migrations
                 name: "IX_OpenIddictTokens_ApplicationId_Status_Subject_Type",
                 schema: "openiddict",
                 table: "OpenIddictTokens",
-                columns: new[] { "ApplicationId", "Status", "Subject", "Type" });
+                columns: ["ApplicationId", "Status", "Subject", "Type"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictTokens_AuthorizationId",
