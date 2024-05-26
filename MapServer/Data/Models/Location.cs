@@ -12,10 +12,8 @@ public record Location
     [Key]
     public required string StreetNumber { get; init; }
 
-    [Required]
     public required decimal Longitude { get; init; }
 
-    [Required]
     public required decimal Latitude { get; init; }
 
     public string? Suburban { get; init; }
