@@ -1,20 +1,39 @@
 // src/components/Map.tsx
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
-import { fromLonLat } from "ol/proj";
+import { fromLonLat, toLonLat } from "ol/proj";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Style, Icon } from "ol/style";
 import { Feature } from "ol";
 import Point from "ol/geom/Point";
 import "ol/ol.css";
+import GeocodingService, {
+  ReverseGeocodingRes,
+} from "@/services/GeocodingService";
+import { useAppDispatch } from "@/hooks/useStoreHooks";
+import { setSnackbarText } from "@/store/slices/uiSlice";
+import AddCompanyModal from "../modals/AddCompanyModal";
+import { styled } from "@mui/material/styles";
+
+const MapContainer = styled("div")(({ theme: _theme }) => ({
+  width: "100%",
+  height: "100%",
+}));
 
 const OlMap = () => {
+  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
+  const [reverseGeocodingRes, setReverseGeocodingRes] =
+    useState<ReverseGeocodingRes | null>(null);
+
+  const dispatch = useAppDispatch();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapObj = useRef<Map>();
+
+  const handleCompanyModal = (open: boolean) => setIsCompanyModalOpen(open);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -49,9 +68,22 @@ const OlMap = () => {
 
     mapObj.current.on("click", async (event) => {
       const coordinates = event.coordinate;
-      //const lonLat = toLonLat(coordinates);
+      const lonLat = toLonLat(coordinates);
 
-      /* await GeocodingService.getStreetNameFromLonLat(lonLat[0], lonLat[1]); */
+      const res = await GeocodingService.getReverseGeocodingInfoFromPoint(
+        lonLat[0],
+        lonLat[1]
+      );
+
+      if (res === null) {
+        dispatch(
+          setSnackbarText("Couldn't get location information from click")
+        );
+        return;
+      }
+
+      setReverseGeocodingRes({ ...res });
+      handleCompanyModal(true);
 
       const iconFeature = new Feature({
         geometry: new Point(coordinates),
@@ -61,9 +93,22 @@ const OlMap = () => {
     });
 
     return () => mapObj.current?.setTarget(undefined);
-  }, []);
+  }, [dispatch]);
 
-  return <div ref={mapRef} style={{ width: "100%", height: "100%" }} />;
+  if (reverseGeocodingRes === null) return <MapContainer ref={mapRef} />;
+
+  const { streetAddress, streetNumber } = reverseGeocodingRes;
+  return (
+    <>
+      <MapContainer ref={mapRef} />
+      <AddCompanyModal
+        isOpen={isCompanyModalOpen}
+        onClose={() => handleCompanyModal(false)}
+        streetAddress={streetAddress}
+        streetNumber={streetNumber}
+      />
+    </>
+  );
 };
 
 export default OlMap;

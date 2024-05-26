@@ -4,7 +4,7 @@ import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import styled from "@emotion/styled";
 import { createModeTheme } from "@/theme/theme";
 import CommonSnackBar from "@/components/CommonSnackBar";
-import AppNavigationBar from "@/components/navigationBar/AppNavigationBar";
+import AppNavigationBar from "@/components/AppNavigationBar";
 import AppFooterBar from "@/components/AppFooterBar";
 import MapPage from "@/views/MapPage";
 import LandingPage from "@/views/LandingPage";

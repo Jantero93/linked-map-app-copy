@@ -12,9 +12,9 @@ IF NOT EXISTS (
   Longitude DECIMAL(12, 9) NOT NULL,
   Latitude DECIMAL(12, 9) NOT NULL,
   Suburban VARCHAR(255) NULL,
-  City VARCHAR(255) NULL,
+  City VARCHAR(255) NOT NULL,
   PostalCode NVARCHAR(127) NULL,
-  PRIMARY KEY (Street, StreetNumber)
+  PRIMARY KEY (Street, StreetNumber, City)
 );
 
 END

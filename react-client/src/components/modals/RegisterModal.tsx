@@ -55,7 +55,6 @@ const fieldsConfiguration: Record<string, FieldConfig> = {
 type FormValues = Record<keyof typeof fieldsConfiguration, string>;
 
 // Type for the form errors
-
 interface Props {
   isOpen: boolean;
   handleModalOpen: (open: boolean) => void;

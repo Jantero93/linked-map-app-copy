@@ -7,6 +7,16 @@ const LAT_PLACEHOLDER = "<LATITUDE>";
 const API_KEY_PLACEHOLDER = "<API_KEY>";
 const REVERSE_GEOCODING_URL = `https://api.opencagedata.com/geocode/v1/json?q=${LAT_PLACEHOLDER}%2C${LON_PLACEHOLDER}&key=${API_KEY_PLACEHOLDER}`;
 
+export type ReverseGeocodingRes = {
+  streetAddress: string;
+  streetNumber: string;
+  longitude: number;
+  latitude: number;
+  suburban?: string;
+  city?: string;
+  postalCode?: string;
+};
+
 /**
  * Generates the URL for reverse geocoding
  * @param longitude
@@ -29,58 +39,43 @@ const generateGeocodingUrl = (longitude: number, latitude: number): string =>
  * @example "Tutkijankatu, Tampere, 33720"
  * @example "Kaijantie"
  */
-const getStreetNameFromLonLat = async (
+const getReverseGeocodingInfoFromPoint = async (
   longitude: number,
   latitude: number
-): Promise<string> => {
+): Promise<ReverseGeocodingRes | null> => {
   const reqUrl = generateGeocodingUrl(longitude, latitude);
   const reverseGeocodingRes = await get<OpenCageReverseGeocodingRes>(reqUrl);
 
-  if (reverseGeocodingRes.status.code !== 200) {
-    return "Map locating failed";
+  const { status, results } = reverseGeocodingRes;
+  const isInvalidRes = status.code !== 200 || results.length === 0;
+
+  if (isInvalidRes) {
+    return null;
   }
 
   const result = reverseGeocodingRes.results[0];
-
-  if (!result) {
-    return "Map locating failed";
-  }
-
   const { road, house_number, city, postcode, suburb } = result.components;
-  const values = { road, house_number, city, postcode, suburb };
 
-  const allValuesUndefined = Object.values(values).every(
-    (value) => value === undefined
-  );
-
-  if (allValuesUndefined) {
-    return "Map locating failed";
+  // Return null if no required data from location
+  if (!road || !house_number || !city) {
+    return null;
   }
 
-  const definedValues = Object.values(values).filter(
-    (value) => value !== undefined
-  );
+  const { lat, lng } = result.geometry;
 
-  if (definedValues.length === 1) {
-    return definedValues[0] as string;
-  }
-
-  const addressParts = [
-    road && house_number ? `${road} ${house_number}` : road,
-    suburb,
+  return {
+    latitude: lat,
+    longitude: lng,
+    streetAddress: road,
+    streetNumber: house_number,
     city,
-    postcode,
-  ];
-
-  const formattedAddress = addressParts
-    .filter((part) => part !== undefined)
-    .join(", ");
-
-  return formattedAddress || "Map locating failed";
+    suburban: suburb,
+    postalCode: postcode,
+  };
 };
 
 const GeocodingService = {
-  getStreetNameFromLonLat,
+  getReverseGeocodingInfoFromPoint,
 };
 
 export default GeocodingService;
