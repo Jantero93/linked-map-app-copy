@@ -18,10 +18,10 @@ import {
 } from "react-router-dom";
 import RoutePath from "@/routing/routes";
 import { setTheme } from "@/store/slices/uiSlice";
-import LoginModal from "@/components/navigationBar/LoginModal";
-import RegisterModal from "@/components/navigationBar/RegisterModal";
-import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import { logoutUser } from "@/store/actions/authActions";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
+import LoginModal from "@/components/modals/LoginModal";
+import RegisterModal from "@/components/modals/RegisterModal";
 
 type StyledLinkProps = MuiLinkProps &
   Omit<RouterLinkProps, "to"> & { to: string };

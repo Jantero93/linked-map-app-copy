@@ -15,7 +15,7 @@ public record Company
 
     public required DateTime EstablishmentDate { get; init; }
 
-    public DateTime ClosureDate { get; init; }
+    public DateTime? ClosureDate { get; init; }
 
     public required Guid LocationId { get; init; }
 }
