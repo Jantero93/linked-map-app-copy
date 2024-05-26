@@ -1,15 +1,9 @@
 import { Form as FinalForm, Field as FinalField } from "react-final-form";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
+import { Button, DialogActions, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { registerUser } from "@/store/actions/authActions";
 import { useAppDispatch } from "@/hooks/useStoreHooks";
+import CommonDialog from "../CommonDialog";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   marginBottom: theme.spacing(1),
@@ -22,14 +16,11 @@ const FormButton = styled(Button)(({ theme: _theme }) => ({
   variant: "contained",
 }));
 
-const PaddedForm = styled("form")(({ theme }) => ({
-  padding: theme.spacing(1),
-}));
-
 // Define the field and form values
 interface FieldConfig {
   label: string;
   type: string;
+  helperText?: string;
   validate: (
     value: string,
     allValues: Partial<FormValues>
@@ -41,12 +32,14 @@ const fieldsConfiguration: Record<string, FieldConfig> = {
   username: {
     label: "Username",
     type: "text",
+    helperText: "Minimum 3 characters",
     validate: (value) =>
       value.length >= 3 ? undefined : "Username must be at least 3 characters",
   },
   password: {
     label: "Password",
     type: "password",
+    helperText: "Minimum 6 characters",
     validate: (value) =>
       value.length >= 6 ? undefined : "Password must be at least 6 characters",
   },
@@ -76,8 +69,9 @@ const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
 
     for (const fieldName in fieldsConfiguration) {
       const field = fieldsConfiguration[fieldName];
-      const value = values[fieldName] || "";
+      const value = values[fieldName] ?? "";
       const error = field.validate(value, values);
+
       if (error) {
         errors[fieldName] = error;
       }
@@ -94,46 +88,53 @@ const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
   };
 
   return (
-    <Dialog open={isOpen} onClose={closeDialog}>
+    <CommonDialog open={isOpen} onClose={closeDialog} title="Register new user">
       <FinalForm<FormValues>
         onSubmit={onSubmit}
         validate={validate}
-        render={({ handleSubmit, submitting, pristine }) => (
-          <PaddedForm onSubmit={handleSubmit}>
-            <DialogTitle>Register new user</DialogTitle>
-            <DialogContent>
-              {Object.keys(fieldsConfiguration).map((fieldName) => (
-                <FinalField
-                  key={fieldName}
-                  name={fieldName}
-                  type={fieldsConfiguration[fieldName].type}
-                >
-                  {({ input, meta }) => (
-                    <StyledTextField
-                      label={fieldsConfiguration[fieldName].label}
-                      inputProps={input}
-                      type={fieldsConfiguration[fieldName].type}
-                      error={meta.error && meta.touched}
-                      helperText={
-                        meta.error && meta.touched ? meta.error : null
-                      }
-                    />
-                  )}
-                </FinalField>
-              ))}
-            </DialogContent>
+        render={({ handleSubmit, hasSubmitErrors }) => (
+          <form onSubmit={handleSubmit}>
+            {Object.keys(fieldsConfiguration).map((fieldName) => (
+              <FinalField
+                key={fieldName}
+                name={fieldName}
+                type={fieldsConfiguration[fieldName].type}
+              >
+                {({ input, meta }) => (
+                  <StyledTextField
+                    label={fieldsConfiguration[fieldName].label}
+                    inputProps={input}
+                    type={fieldsConfiguration[fieldName].type}
+                    error={meta.touched && meta.error}
+                    helperText={
+                      meta.touched && meta.error
+                        ? meta.error
+                        : fieldsConfiguration[fieldName].helperText ?? ""
+                    }
+                  />
+                )}
+              </FinalField>
+            ))}
             <DialogActions>
-              <FormButton type="submit" disabled={submitting || pristine}>
+              <FormButton
+                variant="contained"
+                type="submit"
+                disabled={hasSubmitErrors}
+              >
                 Register
               </FormButton>
-              <FormButton color="error" onClick={closeDialog}>
+              <FormButton
+                variant="contained"
+                color="error"
+                onClick={closeDialog}
+              >
                 Cancel
               </FormButton>
             </DialogActions>
-          </PaddedForm>
+          </form>
         )}
       />
-    </Dialog>
+    </CommonDialog>
   );
 };
 
