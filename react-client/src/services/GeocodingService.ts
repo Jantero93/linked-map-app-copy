@@ -8,8 +8,8 @@ const API_KEY_PLACEHOLDER = "<API_KEY>";
 const REVERSE_GEOCODING_URL = `https://api.opencagedata.com/geocode/v1/json?q=${LAT_PLACEHOLDER}%2C${LON_PLACEHOLDER}&key=${API_KEY_PLACEHOLDER}`;
 
 export type ReverseGeocodingRes = {
-  streetAddress: string;
-  streetNumber: string;
+  streetAddress?: string;
+  streetNumber?: string;
   longitude: number;
   latitude: number;
   suburban?: string;
@@ -47,7 +47,7 @@ const getReverseGeocodingInfoFromPoint = async (
   const reverseGeocodingRes = await get<OpenCageReverseGeocodingRes>(reqUrl);
 
   const { status, results } = reverseGeocodingRes;
-  const isInvalidRes = status.code !== 200 || results.length === 0;
+  const isInvalidRes = status.code !== 200 || !!results.at(0);
 
   if (isInvalidRes) {
     return null;
@@ -55,12 +55,6 @@ const getReverseGeocodingInfoFromPoint = async (
 
   const result = reverseGeocodingRes.results[0];
   const { road, house_number, city, postcode, suburb } = result.components;
-
-  // Return null if no required data from location
-  if (!road || !house_number || !city) {
-    return null;
-  }
-
   const { lat, lng } = result.geometry;
 
   return {

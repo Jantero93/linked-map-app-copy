@@ -17,3 +17,26 @@ export type Nullable<T> = {
 export type NullableProperty<T, K extends keyof T> = {
   [P in keyof T]: P extends K ? T[P] | null : T[P];
 };
+
+/**
+ * TypeScript (and JavaScript) Primitive values. Actual values, no references.
+ */
+export type Primitive =
+  | null
+  | undefined
+  | boolean
+  | number
+  | bigint
+  | string
+  | symbol;
+
+/**
+ * Reference values in TypeScript (and JavaScript), arrays and objects
+ * (object accepts array)
+ */
+export type NonPrimitive<T> = Exclude<T, object>;
+
+/**
+ * Plain object (exclude e.g. array from 'object' type)
+ */
+export type PlainObject = { [key: string]: unknown };

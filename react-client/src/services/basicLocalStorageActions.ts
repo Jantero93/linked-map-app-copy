@@ -1,7 +1,5 @@
 import { LocalStorageKeys } from "@/services/LocalStorageService";
-
-type Primitive = null | undefined | boolean | number | bigint | string | symbol;
-type NonPrimitive<T> = Exclude<T, Primitive>;
+import { NonPrimitive } from "@/utilities/commonTypes";
 type LocalStorageKey = keyof typeof LocalStorageKeys;
 
 /**

@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 
 const LandingPage = () => {
-  return <Typography>This is landing page</Typography>;
+  return <Typography>Moron moro</Typography>;
 };
 
 export default LandingPage;

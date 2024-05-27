@@ -7,4 +7,11 @@ export const createModeTheme = (mode: ThemeType) =>
     palette: {
       mode,
     },
+    components: {
+      MuiButton: {
+        defaultProps: {
+          variant: "contained",
+        },
+      },
+    },
   });
