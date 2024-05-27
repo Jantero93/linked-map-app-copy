@@ -47,7 +47,7 @@ const getReverseGeocodingInfoFromPoint = async (
   const reverseGeocodingRes = await get<OpenCageReverseGeocodingRes>(reqUrl);
 
   const { status, results } = reverseGeocodingRes;
-  const isInvalidRes = status.code !== 200 || !!results.at(0);
+  const isInvalidRes = status.code !== 200 || !!results[0];
 
   if (isInvalidRes) {
     return null;

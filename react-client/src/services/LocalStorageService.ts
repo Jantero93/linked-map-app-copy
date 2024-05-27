@@ -47,8 +47,8 @@ const getTokenFromLocalStorage = (): TokenLocalStorage | null =>
  * Gets theme type from local storage.
  * @returns ThemeType | null
  */
-const getThemeFromLocalStorage = (): ThemeType | null =>
-  getFromLocalStorage<LocalStorageTheme>(LocalStorageKeys.Theme)?.theme ?? null;
+const getThemeFromLocalStorage = () =>
+  getFromLocalStorage<LocalStorageTheme>(LocalStorageKeys.Theme)?.theme;
 
 /**
  * Saves authentication information to local storage.

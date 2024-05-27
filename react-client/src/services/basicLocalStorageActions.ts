@@ -1,5 +1,5 @@
 import { LocalStorageKeys } from "@/services/LocalStorageService";
-import { NonPrimitive } from "@/utilities/commonTypes";
+
 type LocalStorageKey = keyof typeof LocalStorageKeys;
 
 /**
@@ -7,14 +7,12 @@ type LocalStorageKey = keyof typeof LocalStorageKeys;
  * @param key The key corresponding to the item in local storage.
  * @returns The parsed value as type T, or null if not found or parsing fails.
  */
-export const getFromLocalStorage = <T>(
-  key: LocalStorageKey
-): NonPrimitive<T> | null => {
+export const getFromLocalStorage = <T>(key: LocalStorageKey): T | null => {
   const item = localStorage.getItem(key);
   if (!item) return null;
 
   try {
-    return JSON.parse(item) as NonPrimitive<T>;
+    return JSON.parse(item) as T;
   } catch {
     console.error(`Error parsing the local storage item "${key}".`);
     return null;
@@ -27,10 +25,7 @@ export const getFromLocalStorage = <T>(
  * @param value The value to store, must be non-primitive.
  * @throws Will throw an error if JSON.stringify fails.
  */
-export const setToLocalStorage = <T>(
-  key: LocalStorageKey,
-  value: NonPrimitive<T>
-): void => {
+export const setToLocalStorage = <T>(key: LocalStorageKey, value: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
