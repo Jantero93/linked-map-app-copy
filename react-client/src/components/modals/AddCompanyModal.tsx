@@ -64,14 +64,6 @@ const fieldsConfiguration: Record<string, FieldConfig> = {
       return undefined;
     },
   },
-  closureYear: {
-    label: "Closure Year",
-    type: "text",
-    validate: (value, allValues) =>
-      Number(value) >= Number(allValues.establishmentDate)
-        ? undefined
-        : "Closure Year can not earlier than established year",
-  },
 };
 
 type FormValues = Record<keyof typeof fieldsConfiguration, string | undefined>;
@@ -122,11 +114,11 @@ const AddCompanyModal = ({
               </FinalField>
             ))}
             <DialogActions>
-              <Button onClick={onClose} color="primary">
-                Cancel
-              </Button>
               <Button type="submit" color="primary" disabled={hasSubmitErrors}>
                 Submit
+              </Button>
+              <Button color="error" onClick={onClose}>
+                Cancel
               </Button>
             </DialogActions>
           </form>

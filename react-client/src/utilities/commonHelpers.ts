@@ -1,0 +1,23 @@
+import { PlainObject } from "@/utilities/commonTypes";
+
+/**
+ * Check is TypeScript's generic 'object' type really object and not e.g. array
+ * @param value Any TypeScript's 'object' type
+ * @returns returns truly object
+ */
+const isPlainObject = (value: object): value is PlainObject =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
+ * Convert object properties to undefined, excluding arrays
+ * @param obj Plain object, not array
+ * @throws Error if parameter is not plain object (e.g. array.) Parameter is type checked.
+ * @returns
+ */
+export const mapObjectPropertiesUndefined = (obj: PlainObject) => {
+  if (!isPlainObject(obj)) {
+    throw new Error("Input must be a plain object, not an array.");
+  }
+
+  return Object.fromEntries(Object.keys(obj).map((key) => [key, undefined]));
+};

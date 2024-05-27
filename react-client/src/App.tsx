@@ -13,16 +13,17 @@ import "typeface-roboto";
 import { useThemeManagement } from "@/hooks/useThemeManagement";
 import useCheckAuthToken from "@/hooks/useCheckAuthToken";
 
-// Styled components for layout with Flexbox
 const MainContainer = styled(Box)({
   display: "flex",
   flexDirection: "column",
   minHeight: "100vh",
-  minWidth: "100vw",
 });
 
 const PageContainer = styled(Box)({
-  flexGrow: 1,
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+  minHeight: "0",
 });
 
 const App = () => {

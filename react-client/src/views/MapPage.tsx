@@ -1,9 +1,11 @@
-import OlMap from "@/components/openlayers/OlMap";
 import { styled } from "@mui/material";
+import ControlPanel from "@/components/mapView/ControlPanel";
+import OlMap from "@/components/mapView/OlMap";
 
-const PageSection = styled("section")(() => ({
-  height: "100vh",
-  width: "50vw",
+const PageSection = styled("div")(() => ({
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
 }));
 
 const ViewContainer = styled("div")(() => ({
@@ -11,13 +13,14 @@ const ViewContainer = styled("div")(() => ({
   flexDirection: "row",
   width: "100%",
   height: "100%",
+  flex: 1,
 }));
 
 const MapPage = () => {
   return (
     <ViewContainer>
       <PageSection>
-        <h1>Place holder action container</h1>
+        <ControlPanel />
       </PageSection>
       <PageSection>
         <OlMap />

@@ -13,7 +13,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
 const FormButton = styled(Button)(({ theme: _theme }) => ({
   width: "100%",
-  variant: "contained",
 }));
 
 // Define the field and form values
@@ -115,18 +114,10 @@ const RegisterModal = ({ isOpen, handleModalOpen }: Props) => {
               </FinalField>
             ))}
             <DialogActions>
-              <FormButton
-                variant="contained"
-                type="submit"
-                disabled={hasSubmitErrors}
-              >
+              <FormButton type="submit" disabled={hasSubmitErrors}>
                 Register
               </FormButton>
-              <FormButton
-                variant="contained"
-                color="error"
-                onClick={closeDialog}
-              >
+              <FormButton color="error" onClick={closeDialog}>
                 Cancel
               </FormButton>
             </DialogActions>

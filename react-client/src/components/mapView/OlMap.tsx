@@ -1,5 +1,4 @@
-// src/components/Map.tsx
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
@@ -11,29 +10,22 @@ import { Style, Icon } from "ol/style";
 import { Feature } from "ol";
 import Point from "ol/geom/Point";
 import "ol/ol.css";
-import GeocodingService, {
-  ReverseGeocodingRes,
-} from "@/services/GeocodingService";
+import GeocodingService from "@/services/GeocodingService";
 import { useAppDispatch } from "@/hooks/useStoreHooks";
 import { setSnackbarText } from "@/store/slices/uiSlice";
-import AddCompanyModal from "../modals/AddCompanyModal";
+import { clearLocation, setLocation } from "@/store/slices/uiMapSlice";
 import { styled } from "@mui/material/styles";
 
-const MapContainer = styled("div")(({ theme: _theme }) => ({
+const MapContainer = styled("div")(() => ({
+  flex: 1,
   width: "100%",
   height: "100%",
 }));
 
 const OlMap = () => {
-  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
-  const [reverseGeocodingRes, setReverseGeocodingRes] =
-    useState<ReverseGeocodingRes | null>(null);
-
   const dispatch = useAppDispatch();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapObj = useRef<Map>();
-
-  const handleCompanyModal = (open: boolean) => setIsCompanyModalOpen(open);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -82,8 +74,12 @@ const OlMap = () => {
         return;
       }
 
-      setReverseGeocodingRes({ ...res });
-      handleCompanyModal(true);
+      const geoRes = await GeocodingService.getReverseGeocodingInfoFromPoint(
+        lonLat[0],
+        lonLat[1]
+      );
+
+      dispatch(geoRes ? setLocation(geoRes) : clearLocation());
 
       const iconFeature = new Feature({
         geometry: new Point(coordinates),
@@ -95,20 +91,7 @@ const OlMap = () => {
     return () => mapObj.current?.setTarget(undefined);
   }, [dispatch]);
 
-  if (reverseGeocodingRes === null) return <MapContainer ref={mapRef} />;
-
-  const { streetAddress, streetNumber } = reverseGeocodingRes;
-  return (
-    <>
-      <MapContainer ref={mapRef} />
-      <AddCompanyModal
-        isOpen={isCompanyModalOpen}
-        onClose={() => handleCompanyModal(false)}
-        streetAddress={streetAddress}
-        streetNumber={streetNumber}
-      />
-    </>
-  );
+  return <MapContainer ref={mapRef} />;
 };
 
 export default OlMap;

@@ -21,7 +21,7 @@ const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
 }));
 
 const FormButton = styled(({ ...otherProps }: ButtonProps) => (
-  <Button {...otherProps} variant="contained" fullWidth />
+  <Button {...otherProps} fullWidth />
 ))(({ theme: _theme }) => ({}));
 
 interface Props {
