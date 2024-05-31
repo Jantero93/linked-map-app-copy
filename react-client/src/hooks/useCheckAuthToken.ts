@@ -7,6 +7,7 @@ import {
 } from "@/utilities/dateHelpers";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import LocalStorageService from "@/services/LocalStorageService";
+import { setSnackbarText } from "@/store/slices/generalUiSlice";
 
 /**
  * Checks every two minutes or useEffect trigger is auth token expired.
@@ -24,9 +25,14 @@ const useCheckAuthToken = () => {
 
       const isTokenExpired = isTimeBeforeCurrentUtc(accessTokenExpiresDate);
 
-      // Force logout if token expired and user logged in
+      // Force logout if token expired and user is logged in
       if (isTokenExpired && loggedIn) {
         dispatch(logoutUser());
+        dispatch(
+          setSnackbarText(
+            "You have been logged out due to long session. Please log in again."
+          )
+        );
       }
     };
 

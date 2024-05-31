@@ -31,10 +31,15 @@ export type Primitive =
   | symbol;
 
 /**
- * Reference values in TypeScript (and JavaScript), arrays and objects
- * (object accepts array)
+ * Helper type to exclude functions from 'object' type
  */
-export type NonPrimitive<T> = Exclude<T, object>;
+type NonFunction<T> = T extends (...args: unknown[]) => unknown ? never : T;
+
+/**
+ * Reference values in TypeScript (and JavaScript), arrays and objects
+ * (object accepts arrays)
+ */
+export type NonPrimitive = NonFunction<object>;
 
 /**
  * Plain object (exclude e.g. array from 'object' type)

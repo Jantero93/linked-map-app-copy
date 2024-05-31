@@ -1704,3 +1704,6 @@ dotnet_diagnostic.CA2208.severity = none
 
 # CA1848: Use the LoggerMessage delegates
 dotnet_diagnostic.CA1848.severity = none
+
+# S2219: Runtime type checking should be simplified
+dotnet_diagnostic.S2219.severity = suggestion

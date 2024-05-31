@@ -17,7 +17,7 @@ import {
   LinkProps as RouterLinkProps,
 } from "react-router-dom";
 import RoutePath from "@/routing/routes";
-import { setTheme } from "@/store/slices/uiSlice";
+import { setTheme } from "@/store/slices/generalUiSlice";
 import { logoutUser } from "@/store/actions/authActions";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import LoginModal from "@/components/modals/LoginModal";

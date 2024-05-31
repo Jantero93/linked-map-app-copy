@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMediaQuery } from "@mui/material";
-import { setTheme } from "@/store/slices/uiSlice";
+import { setTheme } from "@/store/slices/generalUiSlice";
 import { ThemeType } from "@/theme/theme";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import LocalStorageService from "@/services/LocalStorageService";

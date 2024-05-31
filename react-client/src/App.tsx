@@ -6,7 +6,7 @@ import { createModeTheme } from "@/theme/theme";
 import CommonSnackBar from "@/components/CommonSnackBar";
 import AppNavigationBar from "@/components/AppNavigationBar";
 import AppFooterBar from "@/components/AppFooterBar";
-import MapPage from "@/views/MapPage";
+import MapPage from "@/views/mapView/MapPage";
 import LandingPage from "@/views/LandingPage";
 
 import "typeface-roboto";

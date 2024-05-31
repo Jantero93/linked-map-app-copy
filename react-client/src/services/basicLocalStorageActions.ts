@@ -1,4 +1,5 @@
 import { LocalStorageKeys } from "@/services/LocalStorageService";
+import { NonPrimitive } from "@/utilities/commonTypes";
 
 type LocalStorageKey = keyof typeof LocalStorageKeys;
 
@@ -25,7 +26,10 @@ export const getFromLocalStorage = <T>(key: LocalStorageKey): T | null => {
  * @param value The value to store, must be non-primitive.
  * @throws Will throw an error if JSON.stringify fails.
  */
-export const setToLocalStorage = <T>(key: LocalStorageKey, value: T): void => {
+export const setToLocalStorage = (
+  key: LocalStorageKey,
+  value: NonPrimitive
+): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {

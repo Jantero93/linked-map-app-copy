@@ -11,7 +11,23 @@ export const uiMapSlice = createSlice({
   initialState,
   reducers: {
     setLocation: (state, action: PayloadAction<ReverseGeocodingRes>) => {
-      Object.assign(state, action.payload);
+      const {
+        latitude,
+        longitude,
+        city,
+        postalCode,
+        streetAddress,
+        streetNumber,
+        suburban,
+      } = action.payload;
+
+      state.city = city;
+      state.postalCode = postalCode;
+      state.streetAddress = streetAddress;
+      state.streetNumber = streetNumber;
+      state.suburban = suburban;
+      state.latitude = latitude;
+      state.longitude = longitude;
     },
     clearLocation: (state) => {
       const undefinedState = mapObjectPropertiesUndefined(state);

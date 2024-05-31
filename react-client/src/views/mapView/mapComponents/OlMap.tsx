@@ -12,7 +12,10 @@ import Point from "ol/geom/Point";
 import "ol/ol.css";
 import GeocodingService from "@/services/GeocodingService";
 import { useAppDispatch } from "@/hooks/useStoreHooks";
-import { setSnackbarText } from "@/store/slices/uiSlice";
+import {
+  setControlViewComponent,
+  setSnackbarText,
+} from "@/store/slices/generalUiSlice";
 import { clearLocation, setLocation } from "@/store/slices/uiMapSlice";
 import { styled } from "@mui/material/styles";
 
@@ -36,10 +39,11 @@ const OlMap = () => {
       }),
     ];
 
-    const initialView = new View({
+    const helsinkiView = new View({
       center: fromLonLat([24.950531, 60.192059]),
       zoom: 12,
     });
+    const initialView = helsinkiView;
 
     const vectorSource = new VectorSource();
     const vectorLayer = new VectorLayer({
@@ -62,24 +66,22 @@ const OlMap = () => {
       const coordinates = event.coordinate;
       const lonLat = toLonLat(coordinates);
 
-      const res = await GeocodingService.getReverseGeocodingInfoFromPoint(
-        lonLat[0],
-        lonLat[1]
-      );
-
-      if (res === null) {
-        dispatch(
-          setSnackbarText("Couldn't get location information from click")
-        );
-        return;
-      }
-
       const geoRes = await GeocodingService.getReverseGeocodingInfoFromPoint(
         lonLat[0],
         lonLat[1]
       );
 
+      if (geoRes === null) {
+        dispatch(
+          setSnackbarText(
+            "Couldn't get location information from click. Try to click building."
+          )
+        );
+        return;
+      }
+
       dispatch(geoRes ? setLocation(geoRes) : clearLocation());
+      dispatch(setControlViewComponent("AddCompany"));
 
       const iconFeature = new Feature({
         geometry: new Point(coordinates),

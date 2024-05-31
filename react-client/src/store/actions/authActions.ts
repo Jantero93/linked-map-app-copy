@@ -3,7 +3,7 @@ import { post } from "@/utilities/fetch/genericFetch";
 import { API_URL } from "@/utilities/env";
 import { loginApi } from "@/utilities/fetch/loginFetch";
 import { RejectedActionPayload } from "@/store/store";
-import { setSnackbarText } from "@/store/slices/uiSlice";
+import { setSnackbarText } from "@/store/slices/generalUiSlice";
 
 export type UserCredentials = {
   username: string;

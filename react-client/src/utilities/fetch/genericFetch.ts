@@ -40,8 +40,8 @@ const apiCall = async <T>(
   const config: RequestInit = {
     method,
     headers: {
-      [Headers["Content-Type"]]: "application/json",
       ...createGlobalHeaders(),
+      [Headers["Content-Type"]]: "application/json",
     },
     signal: controller.signal,
   };

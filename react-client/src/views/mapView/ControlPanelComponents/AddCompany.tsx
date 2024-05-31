@@ -1,26 +1,19 @@
-import {
-  TextField,
-  DialogActions,
-  Button,
-  TextFieldProps,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { Form as FinalForm, Field as FinalField } from "react-final-form";
-import CommonDialog from "../CommonDialog";
+import { useAppSelector } from "@/hooks/useStoreHooks";
 import { getCurrentDates } from "@/utilities/dateHelpers";
-
-type Props = {
-  onClose: () => void;
-  isOpen: boolean;
-  streetAddress: string;
-  streetNumber: string;
-};
+import { Box, Button, TextField, TextFieldProps, styled } from "@mui/material";
+import { Field, Form } from "react-final-form";
 
 const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
-  <TextField {...otherProps} fullWidth variant="outlined" />
+  <TextField {...otherProps} variant="filled" />
 ))(({ theme }) => ({
   marginBottom: theme.spacing(1),
   marginTop: theme.spacing(2),
+}));
+
+const FormContainer = styled("form")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  padding: theme.spacing(5),
 }));
 
 interface FieldConfig {
@@ -68,12 +61,9 @@ const fieldsConfiguration: Record<string, FieldConfig> = {
 
 type FormValues = Record<keyof typeof fieldsConfiguration, string | undefined>;
 
-const AddCompanyModal = ({
-  onClose,
-  isOpen,
-  streetAddress,
-  streetNumber,
-}: Props) => {
+const AddCompany = () => {
+  const { streetAddress, streetNumber } = useAppSelector((s) => s.uiMap);
+
   const onSubmit = (values: unknown) => {
     // eslint-disable-next-line no-console
     console.log("values", values);
@@ -84,15 +74,17 @@ const AddCompanyModal = ({
     streetNumber,
   };
 
+  if (!streetAddress || !streetNumber) return null;
+
   return (
-    <CommonDialog open={isOpen} onClose={onClose} title="Add new company">
-      <FinalForm
+    <Box>
+      <Form
         onSubmit={onSubmit}
         initialValues={initializedFormValues}
         render={({ handleSubmit, hasSubmitErrors }) => (
-          <form onSubmit={handleSubmit}>
+          <FormContainer onSubmit={handleSubmit}>
             {Object.keys(fieldsConfiguration).map((fieldName) => (
-              <FinalField
+              <Field
                 key={fieldName}
                 name={fieldName}
                 type={fieldsConfiguration[fieldName].type}
@@ -111,21 +103,16 @@ const AddCompanyModal = ({
                     }
                   />
                 )}
-              </FinalField>
+              </Field>
             ))}
-            <DialogActions>
-              <Button type="submit" color="primary" disabled={hasSubmitErrors}>
-                Submit
-              </Button>
-              <Button color="error" onClick={onClose}>
-                Cancel
-              </Button>
-            </DialogActions>
-          </form>
+            <Button type="submit" color="primary" disabled={hasSubmitErrors}>
+              Submit
+            </Button>
+          </FormContainer>
         )}
       />
-    </CommonDialog>
+    </Box>
   );
 };
 
-export default AddCompanyModal;
+export default AddCompany;
