@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 // Reducers
 import exampleReducer from "@/store/slices/exampleSlice";
-import uiReducer from "@/store/slices/uiSlice";
+import uiReducer from "@/store/slices/generalUiSlice";
 import uiMapReducer from "@/store/slices/uiMapSlice";
 import authReducer from "@/store/slices/authSlice";
 

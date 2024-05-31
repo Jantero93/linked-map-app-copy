@@ -3,12 +3,16 @@ import { ThemeType } from "@/theme/theme";
 import { FALLBACK_THEME } from "@/utilities/env";
 import LocalStorageService from "@/services/LocalStorageService";
 
+// INFO: ViewCompany just for testing purposes, not actual component
+export type ControlViewComponent = "AddCompany" | "ViewCompany";
+
 interface UiState {
   selectedTheme: ThemeType;
   isLoading: boolean;
   error: string | null;
   openSnackbar: boolean;
   snackbarText: string | null;
+  selectedControlViewComponent: ControlViewComponent | null;
 }
 
 const initialState: UiState = {
@@ -18,9 +22,10 @@ const initialState: UiState = {
   error: null,
   openSnackbar: false,
   snackbarText: null,
+  selectedControlViewComponent: null,
 };
 
-export const exampleSlice = createSlice({
+export const generalUiSlice = createSlice({
   name: "ui-slice",
   initialState,
   reducers: {
@@ -45,6 +50,15 @@ export const exampleSlice = createSlice({
       state.snackbarText = null;
       state.openSnackbar = false;
     },
+    setControlViewComponent: (
+      state,
+      action: PayloadAction<ControlViewComponent>
+    ) => {
+      state.selectedControlViewComponent = action.payload;
+    },
+    clearControlViewComponent: (state) => {
+      state.selectedControlViewComponent = null;
+    },
   },
 });
 
@@ -55,6 +69,8 @@ export const {
   setError,
   setSnackbarText,
   clearSnackbar,
-} = exampleSlice.actions;
+  setControlViewComponent,
+  clearControlViewComponent,
+} = generalUiSlice.actions;
 
-export default exampleSlice.reducer;
+export default generalUiSlice.reducer;

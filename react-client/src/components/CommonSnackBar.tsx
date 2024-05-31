@@ -1,6 +1,6 @@
 import Snackbar from "@mui/material/Snackbar";
 import { Slide, SlideProps } from "@mui/material";
-import { clearSnackbar } from "@/store/slices/uiSlice";
+import { clearSnackbar } from "@/store/slices/generalUiSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import { RootState } from "@/store/store";
 

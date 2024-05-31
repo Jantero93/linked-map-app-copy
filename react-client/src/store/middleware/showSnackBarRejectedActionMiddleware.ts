@@ -1,5 +1,5 @@
 import { Middleware, PayloadAction, isRejected } from "@reduxjs/toolkit";
-import { setSnackbarText } from "@/store/slices/uiSlice";
+import { setSnackbarText } from "@/store/slices/generalUiSlice";
 import { RejectedActionPayload } from "@/store/store";
 
 const isRejectedActionWithErrorPayload = (

@@ -69,7 +69,6 @@ public static class OpenIddictInitializer
         using var scope = app.Services.CreateScope();
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
-        var clientId = ApplicationSettings.OpenIddictClientId;
         var client = await manager.FindByClientIdAsync(ApplicationSettings.OpenIddictClientId);
 
         if (client is null)
@@ -80,11 +79,11 @@ public static class OpenIddictInitializer
                 ClientId = ApplicationSettings.OpenIddictClientId,
                 ClientType = OpenIddictConstants.ClientTypes.Public,
                 Permissions =
-            {
-                OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.GrantTypes.Password,
-                OpenIddictConstants.Permissions.GrantTypes.RefreshToken
-            }
+                {
+                    OpenIddictConstants.Permissions.Endpoints.Token,
+                    OpenIddictConstants.Permissions.GrantTypes.Password,
+                    OpenIddictConstants.Permissions.GrantTypes.RefreshToken
+                }
             };
 
             await manager.CreateAsync(descriptor);

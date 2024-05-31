@@ -47,14 +47,20 @@ const getReverseGeocodingInfoFromPoint = async (
   const reverseGeocodingRes = await get<OpenCageReverseGeocodingRes>(reqUrl);
 
   const { status, results } = reverseGeocodingRes;
-  const isInvalidRes = status.code !== 200 || !!results[0];
 
-  if (isInvalidRes) {
+  const isBadStatusCode = status.code !== 200;
+  const {
+    components: { road, house_number },
+  } = results[0];
+
+  const noStreetAddress = road === undefined || house_number === undefined;
+
+  if (isBadStatusCode || noStreetAddress) {
     return null;
   }
 
   const result = reverseGeocodingRes.results[0];
-  const { road, house_number, city, postcode, suburb } = result.components;
+  const { city, postcode, suburb } = result.components;
   const { lat, lng } = result.geometry;
 
   return {

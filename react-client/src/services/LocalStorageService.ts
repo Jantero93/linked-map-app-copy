@@ -38,17 +38,17 @@ export const LocalStorageKeys = {
 
 /**
  * Gets authentication token from local storage.
- * @returns TokenLocalStorage | null
+ * @returns TokenLocalStorage | null if none found from local storage
  */
 const getTokenFromLocalStorage = (): TokenLocalStorage | null =>
   getFromLocalStorage<TokenLocalStorage>(LocalStorageKeys.Token);
 
 /**
  * Gets theme type from local storage.
- * @returns ThemeType | null
+ * @returns ThemeType | null if none found from local storage
  */
-const getThemeFromLocalStorage = () =>
-  getFromLocalStorage<LocalStorageTheme>(LocalStorageKeys.Theme)?.theme;
+const getThemeFromLocalStorage = (): ThemeType | null =>
+  getFromLocalStorage<LocalStorageTheme>(LocalStorageKeys.Theme)?.theme ?? null;
 
 /**
  * Saves authentication information to local storage.
