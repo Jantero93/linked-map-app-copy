@@ -1,68 +1,38 @@
 import { useEffect, useRef } from "react";
-import Map from "ol/Map";
-import View from "ol/View";
-import TileLayer from "ol/layer/Tile";
-import OSM from "ol/source/OSM";
-import { fromLonLat, toLonLat } from "ol/proj";
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import { Style, Icon } from "ol/style";
-import { Feature } from "ol";
-import Point from "ol/geom/Point";
-import "ol/ol.css";
-import GeocodingService from "@/services/GeocodingService";
 import { useAppDispatch } from "@/hooks/useStoreHooks";
-import {
-  setControlViewComponent,
-  setSnackbarText,
-} from "@/store/slices/generalUiSlice";
-import { clearLocation, setLocation } from "@/store/slices/uiMapSlice";
+import { toLonLat } from "ol/proj";
 import { styled } from "@mui/material/styles";
+import { setSnackbarText } from "@/store/slices/generalUiSlice";
+import StreetInfoPopup from "./StreetInfoPopup";
+import { clearLocation, setLocation } from "@/store/slices/uiMapSlice";
+import { MapBrowserEvent } from "ol";
+import GeocodingService from "@/services/GeocodingService";
+import useOverlay from "@/hooks/mapHooks/useOverlay";
+import useInitializeMap from "@/hooks/mapHooks/useInitializeMap";
+import Button from "@mui/material/Button";
+import React from "react";
 
-const MapContainer = styled("div")(() => ({
+const MapContainer = styled("div")({
   flex: 1,
   width: "100%",
   height: "100%",
-}));
+  position: "relative",
+});
 
 const OlMap = () => {
   const dispatch = useAppDispatch();
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapObj = useRef<Map>();
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  const mapInstanceRef = useInitializeMap(mapRef);
+  const overlayRef = useOverlay(mapInstanceRef, popupRef);
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    const map = mapInstanceRef.current;
 
-    const initialLayers = [
-      new TileLayer({
-        source: new OSM(),
-      }),
-    ];
+    if (!map) return;
 
-    const helsinkiView = new View({
-      center: fromLonLat([24.950531, 60.192059]),
-      zoom: 12,
-    });
-    const initialView = helsinkiView;
-
-    const vectorSource = new VectorSource();
-    const vectorLayer = new VectorLayer({
-      source: vectorSource,
-      style: new Style({
-        image: new Icon({
-          anchor: [0.5, 1],
-          src: "https://openlayers.org/en/latest/examples/data/icon.png", // placeholder image
-        }),
-      }),
-    });
-
-    mapObj.current = new Map({
-      target: mapRef.current,
-      layers: [...initialLayers, vectorLayer],
-      view: initialView,
-    });
-
-    mapObj.current.on("click", async (event) => {
+    map.on("click", async (event: MapBrowserEvent<UIEvent>) => {
       const coordinates = event.coordinate;
       const lonLat = toLonLat(coordinates);
 
@@ -72,28 +42,24 @@ const OlMap = () => {
       );
 
       if (geoRes === null) {
-        dispatch(
-          setSnackbarText(
-            "Couldn't get location information from click. Try to click building."
-          )
-        );
+        const notFoundText = `Couldn't get location information from click. Try to click building.`;
+        dispatch(setSnackbarText(notFoundText));
         return;
       }
 
       dispatch(geoRes ? setLocation(geoRes) : clearLocation());
-      dispatch(setControlViewComponent("AddCompany"));
 
-      const iconFeature = new Feature({
-        geometry: new Point(coordinates),
-      });
-
-      vectorSource.addFeature(iconFeature);
+      if (overlayRef.current) {
+        overlayRef.current.setPosition(coordinates);
+      }
     });
+  }, [dispatch, mapInstanceRef, overlayRef]);
 
-    return () => mapObj.current?.setTarget(undefined);
-  }, [dispatch]);
-
-  return <MapContainer ref={mapRef} />;
+  return (
+    <MapContainer ref={mapRef}>
+      <StreetInfoPopup ref={popupRef} />
+    </MapContainer>
+  );
 };
 
 export default OlMap;

@@ -1,6 +1,5 @@
 import { GEOCODING_API_KEY } from "@/utilities/env";
-import { get } from "@/utilities/fetch/genericFetch";
-import { OpenCageReverseGeocodingRes } from "@/services/GeocodingTypes";
+import { requestReverseGeocoding } from "@/utilities/fetch/reverseGeocodingFetch";
 
 const LON_PLACEHOLDER = "<LONGITUDE>";
 const LAT_PLACEHOLDER = "<LATITUDE>";
@@ -12,7 +11,7 @@ export type ReverseGeocodingRes = {
   streetNumber?: string;
   longitude: number;
   latitude: number;
-  suburban?: string;
+  suburb?: string;
   city?: string;
   postalCode?: string;
 };
@@ -44,7 +43,7 @@ const getReverseGeocodingInfoFromPoint = async (
   latitude: number
 ): Promise<ReverseGeocodingRes | null> => {
   const reqUrl = generateGeocodingUrl(longitude, latitude);
-  const reverseGeocodingRes = await get<OpenCageReverseGeocodingRes>(reqUrl);
+  const reverseGeocodingRes = await requestReverseGeocoding(reqUrl);
 
   const { status, results } = reverseGeocodingRes;
 
@@ -69,7 +68,7 @@ const getReverseGeocodingInfoFromPoint = async (
     streetAddress: road,
     streetNumber: house_number,
     city,
-    suburban: suburb,
+    suburb: suburb,
     postalCode: postcode,
   };
 };
