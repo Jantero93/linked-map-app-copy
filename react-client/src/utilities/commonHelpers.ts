@@ -1,4 +1,4 @@
-import { PlainObject } from "@/utilities/commonTypes";
+import { NonPrimitive, PlainObject } from "@/utilities/commonTypes";
 
 /**
  * Check is TypeScript's generic 'object' type really object and not e.g. array
@@ -14,7 +14,7 @@ const isPlainObject = (value: object): value is PlainObject =>
  * @throws Error if parameter is not plain object (e.g. array.) Parameter is type checked.
  * @returns
  */
-export const mapObjectPropertiesUndefined = (obj: PlainObject) => {
+export const mapObjectPropertiesUndefined = (obj: NonPrimitive) => {
   if (!isPlainObject(obj)) {
     throw new Error("Input must be a plain object, not an array.");
   }

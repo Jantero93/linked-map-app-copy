@@ -18,14 +18,14 @@ export const uiMapSlice = createSlice({
         postalCode,
         streetAddress,
         streetNumber,
-        suburban,
+        suburb,
       } = action.payload;
 
       state.city = city;
       state.postalCode = postalCode;
       state.streetAddress = streetAddress;
       state.streetNumber = streetNumber;
-      state.suburban = suburban;
+      state.suburb = suburb;
       state.latitude = latitude;
       state.longitude = longitude;
     },
