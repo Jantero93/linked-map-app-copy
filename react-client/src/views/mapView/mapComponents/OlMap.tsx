@@ -3,14 +3,12 @@ import { useAppDispatch } from "@/hooks/useStoreHooks";
 import { toLonLat } from "ol/proj";
 import { styled } from "@mui/material/styles";
 import { setSnackbarText } from "@/store/slices/generalUiSlice";
-import StreetInfoPopup from "./StreetInfoPopup";
+import StreetInfoPopup, { StreetInfoPopupHandle } from "./StreetInfoPopup";
 import { clearLocation, setLocation } from "@/store/slices/uiMapSlice";
 import { MapBrowserEvent } from "ol";
 import GeocodingService from "@/services/GeocodingService";
 import useOverlay from "@/hooks/mapHooks/useOverlay";
 import useInitializeMap from "@/hooks/mapHooks/useInitializeMap";
-import Button from "@mui/material/Button";
-import React from "react";
 
 const MapContainer = styled("div")({
   flex: 1,
@@ -22,10 +20,11 @@ const MapContainer = styled("div")({
 const OlMap = () => {
   const dispatch = useAppDispatch();
   const mapRef = useRef<HTMLDivElement>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
+  const popupElementRef = useRef<HTMLDivElement>(null);
+  const popupHandleRef = useRef<StreetInfoPopupHandle>(null);
 
   const mapInstanceRef = useInitializeMap(mapRef);
-  const overlayRef = useOverlay(mapInstanceRef, popupRef);
+  const overlayRef = useOverlay(mapInstanceRef, popupElementRef);
 
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -52,12 +51,18 @@ const OlMap = () => {
       if (overlayRef.current) {
         overlayRef.current.setPosition(coordinates);
       }
+
+      if (popupHandleRef.current) {
+        popupHandleRef.current.show();
+      }
     });
   }, [dispatch, mapInstanceRef, overlayRef]);
 
   return (
     <MapContainer ref={mapRef}>
-      <StreetInfoPopup ref={popupRef} />
+      <div ref={popupElementRef}>
+        <StreetInfoPopup ref={popupHandleRef} />
+      </div>
     </MapContainer>
   );
 };
