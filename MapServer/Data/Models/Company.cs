@@ -1,15 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using MicroOrm.Dapper.Repositories.Attributes;
-
 namespace MapServer.Data.Models;
 
-[Table("Workplace", Schema = "work")]
 public record Company
 {
-    [Key]
-    [Identity]
-    public required Guid Id { get; init; }
+    public Guid Id { get; set; }
 
     public required string CompanyName { get; init; }
 
@@ -17,5 +10,5 @@ public record Company
 
     public DateTime? ClosureDate { get; init; }
 
-    public required Guid LocationId { get; init; }
+    public Guid LocationId { get; init; }
 }

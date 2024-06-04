@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ReverseGeocodingRes } from "@/services/GeocodingService";
 import { mapObjectPropertiesUndefined } from "@/utilities/commonHelpers";
+import { RootState } from "@/store/store";
 
 type UiSelectedMapLocation = Partial<ReverseGeocodingRes>;
 
@@ -37,5 +38,17 @@ export const uiMapSlice = createSlice({
 });
 
 export const { setLocation, clearLocation } = uiMapSlice.actions;
+
+// Define the typed selector function
+export const selectValidMapLocation = (state: RootState) => {
+  const { latitude, longitude, city, streetAddress, streetNumber, ...rest } =
+    state.uiMap;
+
+  if (latitude && longitude && city && streetAddress && streetNumber) {
+    return { latitude, longitude, city, streetAddress, streetNumber, ...rest };
+  }
+
+  return null;
+};
 
 export default uiMapSlice.reducer;

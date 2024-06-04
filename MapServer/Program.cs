@@ -72,7 +72,8 @@ static void ConfigureAppSettings(ConfigurationManager configuration)
 
 static T GetRequiredConfiguration<T>(IConfiguration configuration, string key)
 {
-    var value = configuration[key] ?? throw new ArgumentNullException($"No value found for key: {key}");
+    var value = configuration[key];
+    ArgumentException.ThrowIfNullOrEmpty(value);
     return configuration.GetValue<T>(key)!;
 }
 
