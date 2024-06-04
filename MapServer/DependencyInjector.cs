@@ -1,6 +1,9 @@
 using System.Data;
 using System.Data.SqlClient;
+using MapServer.Data.Interfaces;
 using MapServer.Data.Repositories;
+using MapServer.Services;
+using MapServer.Services.Interfaces;
 using MapServer.Store.Repositories;
 
 namespace MapServer;
@@ -11,13 +14,12 @@ public static class DependencyInjector
     {
         // Generic
         services.AddScoped<IDbConnection>(provider => new SqlConnection(provider.GetRequiredService<IConfiguration>().GetConnectionString("MapApplication")));
-        services.AddAutoMapper(typeof(Program));
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         // Repositories
-        services.AddScoped<TestRepository>();
-        services.AddScoped<LocationRepository>();
-        services.AddScoped<CompanyRepository>();
-        services.AddScoped<WorkExperienceRepository>();
+        services.AddScoped<ICompanyStore, CompanyStore>();
+        services.AddScoped<ILocationStore, LocationStore>();
+
+        // Services
+        services.AddScoped<ICompanyService, CompanyService>();
     }
 }

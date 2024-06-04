@@ -1,24 +1,18 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MapServer.Store.Models;
 
-[Table("Location", Schema = "map")]
 public record Location
 {
-    [Key]
+    public Guid Id { get; init; }
     public required string Street { get; init; }
-
-    [Key]
     public required string StreetNumber { get; init; }
-
-    [Key]
     public required string City { get; init; }
-
-    public required decimal Longitude { get; init; }
-
-    public required decimal Latitude { get; init; }
-
-    public string? Suburban { get; init; }
+    public required double Longitude { get; init; }
+    public required double Latitude { get; init; }
+    public string? Suburb { get; init; }
     public string? PostalCode { get; init; }
+
+    [NotMapped]
+    public string FullAddress => $"{Street} {StreetNumber}";
 }

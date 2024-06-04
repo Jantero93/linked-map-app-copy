@@ -6,5 +6,5 @@ public record CompanyDto
     public required string CompanyName { get; init; }
     public required DateTime EstablishmentDate { get; init; }
     public DateTime? ClosureDate { get; init; }
-    public LocationDto? Location { get; init; }
+    public required LocationDto? Location { get; init; }
 }

@@ -47,3 +47,14 @@ export const getCurrentDates = (
       return moment().year();
   }
 };
+
+/**
+ * Checks is given year same or before compareTo, compareTo defaults to current year
+ */
+export const isYearSameOrBefore = (year: string, compareTo?: string) => {
+  const inputYear = moment(year, "YYYY", true);
+
+  const compareYear = compareTo ? moment() : moment(compareTo, "YYYY", true);
+
+  return inputYear.isSameOrBefore(compareYear);
+};

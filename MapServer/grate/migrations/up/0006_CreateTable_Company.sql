@@ -11,8 +11,8 @@ IF NOT EXISTS (
   Name VARCHAR(127) NOT NULL,
   EstablishmentDate DATE NOT NULL,
   ClosureDate DATE NULL,
-  Street VARCHAR(255) NOT NULL,
-  StreetNumber NVARCHAR(255) NOT NULL
+  LocationId UNIQUEIDENTIFIER NOT NULL,
+  CONSTRAINT FK_Company_Location FOREIGN KEY (LocationId) REFERENCES MAP.Location(Id)
 );
 
 END
