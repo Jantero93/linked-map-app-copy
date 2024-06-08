@@ -2,7 +2,7 @@ import { styled } from "@mui/material";
 import { useAppSelector } from "@/hooks/useStoreHooks";
 import { ControlViewComponent } from "@/store/slices/generalUiSlice";
 import ControlPanel from "@/views/mapView/ControlPanelComponents/ControlPanel";
-import OlMap from "@/views/mapView/mapComponents/OlMap";
+import LeafletMap from "@/views/mapView/mapComponents/LeafletMap";
 import AddCompany from "@/views/mapView/ControlPanelComponents/AddCompany";
 
 const PageSection = styled("section")({
@@ -40,7 +40,7 @@ const MapPage = () => {
         <ControlPanel component={controlPanelComponent} />
       </PageSection>
       <PageSection>
-        <OlMap />
+        <LeafletMap />
       </PageSection>
     </ViewContainer>
   );

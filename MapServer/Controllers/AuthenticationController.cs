@@ -15,8 +15,9 @@ using System.Net.Mime;
 namespace MapServer.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
 [ProducesErrorResponseType(typeof(RequestFailedResponse))]
+[Produces(MediaTypeNames.Application.Json)]
+[Route("api/[controller]")]
 public class AuthenticationController(
     UserManager<ApplicationUser> userManager,
     IOpenIddictTokenManager tokenManager,
@@ -26,8 +27,6 @@ public class AuthenticationController(
     [HttpPost("~/connect/token")]
     [AllowAnonymous]
     [Consumes(MediaTypeNames.Application.FormUrlEncoded)]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesDefaultResponseType(typeof(OpenIddictLoginResponse))]
     public async Task<IActionResult> Login()
     {
         logger.LogInformation("OpenIddict Login endpoint");
@@ -81,7 +80,6 @@ public class AuthenticationController(
 
     [HttpPost("register")]
     [AllowAnonymous]
-    [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Login([FromBody] RegisterRequest req)
     {
         var userExists = await userManager.FindByNameAsync(req.Username);
@@ -115,10 +113,7 @@ public class AuthenticationController(
 
         if (string.IsNullOrEmpty(userId))
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new RequestFailedResponse
-            {
-                Message = "Logout failed"
-            });
+            return NoContent();
         }
 
         var tokens = await tokenManager.FindBySubjectAsync(userId).ToListAsync();

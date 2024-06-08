@@ -8,7 +8,7 @@ import AppNavigationBar from "@/components/AppNavigationBar";
 import AppFooterBar from "@/components/AppFooterBar";
 import MapPage from "@/views/mapView/MapPage";
 import LandingPage from "@/views/LandingPage";
-
+import "leaflet/dist/leaflet.css";
 import "typeface-roboto";
 import { useThemeManagement } from "@/hooks/useThemeManagement";
 import useCheckAuthToken from "@/hooks/useCheckAuthToken";
