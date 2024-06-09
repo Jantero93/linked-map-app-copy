@@ -26,7 +26,7 @@ const ControlPanel = () => {
   );
 
   return (
-    <PaddedStack spacing={1}>
+    <PaddedStack spacing={2}>
       <SelectControlPanelDropdown />
       {ComponentMap[selectedControlViewComponent]}
     </PaddedStack>

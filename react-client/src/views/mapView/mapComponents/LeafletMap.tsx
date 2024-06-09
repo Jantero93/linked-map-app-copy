@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import {
   MapContainer,
   Marker,
   Popup,
   TileLayer,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
@@ -28,6 +30,9 @@ L.Icon.Default.mergeOptions({
 const LeafletMap = () => {
   const dispatch = useAppDispatch();
   const controllerComponent = useAppSelector(selectedControllerComponent);
+  const shouldInvalidateMapSize = useAppSelector(
+    (s) => s.uiMap.shouldInvalidateSize
+  );
 
   const handleMapClick = async (lat: number, lng: number) => {
     if (controllerComponent === "AddCompany") {
@@ -51,15 +56,26 @@ const LeafletMap = () => {
     return null;
   };
 
+  const ResizeHandler = () => {
+    const map = useMap();
+
+    useEffect(() => {
+      shouldInvalidateMapSize && map.invalidateSize();
+    }, [map]);
+
+    return null;
+  };
+
   return (
     <MapContainer
-      center={[51.505, -0.09]}
-      zoom={13}
+      center={[61.4898, 23.7734]}
+      zoom={14}
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <MapEventHandlers />
-      <Marker position={[51.505, -0.09]}>
+      <ResizeHandler />
+      <Marker position={[61.4898, 23.7734]}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>

@@ -3,9 +3,11 @@ import { ReverseGeocodingRes } from "@/services/GeocodingService";
 import { mapObjectPropertiesUndefined } from "@/utilities/commonHelpers";
 import { RootState } from "@/store/store";
 
-type UiSelectedMapLocation = Partial<ReverseGeocodingRes>;
+type UiSelectedMapLocation = Partial<ReverseGeocodingRes> & {
+  shouldInvalidateSize: boolean;
+};
 
-const initialState: UiSelectedMapLocation = {};
+const initialState: UiSelectedMapLocation = { shouldInvalidateSize: true };
 
 export const uiMapSlice = createSlice({
   name: "ui-map",
@@ -34,10 +36,14 @@ export const uiMapSlice = createSlice({
       const undefinedState = mapObjectPropertiesUndefined(state);
       Object.assign(state, undefinedState);
     },
+    invalidateMapSize: (state) => {
+      state.shouldInvalidateSize = !state.shouldInvalidateSize;
+    },
   },
 });
 
-export const { setLocation, clearLocation } = uiMapSlice.actions;
+export const { setLocation, clearLocation, invalidateMapSize } =
+  uiMapSlice.actions;
 
 // Define the typed selector function
 export const selectValidMapLocation = (state: RootState) => {
