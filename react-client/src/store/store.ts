@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 // Reducers
-import exampleReducer from "@/store/slices/exampleSlice";
 import uiReducer from "@/store/slices/generalUiSlice";
 import uiMapReducer from "@/store/slices/uiMapSlice";
 import authReducer from "@/store/slices/authSlice";
@@ -20,7 +19,6 @@ export type RejectedActionPayload = {
 
 export const store = configureStore({
   reducer: {
-    example: exampleReducer,
     ui: uiReducer,
     uiMap: uiMapReducer,
     auth: authReducer,

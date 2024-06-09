@@ -1,9 +1,6 @@
 import { styled } from "@mui/material";
-import { useAppSelector } from "@/hooks/useStoreHooks";
-import { ControlViewComponent } from "@/store/slices/generalUiSlice";
-import ControlPanel from "@/views/mapView/ControlPanelComponents/ControlPanel";
+import ControlPanel from "@/views/mapView/ControlPanelItems/ControlPanel";
 import LeafletMap from "@/views/mapView/mapComponents/LeafletMap";
-import AddCompany from "@/views/mapView/ControlPanelComponents/AddCompany";
 
 const PageSection = styled("section")({
   flex: 1,
@@ -19,25 +16,11 @@ const ViewContainer = styled("div")({
   flex: 1,
 });
 
-const ControlPanelComponents: Record<ControlViewComponent, JSX.Element> = {
-  AddCompany: <AddCompany />,
-  ViewCompany: <h1>This is view company component</h1>,
-};
-
 const MapPage = () => {
-  const selectedControlViewComponent = useAppSelector(
-    (s) => s.ui.selectedControlViewComponent
-  );
-
-  const controlPanelComponent =
-    selectedControlViewComponent === null
-      ? null
-      : ControlPanelComponents[selectedControlViewComponent];
-
   return (
     <ViewContainer>
       <PageSection>
-        <ControlPanel component={controlPanelComponent} />
+        <ControlPanel />
       </PageSection>
       <PageSection>
         <LeafletMap />

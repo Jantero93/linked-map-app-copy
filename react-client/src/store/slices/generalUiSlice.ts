@@ -2,9 +2,10 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ThemeType } from "@/theme/theme";
 import { FALLBACK_THEME } from "@/utilities/env";
 import LocalStorageService from "@/services/LocalStorageService";
+import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/components/componentsConstants";
 
 // INFO: ViewCompany just for testing purposes, not actual component
-export type ControlViewComponent = "AddCompany" | "ViewCompany";
+export type ControlViewComponent = keyof typeof ControlPanelComponents;
 
 interface UiState {
   selectedTheme: ThemeType;
@@ -12,7 +13,7 @@ interface UiState {
   error: string | null;
   openSnackbar: boolean;
   snackbarText: string | null;
-  selectedControlViewComponent: ControlViewComponent | null;
+  selectedControlViewComponent: ControlViewComponent;
 }
 
 const initialState: UiState = {
@@ -22,7 +23,7 @@ const initialState: UiState = {
   error: null,
   openSnackbar: false,
   snackbarText: null,
-  selectedControlViewComponent: null,
+  selectedControlViewComponent: "InitialView",
 };
 
 export const generalUiSlice = createSlice({
@@ -57,7 +58,7 @@ export const generalUiSlice = createSlice({
       state.selectedControlViewComponent = action.payload;
     },
     clearControlViewComponent: (state) => {
-      state.selectedControlViewComponent = null;
+      state.selectedControlViewComponent = "InitialView";
     },
   },
 });
