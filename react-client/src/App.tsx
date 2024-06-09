@@ -1,17 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import RoutePath from "@/routing/routes";
+import { BrowserRouter } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import styled from "@emotion/styled";
 import { createModeTheme } from "@/theme/theme";
 import CommonSnackBar from "@/components/CommonSnackBar";
 import AppNavigationBar from "@/components/AppNavigationBar";
 import AppFooterBar from "@/components/AppFooterBar";
-import MapPage from "@/views/mapView/MapPage";
-import LandingPage from "@/views/LandingPage";
-import "leaflet/dist/leaflet.css";
-import "typeface-roboto";
 import { useThemeManagement } from "@/hooks/useThemeManagement";
 import useCheckAuthToken from "@/hooks/useCheckAuthToken";
+import RouterComponent from "@/routing/RouterComponent";
+
+import "typeface-roboto";
+import "leaflet/dist/leaflet.css";
 
 const MainContainer = styled(Box)({
   display: "flex",
@@ -33,18 +32,15 @@ const App = () => {
   return (
     <ThemeProvider theme={createModeTheme(currentTheme)}>
       <CssBaseline />
-      <Router>
+      <BrowserRouter>
         <MainContainer component="div">
           <AppNavigationBar />
           <PageContainer component="main">
-            <Routes>
-              <Route path={RoutePath.LandingPage} element={<LandingPage />} />
-              <Route path={RoutePath.MapPage} element={<MapPage />} />
-            </Routes>
+            <RouterComponent />
           </PageContainer>
           <AppFooterBar />
         </MainContainer>
-      </Router>
+      </BrowserRouter>
       <CommonSnackBar />
     </ThemeProvider>
   );
