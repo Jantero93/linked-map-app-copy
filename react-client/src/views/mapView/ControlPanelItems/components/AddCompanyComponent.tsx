@@ -41,6 +41,7 @@ const AddCompany = () => {
 
   const mapLocation = useAppSelector(selectValidMapLocation);
   const controllerComponent = useAppSelector(selectedControllerComponent);
+  const isLoggedIn = useAppSelector((s) => s.auth.isLoggedIn);
 
   // Clear location selection when component is changed
   useEffect(() => {
@@ -51,6 +52,10 @@ const AddCompany = () => {
       dispatch(clearLocation());
     };
   }, [dispatch, controllerComponent]);
+
+  if (!isLoggedIn) {
+    return <Typography>Log in to select place for adding company</Typography>;
+  }
 
   if (mapLocation === null) {
     return <Typography>Select position from map</Typography>;
