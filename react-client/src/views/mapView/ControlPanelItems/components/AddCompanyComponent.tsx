@@ -3,9 +3,24 @@ import {
   AddCompanyRequest,
   postNewCompany,
 } from "@/store/actions/companyActions";
-import { selectValidMapLocation } from "@/store/slices/uiMapSlice";
-import { isYearSameOrBefore } from "@/utilities/dateHelpers";
-import { Box, Button, TextField, TextFieldProps, styled } from "@mui/material";
+import { selectedControllerComponent } from "@/store/slices/generalUiSlice";
+import {
+  clearLocation,
+  selectValidMapLocation,
+} from "@/store/slices/uiMapSlice";
+import {
+  createJsDateFromString,
+  isYearSameOrBefore,
+} from "@/utilities/dateHelpers";
+import {
+  Box,
+  Button,
+  TextField,
+  TextFieldProps,
+  Typography,
+  styled,
+} from "@mui/material";
+import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
 
 const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
@@ -22,13 +37,23 @@ const FormContainer = styled("form")(({ theme }) => ({
 }));
 
 const AddCompany = () => {
-  const storeLocation = useAppSelector((s) => s.uiMap);
   const dispatch = useAppDispatch();
 
   const mapLocation = useAppSelector(selectValidMapLocation);
+  const controllerComponent = useAppSelector(selectedControllerComponent);
+
+  // Clear location selection when component is changed
+  useEffect(() => {
+    if (controllerComponent !== "AddCompany") {
+      dispatch(clearLocation());
+    }
+    return () => {
+      dispatch(clearLocation());
+    };
+  }, [dispatch, controllerComponent]);
 
   if (mapLocation === null) {
-    return <div>Error on map location. ReClick location</div>;
+    return <Typography>Select position from map</Typography>;
   }
   const initializedFormValues = {
     streetAddress: mapLocation.streetAddress,
@@ -64,7 +89,10 @@ const AddCompany = () => {
   ) => {
     const companyData = {
       ...formValues,
-      establishmentDate: new Date(Number(formValues.establishmentDate), 0),
+      establishmentDate: createJsDateFromString(
+        formValues.establishmentDate.toString(),
+        "YYYY"
+      ),
     };
     const payload: AddCompanyRequest = {
       ...companyData,
@@ -84,16 +112,13 @@ const AddCompany = () => {
           <FormContainer onSubmit={handleSubmit}>
             <Field
               name="streetAddress"
-              initialValue={storeLocation.streetAddress}
+              initialValue={mapLocation.streetAddress}
             >
               {({ input }) => (
                 <StyledTextField {...input} label="Street Address" disabled />
               )}
             </Field>
-            <Field
-              name="streetNumber"
-              initialValue={storeLocation.streetNumber}
-            >
+            <Field name="streetNumber" initialValue={mapLocation.streetNumber}>
               {({ input }) => (
                 <StyledTextField {...input} label="Street Number" disabled />
               )}

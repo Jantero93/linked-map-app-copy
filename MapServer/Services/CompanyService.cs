@@ -2,6 +2,7 @@ using MapServer.ApiModels.Requests;
 using MapServer.Data.DTOs;
 using MapServer.Data.Interfaces;
 using MapServer.Data.Models;
+using MapServer.Mappers;
 using MapServer.Services.Interfaces;
 using MapServer.Store.Models;
 
@@ -30,10 +31,13 @@ public class CompanyService(
 
         logger.LogInformation("Added to db new Location with Id: {Id}", location.Id);
 
+        // Reset Datetime 
+        var establishmentDate = request.EstablishmentDate.ToUniversalTime().Date;
+
         Company newCompany = new()
         {
             CompanyName = request.CompanyName,
-            EstablishmentDate = request.EstablishmentDate,
+            EstablishmentDate = establishmentDate,
             ClosureDate = null,
             LocationId = location.Id
         };
@@ -42,24 +46,7 @@ public class CompanyService(
 
         logger.LogInformation("Added to db new Company with Id: {Id}", company.Id);
 
-        CompanyDto dto = new()
-        {
-            Id = company.Id,
-            CompanyName = company.CompanyName,
-            EstablishmentDate = company.EstablishmentDate,
-            ClosureDate = company.ClosureDate,
-            Location = new LocationDto
-            {
-                Id = location.Id,
-                City = location.City,
-                Latitude = location.Latitude,
-                Longitude = location.Longitude,
-                Street = location.Street,
-                RoadNumber = location.StreetNumber,
-                PostalCode = location.PostalCode,
-                Suburban = location.Suburb
-            }
-        };
+        var dto = CompanyMapper.MapLocationAndCompanyToDto(location, company);
 
         logger.LogInformation("Returning new CompanyDto: {@CompanyDto}", dto);
 
