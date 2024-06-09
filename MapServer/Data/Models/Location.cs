@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MapServer.Store.Models;
@@ -12,7 +13,4 @@ public record Location
     public required double Latitude { get; init; }
     public string? Suburb { get; init; }
     public string? PostalCode { get; init; }
-
-    [NotMapped]
-    public string FullAddress => $"{Street} {StreetNumber}";
 }
