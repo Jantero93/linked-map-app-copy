@@ -25,36 +25,38 @@ export const isTimeAfterCurrentUtc = (date: string | Date): boolean =>
   moment(date).isAfter(moment().utc());
 
 /**
- * Get current time on JavaScript Date, current year, current hour etc. Check parametets
- * @param format
- * @returns Return current time on wanted parameter type
- */
-export const getCurrentDates = (
-  format?: "year" | "month" | "week" | "day" | "hour"
-): number => {
-  switch (format) {
-    case "year":
-      return moment().year();
-    case "month":
-      return moment().month();
-    case "week":
-      return moment().week();
-    case "day":
-      return moment().day();
-    case "hour":
-      return moment().hour();
-    default:
-      return moment().year();
-  }
-};
-
-/**
  * Checks is given year same or before compareTo, compareTo defaults to current year
  */
-export const isYearSameOrBefore = (year: string, compareTo?: string) => {
+export const isYearSameOrBefore = (
+  year: string,
+  compareTo?: string
+): boolean => {
   const inputYear = moment(year, "YYYY", true);
 
   const compareYear = compareTo ? moment() : moment(compareTo, "YYYY", true);
 
   return inputYear.isSameOrBefore(compareYear);
+};
+
+/**
+ * Creates Javascript object from given string. Returns on utc time
+ * If format YYYY, first day and month of year will be provided
+ * @throws If format and input doesn't pass moment's strict check
+ */
+export const createJsDateFromString = (
+  dateString: string,
+  format = "YYYY-MM-DD"
+): Date => {
+  const parsedMoment =
+    format === "YYYY"
+      ? moment(dateString + "-01-02", "YYYY-MM-DD", true)
+      : moment(dateString, format, true);
+
+  if (!parsedMoment.isValid()) {
+    throw new Error(
+      `Moment not valid: dateString=${dateString}, format=${format}`
+    );
+  }
+
+  return parsedMoment.utc().toDate();
 };

@@ -7,7 +7,7 @@ public record LocationDto
     public required double Latitude { get; init; }
     public required string Street { get; init; }
     public required string RoadNumber { get; init; }
+    public required string City { get; init; }
     public string? Suburban { get; init; }
-    public string? City { get; init; }
     public string? PostalCode { get; init; }
 }

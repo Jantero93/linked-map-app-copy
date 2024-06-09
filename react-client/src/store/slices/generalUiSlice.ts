@@ -2,7 +2,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ThemeType } from "@/theme/theme";
 import { FALLBACK_THEME } from "@/utilities/env";
 import LocalStorageService from "@/services/LocalStorageService";
-import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/components/componentsConstants";
+import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
+import { RootState } from "../store";
 
 // INFO: ViewCompany just for testing purposes, not actual component
 export type ControlViewComponent = keyof typeof ControlPanelComponents;
@@ -73,5 +74,8 @@ export const {
   setControlViewComponent,
   clearControlViewComponent,
 } = generalUiSlice.actions;
+
+export const selectedControllerComponent = (state: RootState) =>
+  state.ui.selectedControlViewComponent;
 
 export default generalUiSlice.reducer;

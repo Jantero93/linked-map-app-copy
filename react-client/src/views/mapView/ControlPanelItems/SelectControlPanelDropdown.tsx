@@ -5,7 +5,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
-import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/components/componentsConstants";
+import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
 import {
   ControlViewComponent,
   setControlViewComponent,
