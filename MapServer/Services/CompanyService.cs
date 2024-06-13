@@ -10,8 +10,8 @@ namespace MapServer.Services;
 
 public class CompanyService(
     ILogger<ICompanyService> logger,
-    ICompanyStore companyRepository,
-    ILocationStore locationRepository
+    ICompanyStore companyStore,
+    ILocationStore locationStore
     ) : ICompanyService
 {
     public async Task<CompanyDto> AddNewCompany(AddNewCompanyRequest request)
@@ -27,7 +27,7 @@ public class CompanyService(
             Suburb = request.Suburb
         };
 
-        var location = await locationRepository.InsertLocation(companyLocation);
+        var location = await locationStore.InsertLocation(companyLocation);
 
         logger.LogInformation("Added to db new Location with Id: {Id}", location.Id);
 
@@ -42,7 +42,7 @@ public class CompanyService(
             LocationId = location.Id
         };
 
-        var company = await companyRepository.InsertCompany(newCompany);
+        var company = await companyStore.InsertCompany(newCompany);
 
         logger.LogInformation("Added to db new Company with Id: {Id}", company.Id);
 
@@ -51,5 +51,23 @@ public class CompanyService(
         logger.LogInformation("Returning new CompanyDto: {@CompanyDto}", dto);
 
         return dto;
+    }
+
+    public async Task<List<CompanyDto>> GetCompanyDtos()
+    {
+        logger.LogInformation("Getting all company dtos");
+
+        var companies = await companyStore.GetAllCompanies();
+        var location = await locationStore.GetAllLocations();
+
+        var dtos = companies.Join(location,
+            c => c.LocationId,
+            l => l.Id,
+            (c, l) => CompanyMapper.MapLocationAndCompanyToDto(l, c)
+            ).ToList();
+
+        logger.LogInformation("Found {Count} company dtos", dtos.Count);
+
+        return dtos;
     }
 }

@@ -12,7 +12,7 @@ public static class CompanyMapper
         CompanyName = c.CompanyName,
         EstablishmentDate = c.EstablishmentDate,
         ClosureDate = c.ClosureDate,
-        Location = new()
+        Location = new LocationDto()
         {
             Id = l.Id,
             City = l.City,

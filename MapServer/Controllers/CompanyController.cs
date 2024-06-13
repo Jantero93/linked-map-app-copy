@@ -12,6 +12,17 @@ public class CompanyController(
     ICompanyService companyService
 ) : SecurityBaseApiController
 {
+    [HttpGet]
+    [Route("getCompanies")]
+    public async Task<ActionResult<List<CompanyDto>>> GetALlCompanies()
+    {
+        logger.LogInformation("Getting all companies endpoint");
+
+        var companiesList = await companyService.GetCompanyDtos();
+
+        return Ok(companiesList);
+    }
+
     [HttpPost]
     [Route("addCompany")]
     public async Task<ActionResult<CompanyDto>> PostNewCompany([FromBody] AddNewCompanyRequest req)
