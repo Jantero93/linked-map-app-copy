@@ -6,5 +6,6 @@ namespace MapServer.Services.Interfaces;
 public interface ICompanyService
 {
     Task<CompanyDto> AddNewCompany(AddNewCompanyRequest request);
+    Task<List<CompanyDto>> GetCompanyDtos();
 }
 

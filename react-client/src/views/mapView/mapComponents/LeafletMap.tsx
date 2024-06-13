@@ -49,8 +49,8 @@ const LeafletMap = () => {
 
   const MapEventHandlers = () => {
     useMapEvents({
-      click: (e) => {
-        handleMapClick(e.latlng.lat, e.latlng.lng);
+      click: async ({ latlng: { lat, lng } }) => {
+        await handleMapClick(lat, lng);
       },
     });
     return null;

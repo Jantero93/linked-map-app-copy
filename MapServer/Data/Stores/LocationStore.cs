@@ -5,8 +5,27 @@ using MapServer.Store.Models;
 
 namespace MapServer.Store.Repositories;
 
-public class LocationStore(IDbConnection dbConnection) : ILocationStore
+public class LocationStore(IDbConnection dbConnection, ILogger<ILocationStore> logger) : ILocationStore
 {
+    public async Task<List<Location>> GetAllLocations()
+    {
+        logger.LogInformation("Getting all location from database");
+
+        var locations = await dbConnection.QueryAsync<Location>(@"
+           SELECT [Id]
+                 ,[Street]
+                 ,[StreetNumber]
+                 ,[Longitude]
+                 ,[Latitude]
+                 ,[Suburb]
+                 ,[City]
+                 ,[PostalCode]
+             FROM [MapApplication].[map].[Location]
+        ");
+
+        return locations.ToList();
+    }
+
     public async Task<Location> InsertLocation(Location location)
     {
         // Check if the location already exists
@@ -47,6 +66,8 @@ public class LocationStore(IDbConnection dbConnection) : ILocationStore
                 location.Suburb,
                 location.PostalCode
             });
+
+        logger.LogInformation("Added new location to database, id: {Id}", newGuid);
 
         return location with { Id = newGuid };
     }

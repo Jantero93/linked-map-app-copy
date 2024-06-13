@@ -7,6 +7,20 @@ namespace MapServer.Data.Repositories;
 
 public class CompanyStore(IDbConnection dbConnection) : ICompanyStore
 {
+    public async Task<List<Company>> GetAllCompanies()
+    {
+        var companies = await dbConnection.QueryAsync<Company>(@"
+            SELECT [Id]
+                  ,[Name]
+                  ,[EstablishmentDate]
+                  ,[ClosureDate]
+                  ,[LocationId]
+              FROM [MapApplication].[work].[Company]
+        ");
+
+        return companies.ToList();
+    }
+
     public async Task<Company> InsertCompany(Company company)
     {
         var newGuid = await dbConnection.QuerySingleAsync<Guid>(@"
