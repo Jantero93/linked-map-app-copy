@@ -12,7 +12,7 @@ import {
   ControlViewComponent,
   setControlViewComponent,
 } from "@/store/slices/generalUiSlice";
-import { normalizeControlPanelComponentNames } from "@/utilities/commonHelpers";
+import { normalizeControlPanelComponentName } from "@/utilities/stringUtils";
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
@@ -45,7 +45,7 @@ const SelectControlPanelDropdown = () => {
       <Select onChange={handleChange} value={selectedComponent}>
         {controlPanelComponentValues.map((component) => (
           <MenuItem key={component} value={component}>
-            {normalizeControlPanelComponentNames(component)}
+            {normalizeControlPanelComponentName(component)}
           </MenuItem>
         ))}
       </Select>

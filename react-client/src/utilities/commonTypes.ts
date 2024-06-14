@@ -2,7 +2,7 @@
  * Make every property nullable in object
  * @example const person: { name: string; age: number } = { name: "John", age: 55 };
  *
- * const personNullable: Nullable<typeof person> = { name: string | null, age: number | null };
+ * const personNullable: Nullable<typeof person> => { name: string | null, age: number | null };
  */
 export type Nullable<T> = {
   [P in keyof T]: T[P] | null;
@@ -12,7 +12,7 @@ export type Nullable<T> = {
  * Make property or properties nullable in object
  * @example const person: { name: string; age: number } = { name: "John", age: "55" }
  *
- * const personPartlyNullable: Nullable<typeof person, "age"> = { name: string, age: number | null}
+ * const personPartlyNullable: Nullable<typeof person, "age"> => { name: string, age: number | null}
  */
 export type NullableProperty<T, K extends keyof T> = {
   [P in keyof T]: P extends K ? T[P] | null : T[P];
@@ -42,6 +42,6 @@ type NonFunction<T> = T extends (...args: unknown[]) => unknown ? never : T;
 export type NonPrimitive = NonFunction<object>;
 
 /**
- * Plain object (exclude e.g. array from 'object' type)
+ * Plain object (exclude e.g. array, functions from 'object' type)
  */
 export type PlainObject = { [key: string]: unknown };
