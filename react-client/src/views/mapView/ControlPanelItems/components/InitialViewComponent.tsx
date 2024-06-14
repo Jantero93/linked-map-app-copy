@@ -1,17 +1,11 @@
-import {
-  Box,
-  IconButton,
-  IconButtonProps,
-  List,
-  ListItem,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
 import { setControlViewComponent } from "@/store/slices/generalUiSlice";
 import { useAppDispatch } from "@/hooks/useStoreHooks";
-import { normalizeControlPanelComponentNames } from "@/utilities/commonHelpers";
+import { ControlPanelComponentName } from "@/utilities/commonHelpers";
+import { normalizeControlPanelComponentName } from "@/utilities/stringUtils";
 
 const StyledList = styled(List)(({ theme: _theme }) => ({
   width: "100%",
@@ -25,31 +19,32 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   },
 }));
 
-const ListActionButton = styled(({ ...otherProps }: IconButtonProps) => (
-  <IconButton {...otherProps} color="success" />
-))(({ theme: _theme }) => ({}));
-
 const InitialViewComponent = () => {
   const dispatch = useAppDispatch();
+
+  const renderSecondaryActionIcon = (
+    componentName: ControlPanelComponentName
+  ) => (
+    <IconButton
+      color="success"
+      onClick={() => dispatch(setControlViewComponent(componentName))}
+    >
+      <ArrowForwardIcon fontSize="large" />
+    </IconButton>
+  );
 
   return (
     <Box>
       <StyledList>
         {Object.values(ControlPanelComponents)
-          .filter((component) => component !== "InitialView")
-          .map((component) => (
+          .filter((componentName) => componentName !== "InitialView")
+          .map((componentName) => (
             <StyledListItem
-              key={component}
-              secondaryAction={
-                <ListActionButton
-                  onClick={() => dispatch(setControlViewComponent(component))}
-                >
-                  <ArrowForwardIcon fontSize="large" />
-                </ListActionButton>
-              }
+              key={componentName}
+              secondaryAction={renderSecondaryActionIcon(componentName)}
             >
               <Typography>
-                {normalizeControlPanelComponentNames(component)}
+                {normalizeControlPanelComponentName(componentName)}
               </Typography>
             </StyledListItem>
           ))}

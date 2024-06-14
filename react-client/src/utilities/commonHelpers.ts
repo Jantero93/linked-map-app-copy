@@ -23,23 +23,5 @@ export const mapObjectPropertiesUndefined = (obj: NonPrimitive) => {
   return Object.fromEntries(Object.keys(obj).map((key) => [key, undefined]));
 };
 
-type ComponentName =
+export type ControlPanelComponentName =
   (typeof ControlPanelComponents)[keyof typeof ControlPanelComponents];
-
-/**
- * Normalize component names of map's control panel
- */
-export const normalizeControlPanelComponentNames = (
-  component: ComponentName
-) => {
-  switch (component) {
-    case "AddCompany":
-      return "Add company";
-    case "GetCompanies":
-      return "Get all companies";
-    case "InitialView":
-      return "Initial view";
-    default:
-      throw new Error(`Unknown component component name: ${component}`);
-  }
-};
