@@ -14,7 +14,7 @@ The repository also contains a client started with Vue (web-client folder), but 
 - TypeScript React
 - Redux
 - MUI
-- OpenLayers
+- Leaflet
 
 ### Server:
 - .NET Core
