@@ -3,13 +3,20 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
 import {
   ControlViewComponent,
   setControlViewComponent,
 } from "@/store/slices/generalUiSlice";
+import { normalizeControlPanelComponentNames } from "@/utilities/commonHelpers";
+
+const StyledHeader = styled(Typography)(({ theme }) => ({
+  paddingBottom: theme.spacing(2),
+}));
 
 const SelectControlPanelDropdown = () => {
   const selectedComponent = useAppSelector(
@@ -17,10 +24,10 @@ const SelectControlPanelDropdown = () => {
   );
   const dispatch = useAppDispatch();
 
-  const controlPanelComponentKeys = Object.values(ControlPanelComponents);
+  const controlPanelComponentValues = Object.values(ControlPanelComponents);
 
   const isComponentString = (input: string): input is ControlViewComponent =>
-    controlPanelComponentKeys.includes(input as ControlViewComponent);
+    controlPanelComponentValues.includes(input as ControlViewComponent);
 
   const handleChange = ({ target: { value } }: SelectChangeEvent) => {
     if (!isComponentString(value)) {
@@ -34,10 +41,11 @@ const SelectControlPanelDropdown = () => {
 
   return (
     <FormControl>
+      <StyledHeader variant="h6">Map interactions</StyledHeader>
       <Select onChange={handleChange} value={selectedComponent}>
-        {controlPanelComponentKeys.map((component) => (
+        {controlPanelComponentValues.map((component) => (
           <MenuItem key={component} value={component}>
-            {component}
+            {normalizeControlPanelComponentNames(component)}
           </MenuItem>
         ))}
       </Select>

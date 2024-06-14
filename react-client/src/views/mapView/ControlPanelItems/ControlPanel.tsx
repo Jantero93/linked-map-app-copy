@@ -3,6 +3,7 @@ import { useAppSelector } from "@/hooks/useStoreHooks";
 import SelectControlPanelDropdown from "@/views/mapView/ControlPanelItems/SelectControlPanelDropdown";
 import { selectedControllerComponent } from "@/store/slices/generalUiSlice";
 import AddCompanyComponent from "@/views/mapView/ControlPanelItems/components/AddCompanyComponent";
+import InitialViewComponent from "@/views/mapView/ControlPanelItems/components/InitialViewComponent";
 
 const PaddedStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -15,9 +16,9 @@ export const ControlPanelComponents = {
 
 const { AddCompany, GetCompanies, InitialView } = ControlPanelComponents;
 
-const ComponentMap: Record<string, JSX.Element> = {
+const ComponentMapping: Record<string, JSX.Element> = {
   [AddCompany]: <AddCompanyComponent />,
-  [InitialView]: <Typography>Very good initial view</Typography>,
+  [InitialView]: <InitialViewComponent />,
   [GetCompanies]: <Typography>Get companies</Typography>,
 };
 const ControlPanel = () => {
@@ -28,7 +29,7 @@ const ControlPanel = () => {
   return (
     <PaddedStack spacing={2}>
       <SelectControlPanelDropdown />
-      {ComponentMap[selectedControlViewComponent]}
+      {ComponentMapping[selectedControlViewComponent]}
     </PaddedStack>
   );
 };

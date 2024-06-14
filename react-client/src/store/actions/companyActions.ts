@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { post } from "@/utilities/fetch/genericFetch";
+import { get, post } from "@/utilities/fetch/genericFetch";
 import { API_URL } from "@/utilities/env";
 import { RejectedActionPayload } from "@/store/store";
 import { CompanyDto } from "@/utilities/models/CompanyDto";
@@ -24,6 +24,22 @@ export const postNewCompany = createAsyncThunk(
       const rejectedPayload: RejectedActionPayload = {
         errorDescription:
           e instanceof Error ? e.message : "Request could not reach server",
+      };
+
+      return rejectWithValue(rejectedPayload);
+    }
+  }
+);
+
+export const getAllCompanies = createAsyncThunk(
+  "company-addCompany",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await get<CompanyDto[]>(`${API_URL}/company/getCompanies`);
+    } catch (e) {
+      const rejectedPayload: RejectedActionPayload = {
+        errorDescription:
+          e instanceof Error ? e.message : "Couldn't get all companies",
       };
 
       return rejectWithValue(rejectedPayload);

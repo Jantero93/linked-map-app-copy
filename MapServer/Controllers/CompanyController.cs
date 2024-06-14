@@ -1,6 +1,7 @@
 using MapServer.ApiModels.Requests;
 using MapServer.Data.DTOs;
 using MapServer.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MapServer.Controllers;
@@ -13,6 +14,7 @@ public class CompanyController(
 ) : SecurityBaseApiController
 {
     [HttpGet]
+    [AllowAnonymous]
     [Route("getCompanies")]
     public async Task<ActionResult<List<CompanyDto>>> GetALlCompanies()
     {
