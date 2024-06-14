@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import uiReducer from "@/store/slices/generalUiSlice";
 import uiMapReducer from "@/store/slices/uiMapSlice";
 import authReducer from "@/store/slices/authSlice";
+import companyReducer from "@/store/slices/companySlice";
 
 // Middleware
 import showSnackbarRejectedActionMiddleware from "@/store/middleware/showSnackBarRejectedActionMiddleware";
@@ -22,6 +23,7 @@ export const store = configureStore({
     ui: uiReducer,
     uiMap: uiMapReducer,
     auth: authReducer,
+    company: companyReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(showSnackbarRejectedActionMiddleware),

@@ -1,4 +1,5 @@
 import { NonPrimitive, PlainObject } from "@/utilities/commonTypes";
+import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
 
 /**
  * Check is TypeScript's generic 'object' type really object and not e.g. array
@@ -20,4 +21,25 @@ export const mapObjectPropertiesUndefined = (obj: NonPrimitive) => {
   }
 
   return Object.fromEntries(Object.keys(obj).map((key) => [key, undefined]));
+};
+
+type ComponentName =
+  (typeof ControlPanelComponents)[keyof typeof ControlPanelComponents];
+
+/**
+ * Normalize component names of map's control panel
+ */
+export const normalizeControlPanelComponentNames = (
+  component: ComponentName
+) => {
+  switch (component) {
+    case "AddCompany":
+      return "Add company";
+    case "GetCompanies":
+      return "Get all companies";
+    case "InitialView":
+      return "Initial view";
+    default:
+      throw new Error(`Unknown component component name: ${component}`);
+  }
 };

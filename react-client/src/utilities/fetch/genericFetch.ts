@@ -29,13 +29,16 @@ const createGlobalHeaders = () => {
 
 export type ErrorApiResponse = { message: string };
 
+/**
+ * Generic api call. Expects payload and answer to be application/json
+ */
 const apiCall = async <T>(
   url: string,
   method: "GET" | "POST" | "PUT" | "DELETE",
   data?: unknown
 ): Promise<T> => {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5_000);
+  const timeoutId = setTimeout(() => controller.abort(), 10_000);
 
   const config: RequestInit = {
     method,
@@ -56,8 +59,7 @@ const apiCall = async <T>(
 
     if (!response.ok) {
       const errResMsg = (await response.json()) as unknown as ErrorApiResponse;
-      console.warn("API call failed, reason:", errResMsg.message);
-      throw new Error(errResMsg.message);
+      console.error("API call failed, error:", errResMsg);
     }
 
     const contentType = response.headers.get(Headers["Content-Type"]);
@@ -80,7 +82,8 @@ const apiCall = async <T>(
       console.warn("API call aborted due to timeout");
     }
 
-    console.warn("Exception in apiCall method", (e as Error).message);
+    console.error("Exception in apiCall method", (e as Error).message);
+    console.error("Full api error: " + e);
 
     throw e;
   }
