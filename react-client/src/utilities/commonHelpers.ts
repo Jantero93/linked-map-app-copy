@@ -1,5 +1,5 @@
 import { NonPrimitive, PlainObject } from "@/utilities/commonTypes";
-import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
+import { ControlPanelComponents } from "@/views/mapView/componentMapping";
 
 /**
  * Check is TypeScript's generic 'object' type really object and not e.g. array

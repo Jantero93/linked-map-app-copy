@@ -1,11 +1,17 @@
 import { useEffect, useRef } from "react";
 import Split from "split.js";
-import { styled } from "@mui/material";
-import { useAppDispatch } from "@/hooks/useStoreHooks";
+import { Typography, styled } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
 import ControlPanel from "@/views/mapView/ControlPanelItems/ControlPanel";
-import LeafletMap from "@/views/mapView/mapComponents/LeafletMap";
-import "@/views/mapView/gutter.css";
 import { invalidateMapSize } from "@/store/slices/uiMapSlice";
+import DefaultLeafletMap from "./mapComponents/DefaultLeafletMap";
+import AddCompanyComponent from "./ControlPanelItems/components/AddCompanyComponent";
+import InitialViewComponent from "./ControlPanelItems/components/InitialViewComponent";
+import AddCompanyMap from "./mapComponents/AddCompanyMap";
+import { ControlPanelComponents } from "./componentMapping";
+import { selectedControllerComponent } from "@/store/slices/generalUiSlice";
+
+import "@/views/mapView/gutter.css";
 
 const PageSection = styled("section")({
   display: "flex",
@@ -22,12 +28,24 @@ const ViewContainer = styled("div")({
   height: "calc(100vh - 130px)", // Adjust this based on your footer height
 });
 
+const { AddCompany, GetCompanies, InitialView } = ControlPanelComponents;
+
+const ComponentMap: Record<string, [JSX.Element, JSX.Element]> = {
+  [AddCompany]: [<AddCompanyComponent />, <AddCompanyMap />],
+  [InitialView]: [<InitialViewComponent />, <></>],
+  [GetCompanies]: [<Typography>Get companies</Typography>, <></>],
+};
+
 const MapPage = () => {
   const dispatch = useAppDispatch();
+  const controlPanelComponent = useAppSelector(selectedControllerComponent);
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Invalidate map on route change & component initial
+    dispatch(invalidateMapSize());
+
     if (leftRef.current && rightRef.current) {
       Split([leftRef.current, rightRef.current], {
         sizes: [50, 50],
@@ -43,10 +61,12 @@ const MapPage = () => {
   return (
     <ViewContainer>
       <PageSection id="split-col-left" ref={leftRef}>
-        <ControlPanel />
+        <ControlPanel component={ComponentMap[controlPanelComponent][0]} />
       </PageSection>
       <PageSection id="split-col-right" ref={rightRef}>
-        <LeafletMap />
+        <DefaultLeafletMap>
+          {ComponentMap[controlPanelComponent][1]}
+        </DefaultLeafletMap>
       </PageSection>
     </ViewContainer>
   );

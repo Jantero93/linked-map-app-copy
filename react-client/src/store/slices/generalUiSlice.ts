@@ -2,8 +2,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ThemeType } from "@/theme/theme";
 import { FALLBACK_THEME } from "@/utilities/env";
 import LocalStorageService from "@/services/LocalStorageService";
-import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
 import { RootState } from "../store";
+import { ControlPanelComponents } from "@/views/mapView/componentMapping";
 
 // INFO: ViewCompany just for testing purposes, not actual component
 export type ControlViewComponent = keyof typeof ControlPanelComponents;

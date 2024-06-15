@@ -1,12 +1,4 @@
-import { useEffect } from "react";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
+import { Marker, Popup, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import DefaultMarkerIcon2x from "@/assets/map/default-marker-icon-2x.png";
 import DefaultMarkerIcon from "@/assets/map/default-marker-icon.png";
@@ -27,24 +19,25 @@ L.Icon.Default.mergeOptions({
   shadowUrl: DefaultMarkerShadow,
 });
 
-const LeafletMap = () => {
+const AddCompanyMap = () => {
   const dispatch = useAppDispatch();
   const controllerComponent = useAppSelector(selectedControllerComponent);
-  const shouldInvalidateMapSize = useAppSelector(
-    (s) => s.uiMap.shouldInvalidateSize
-  );
 
   const handleMapClick = async (lat: number, lng: number) => {
-    if (controllerComponent === "AddCompany") {
-      const geocodingRes =
-        await GeocodingService.getReverseGeocodingInfoFromPoint(lng, lat);
-
-      geocodingRes
-        ? dispatch(setLocation(geocodingRes))
-        : dispatch(
-            setSnackbarText("Didn't find location, try to click building")
-          );
+    if (controllerComponent !== "AddCompany") {
+      throw new Error(
+        `Map and controller panel logic failed; controller component: ${controllerComponent}`
+      );
     }
+
+    const geocodingRes =
+      await GeocodingService.getReverseGeocodingInfoFromPoint(lng, lat);
+
+    geocodingRes
+      ? dispatch(setLocation(geocodingRes))
+      : dispatch(
+          setSnackbarText("Didn't find location, try to click building")
+        );
   };
 
   const MapEventHandlers = () => {
@@ -56,32 +49,16 @@ const LeafletMap = () => {
     return null;
   };
 
-  const ResizeHandler = () => {
-    const map = useMap();
-
-    useEffect(() => {
-      shouldInvalidateMapSize && map.invalidateSize();
-    }, [map]);
-
-    return null;
-  };
-
   return (
-    <MapContainer
-      center={[61.4898, 23.7734]}
-      zoom={14}
-      style={{ height: "100%", width: "100%" }}
-    >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <>
       <MapEventHandlers />
-      <ResizeHandler />
       <Marker position={[61.4898, 23.7734]}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
       </Marker>
-    </MapContainer>
+    </>
   );
 };
 
-export default LeafletMap;
+export default AddCompanyMap;

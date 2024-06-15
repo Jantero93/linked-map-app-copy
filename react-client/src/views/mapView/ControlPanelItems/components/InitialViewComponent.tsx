@@ -1,11 +1,11 @@
 import { Box, IconButton, List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
 import { setControlViewComponent } from "@/store/slices/generalUiSlice";
 import { useAppDispatch } from "@/hooks/useStoreHooks";
 import { ControlPanelComponentName } from "@/utilities/commonHelpers";
 import { normalizeControlPanelComponentName } from "@/utilities/stringUtils";
+import { ControlPanelComponents } from "@/views/mapView/componentMapping";
 
 const StyledList = styled(List)(({ theme: _theme }) => ({
   width: "100%",
