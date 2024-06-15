@@ -1,5 +1,10 @@
 # LinkedIn Map Copy
 
+## Repository stats
+![GitHub Last commit](https://img.shields.io/github/last-commit/Jantero93/linked-map-app-copy)
+![GitHub Commit activity](https://img.shields.io/github/commit-activity/m/Jantero93/linked-map-app-copy)
+![Total Lines of Code](https://sloc.xyz/github/Jantero93/linked-map-app-copy)
+
 The purpose of this program is to be similar to LinkedIn, allowing users to place job positions on a map and view people's work experiences at those job positions. Initially, all visible information (companies, work experiences) is intended to be public.
 
 The program also includes a timeline component. When a company is clicked, the timeline shows the people who have worked there, or if a person is selected, it shows their work experiences across different job positions.
