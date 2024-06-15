@@ -7,12 +7,12 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
-import { ControlPanelComponents } from "@/views/mapView/ControlPanelItems/ControlPanel";
 import {
   ControlViewComponent,
   setControlViewComponent,
 } from "@/store/slices/generalUiSlice";
 import { normalizeControlPanelComponentName } from "@/utilities/stringUtils";
+import { ControlPanelComponents } from "@/views/mapView/componentMapping";
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
