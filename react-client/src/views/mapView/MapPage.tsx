@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Split from "split.js";
 import { Typography, styled } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStoreHooks";
@@ -31,9 +31,26 @@ const ViewContainer = styled("div")({
 const { AddCompany, GetCompanies, InitialView } = ControlPanelComponents;
 
 const ComponentMap: Record<string, [JSX.Element, JSX.Element]> = {
-  [AddCompany]: [<AddCompanyComponent />, <AddCompanyMap />],
-  [InitialView]: [<InitialViewComponent />, <></>],
-  [GetCompanies]: [<Typography>Get companies</Typography>, <></>],
+  [AddCompany]: [
+    <AddCompanyComponent
+      key={ControlPanelComponents[ControlPanelComponents.AddCompany]}
+    />,
+    <AddCompanyMap
+      key={ControlPanelComponents[ControlPanelComponents.AddCompany]}
+    />,
+  ],
+  [InitialView]: [
+    <InitialViewComponent
+      key={ControlPanelComponents[ControlPanelComponents.InitialView]}
+    />,
+    <React.Fragment
+      key={ControlPanelComponents[ControlPanelComponents.InitialView]}
+    />,
+  ],
+  [GetCompanies]: [
+    <Typography key={"test"}>Get companies</Typography>,
+    <React.Fragment key={"test"} />,
+  ],
 };
 
 const MapPage = () => {
@@ -42,8 +59,18 @@ const MapPage = () => {
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
 
+  // Hacky solution for rendering map tiles on resizing + route changes
+  // Trello: https://trello.com/c/rGEUcJz7/86-tile-rendering-bugiin-ei-hacky-solutioni
+  const [isRightRefReady, setIsRightRefReady] = useState(false);
+
   useEffect(() => {
-    // Invalidate map on route change & component initial
+    // Check if rightRef.current is ready on mount
+    if (rightRef.current) {
+      setIsRightRefReady(true);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
     dispatch(invalidateMapSize());
 
     if (leftRef.current && rightRef.current) {
@@ -54,9 +81,10 @@ const MapPage = () => {
         cursor: "col-resize",
         onDrag: () => dispatch(invalidateMapSize()),
         onDragEnd: () => dispatch(invalidateMapSize()),
+        onDragStart: () => dispatch(invalidateMapSize()),
       });
     }
-  }, [dispatch]);
+  }, [dispatch, isRightRefReady]);
 
   return (
     <ViewContainer>
