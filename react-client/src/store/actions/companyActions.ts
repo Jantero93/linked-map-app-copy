@@ -32,7 +32,7 @@ export const postNewCompany = createAsyncThunk(
 );
 
 export const getAllCompanies = createAsyncThunk(
-  "company-addCompany",
+  "company-getall",
   async (_, { rejectWithValue }) => {
     try {
       return await get<CompanyDto[]>(`${API_URL}/company/getCompanies`);

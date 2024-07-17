@@ -10,6 +10,7 @@ import InitialViewComponent from "./ControlPanelItems/components/InitialViewComp
 import AddCompanyMap from "./mapComponents/AddCompanyMap";
 import { ControlPanelComponents } from "./componentMapping";
 import { selectedControllerComponent } from "@/store/slices/generalUiSlice";
+import AllCompaniesMap from "./mapComponents/AllCompaniesMap";
 
 import "@/views/mapView/gutter.css";
 
@@ -43,7 +44,7 @@ const ComponentMap: Record<string, [JSX.Element, JSX.Element]> = {
     <InitialViewComponent
       key={ControlPanelComponents[ControlPanelComponents.InitialView]}
     />,
-    <React.Fragment
+    <AllCompaniesMap
       key={ControlPanelComponents[ControlPanelComponents.InitialView]}
     />,
   ],

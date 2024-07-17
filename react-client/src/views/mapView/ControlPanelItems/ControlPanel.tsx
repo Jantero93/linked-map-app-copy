@@ -8,7 +8,7 @@ const PaddedStack = styled(Stack)(({ theme }) => ({
 type ControlPanelProps = { component: JSX.Element };
 
 const ControlPanel = ({ component }: ControlPanelProps) => (
-  <PaddedStack key={Math.random()} spacing={2}>
+  <PaddedStack spacing={2}>
     <SelectControlPanelDropdown />
     {component}
   </PaddedStack>

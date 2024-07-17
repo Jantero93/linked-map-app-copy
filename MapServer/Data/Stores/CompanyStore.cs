@@ -33,7 +33,7 @@ public class CompanyStore(IDbConnection dbConnection) : ICompanyStore
             VALUES (@CompanyName, @EstablishmentDate, @ClosureDate, @LocationId)",
             new
             {
-                company.CompanyName,
+                company.Name,
                 company.EstablishmentDate,
                 company.ClosureDate,
                 company.LocationId

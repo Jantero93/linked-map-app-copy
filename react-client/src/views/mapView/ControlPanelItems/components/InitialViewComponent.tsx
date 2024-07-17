@@ -6,6 +6,7 @@ import { useAppDispatch } from "@/hooks/useStoreHooks";
 import { ControlPanelComponentName } from "@/utilities/commonHelpers";
 import { normalizeControlPanelComponentName } from "@/utilities/stringUtils";
 import { ControlPanelComponents } from "@/views/mapView/componentMapping";
+import { getAllCompanies } from "@/store/actions/companyActions";
 
 const StyledList = styled(List)(({ theme: _theme }) => ({
   width: "100%",
@@ -21,6 +22,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 
 const InitialViewComponent = () => {
   const dispatch = useAppDispatch();
+  dispatch(getAllCompanies);
 
   const renderSecondaryActionIcon = (
     componentName: ControlPanelComponentName

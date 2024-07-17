@@ -9,7 +9,7 @@ public static class CompanyMapper
     public static CompanyDto MapLocationAndCompanyToDto(Location l, Company c) => new()
     {
         Id = c.Id,
-        CompanyName = c.CompanyName,
+        Name = c.Name,
         EstablishmentDate = c.EstablishmentDate,
         ClosureDate = c.ClosureDate,
         Location = new LocationDto()

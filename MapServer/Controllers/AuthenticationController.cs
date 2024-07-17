@@ -127,7 +127,7 @@ public class AuthenticationController(
 
             if (!result)
             {
-                logger.LogWarning("Failed to revoke token {@Token}", token.ToString());
+                logger.LogWarning("Failed to revoke token {@Token}", token);
             }
 
             var timeMonthAgo = DateTime.UtcNow.AddMonths(-1);

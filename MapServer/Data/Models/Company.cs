@@ -4,7 +4,7 @@ public record Company
 {
     public Guid Id { get; set; }
 
-    public required string CompanyName { get; init; }
+    public required string Name { get; init; }
 
     public required DateTime EstablishmentDate { get; init; }
 

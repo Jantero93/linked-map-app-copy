@@ -12,7 +12,7 @@ export const normalizeControlPanelComponentName = (
     case "GetCompanies":
       return "Get all companies";
     case "InitialView":
-      return "Initial view";
+      return "All actions";
     default:
       throw new Error(`Unknown component component name: ${component}`);
   }

@@ -36,7 +36,7 @@ public class CompanyService(
 
         Company newCompany = new()
         {
-            CompanyName = request.CompanyName,
+            Name = request.CompanyName,
             EstablishmentDate = establishmentDate,
             ClosureDate = null,
             LocationId = location.Id

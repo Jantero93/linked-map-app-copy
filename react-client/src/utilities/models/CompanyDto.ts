@@ -2,7 +2,7 @@ import { LocationDto } from "@/utilities/models/LocationDto";
 
 export interface CompanyDto {
   id: string;
-  companyName: string;
+  name: string;
   establishmentDate: Date;
   closureDate?: Date;
   location: LocationDto;

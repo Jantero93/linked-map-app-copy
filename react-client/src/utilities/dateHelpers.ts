@@ -60,3 +60,11 @@ export const createJsDateFromString = (
 
   return parsedMoment.utc().toDate();
 };
+
+/**
+ * Converts Javascript object to string
+ * @param date JavaScript date to convert
+ * @param format Formatting the date. Default YYYYY/MM
+ */
+export const dateToString = (date: Date, format = "MM/YYYY"): string =>
+  moment(date).format(format);
