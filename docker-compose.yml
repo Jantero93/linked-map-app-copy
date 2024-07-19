@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: ${ENV}-react-client-image
+    container_name: ${ENV}-react-client-container
+    build:
+
+      context: ./react-client
+      dockerfile: Dockerfile
+      args:
+        VITE_NODE_ENV: ${VITE_NODE_ENV}
+        VITE_APP_API_URL: ${VITE_APP_API_URL}
+        VITE_API_LOGIN_URL: ${VITE_API_LOGIN_URL}
+        VITE_OPENIDDICT_CLIENT_ID: ${VITE_OPENIDDICT_CLIENT_ID}
+        VITE_OPENIDDICT_GRANT_TYPE: ${VITE_OPENIDDICT_GRANT_TYPE}
+        VITE_FALLBACK_THEME: ${VITE_FALLBACK_THEME}
+        VITE_GEOCODING_API_KEY: ${VITE_GEOCODING_API_KEY}
+    ports:
+      - '80:80'
+    networks:
+      - app-network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+networks:
+  app-network:

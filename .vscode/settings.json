@@ -4,5 +4,25 @@
     "mssql",
     "sqlcmd",
     "sqlserver"
-  ]
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#61244c",
+    "activityBar.background": "#61244c",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#5b742b",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#61244c",
+    "statusBar.background": "#3c162f",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#61244c",
+    "statusBarItem.remoteBackground": "#3c162f",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#3c162f",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#3c162f99",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#3c162f"
 }

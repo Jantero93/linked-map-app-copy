@@ -1,0 +1,40 @@
+# Build stage
+FROM node:20-alpine3.17 AS build
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+COPY package*.json /app/
+RUN npm install -g npm@10.8.2
+RUN npm ci --silent
+
+# Runtime environment variables
+ARG VITE_NODE_ENV
+ENV VITE_NODE_ENV=$VITE_NODE_ENV
+
+ARG VITE_APP_API_URL
+ENV VITE_APP_API_URL=$VITE_APP_API_URL
+
+ARG VITE_API_LOGIN_URL
+ENV VITE_API_LOGIN_URL=$VITE_API_LOGIN_URL
+
+ARG VITE_OPENIDDICT_CLIENT_ID
+ENV VITE_OPENIDDICT_CLIENT_ID=$VITE_OPENIDDICT_CLIENT_ID
+
+ARG VITE_OPENIDDICT_GRANT_TYPE
+ENV VITE_OPENIDDICT_GRANT_TYPE=$VITE_OPENIDDICT_GRANT_TYPE
+
+ARG VITE_FALLBACK_THEME
+ENV VITE_FALLBACK_THEME=$VITE_FALLBACK_THEME
+
+ARG VITE_GEOCODING_API_KEY
+ENV VITE_GEOCODING_API_KEY=$VITE_GEOCODING_API_KEY
+
+COPY . /app
+RUN npm run build
+
+# Serve stage
+FROM nginx:1.25.0-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
