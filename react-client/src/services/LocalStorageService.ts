@@ -36,6 +36,9 @@ export const LocalStorageKeys = {
   Theme: "Theme",
 } as const;
 
+export type LocalStorageKey = keyof typeof LocalStorageKeys;
+
+
 /**
  * Gets authentication token from local storage.
  * @returns TokenLocalStorage | null if none found from local storage

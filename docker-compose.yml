@@ -3,9 +3,8 @@ version: '3.8'
 services:
   frontend:
     image: ${ENV}-react-client-image
-    container_name: ${ENV}-react-client-container
+    container_name: ${ENV}-react-client
     build:
-
       context: ./react-client
       dockerfile: Dockerfile
       args:
@@ -23,5 +22,20 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
+  sql-server:
+    container_name: ${ENV}-sql-server
+    image: ${ENV}-sql-server-image
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: ${SA_PASSWORD}
+    ports:
+      - 1433:1433
+    networks:
+      - app-network
+
 networks:
   app-network:
+    name: linkedin-map-copy-network
