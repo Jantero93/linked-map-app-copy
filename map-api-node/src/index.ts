@@ -1,9 +1,11 @@
 import { FastifyListenOptions } from "fastify/types/instance";
-import { PORT } from "./utilities/env";
+import { ENV_PORT } from "./config/env";
 import fastify from "./fastify/fastify-server-instance";
+import "reflect-metadata";
+import { AppDataSource } from "./config/database-config";
 
 const SERVER_OPTIONS: FastifyListenOptions = {
-  port: PORT,
+  port: ENV_PORT,
 };
 
 const startFastify = async () => {
@@ -13,6 +15,9 @@ const startFastify = async () => {
   }
 
   try {
+    await AppDataSource.initialize();
+    fastify.log.info("Database connected");
+
     const path = await fastify.listen(SERVER_OPTIONS);
     return fastify.log.info(`Server started on ${path}`);
   } catch (err) {
