@@ -1,0 +1,40 @@
+{
+  "name": "map-api-node",
+  "version": "0.0.1",
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "dist/index.js",
+    "test": "echo \"No tests implemented\" && exit 1",
+    "prettier:check": "prettier --check src/**/*.{jsx,tsx,js,ts,css,json,html}",
+    "prettier:write": "prettier --write src/**/*.{jsx,tsx,js,ts,css,json,html}",
+    "eslint:check": "eslint src/**/*.{jsx,tsx,js,ts} --max-warnings 0",
+    "eslint:fix": "eslint src/**/*.{jsx,tsx,js,ts} --fix"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1"
+  },
+  "devDependencies": {
+    "@types/eslint": "^9.6.0",
+    "@types/node": "^22.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.2.0",
+    "@typescript-eslint/parser": "^8.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "nodemon": "^3.1.4",
+    "pino-pretty": "^11.2.2",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}

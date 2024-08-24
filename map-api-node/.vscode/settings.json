@@ -1,0 +1,65 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
+  "cSpell.enableFiletypes": ["typescriptreact"],
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "cSpell.words": [
+    "fontsource",
+    "Hervanta",
+    "Kaijantie",
+    "latlng",
+    "Neue",
+    "openapi",
+    "Parens",
+    "pino",
+    "Roadinfo",
+    "Robota",
+    "Roboto",
+    "Tutkijankatu"
+  ],
+  "better-comments.tags": [
+    {
+      "tag": "FIXME",
+      "color": "#FF2D00",
+      "underline": false,
+      "backgroundColor": "transparent"
+    },
+    {
+      "tag": "BUG",
+      "color": "#FF2D00",
+      "underline": false,
+      "bold": true,
+      "backgroundColor": "transparent"
+    },
+    {
+      "tag": "NOTE",
+      "color": "#3498DB",
+      "backgroundColor": "transparent",
+      "italic": true
+    },
+    {
+      "tag": "INFO",
+      "color": "#3498DB",
+      "backgroundColor": "transparent",
+      "italic": true
+    },
+    {
+      "tag": "//",
+      "color": "#474747",
+      "strikethrough": true,
+      "backgroundColor": "transparent"
+    },
+    {
+      "tag": "TODO",
+      "color": "#FF8C00",
+      "backgroundColor": "transparent"
+    }
+  ],
+  "[shellscript]": {
+    "editor.defaultFormatter": "shakram02.bash-beautify"
+  }
+}
