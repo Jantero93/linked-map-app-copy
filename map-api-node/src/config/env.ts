@@ -21,3 +21,4 @@ export const ENV_DB = {
   USERNAME: getEnv("DB_USERNAME"),
   PASSWORD: getEnv("DB_PASSWORD"),
 };
+export const ENV_JWT_SECRET = getEnv("JWT_SECRET");

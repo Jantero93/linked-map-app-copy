@@ -1,7 +1,7 @@
 import { doesDatabaseExists, createDatabase } from "./config/database-config";
 import fastify from "./fastify/fastify-server-instance";
-import registerRoutes from "./routes";
-import registerMiddlewares from "./middlewares";
+import declareRoutes from "./routes";
+import declareMiddlewares from "./middlewares";
 
 const setupApi = async () => {
   if (!(await doesDatabaseExists())) {
@@ -9,8 +9,10 @@ const setupApi = async () => {
   }
   fastify.log.info("Database connected");
 
-  registerMiddlewares(fastify);
-  registerRoutes(fastify);
+  fastify.register(declareMiddlewares);
+  fastify.register(declareRoutes);
+
+  fastify.log.info("Plugins registered in Fastify");
 
   return fastify;
 };

@@ -1,8 +1,10 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-export const registerTestRoutes = (fastify: FastifyInstance) => {
-  fastify.get("/ping", async (_request, _reply) => {
-    const res = { message: "roger roger" };
-    return res;
+export const registerTestRoutes = async (fastify: FastifyInstance) => {
+  fastify.route({
+    method: "GET",
+    url: "/ping",
+    handler: (_request: FastifyRequest, reply: FastifyReply) =>
+      reply.status(200).send({ message: "Roger!" }),
   });
 };

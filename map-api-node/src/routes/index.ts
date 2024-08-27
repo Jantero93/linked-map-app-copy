@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { registerTestRoutes } from "./test-route";
 
-const registerRoutes = (fastify: FastifyInstance) => {
+const registerRoutes = async (fastify: FastifyInstance) => {
   registerTestRoutes(fastify);
 };
 

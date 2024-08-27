@@ -23,3 +23,11 @@ model Location {
   suburb       String? @db.VarChar(255)
   postalCode   String? @db.VarChar(100)
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

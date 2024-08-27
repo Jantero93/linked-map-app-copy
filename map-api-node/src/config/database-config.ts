@@ -42,7 +42,6 @@ export const createDatabase = async () => {
   try {
     await client.connect();
     await client.query(`CREATE DATABASE "${DB_NAME}"`);
-
     fastify.log.info("Initialized new database");
   } catch (err) {
     fastify.log.error(`Exception on creating database: ${err}`);
