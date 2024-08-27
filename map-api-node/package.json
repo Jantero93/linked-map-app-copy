@@ -14,7 +14,7 @@
     "prettier:write": "prettier --write src/**/*.{js,ts,json}",
     "eslint:check": "eslint src/**/*.{js,ts} --max-warnings 0",
     "eslint:fix": "eslint src/**/*.{js,ts} --fix",
-    "prisma:migrate": "prisma migrate dev --name init --"
+    "prisma:migrate:dev": "npx prisma migrate dev --name"
   },
   "dependencies": {
     "@fastify/cors": "^9.0.1",
@@ -25,10 +25,12 @@
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
+    "http-status-codes": "^2.3.0",
     "pg": "^8.12.0",
     "prisma": "^5.18.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/eslint": "^9.6.0",
     "@types/node": "^22.5.0",
     "@types/pg": "^8.11.6",

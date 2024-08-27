@@ -10,7 +10,7 @@ const setupApi = async () => {
   fastify.log.info("Database connected");
 
   fastify.register(declareMiddlewares);
-  fastify.register(declareRoutes);
+  fastify.register(declareRoutes, { prefix: "/api" });
 
   fastify.log.info("Plugins registered in Fastify");
 
