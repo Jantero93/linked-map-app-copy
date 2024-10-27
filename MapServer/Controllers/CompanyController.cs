@@ -16,6 +16,7 @@ public class CompanyController(
     [HttpGet]
     [AllowAnonymous]
     [Route("getCompanies")]
+    [ProducesResponseType(typeof(List<CompanyDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<CompanyDto>>> GetALlCompanies()
     {
         logger.LogInformation("Getting all companies endpoint");
@@ -27,6 +28,7 @@ public class CompanyController(
 
     [HttpPost]
     [Route("addCompany")]
+    [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status201Created)]
     public async Task<ActionResult<CompanyDto>> PostNewCompany([FromBody] AddNewCompanyRequest req)
     {
         logger.LogInformation(

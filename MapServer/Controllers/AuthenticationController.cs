@@ -22,7 +22,7 @@ public class AuthenticationController(
     UserManager<ApplicationUser> userManager,
     IOpenIddictTokenManager tokenManager,
     ILogger<AuthenticationController> logger
-    ) : ControllerBase
+) : ControllerBase
 {
     [HttpPost("~/connect/token")]
     [AllowAnonymous]
@@ -35,10 +35,10 @@ public class AuthenticationController(
         {
             logger.LogCritical("OpenIddictServerRequest null");
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new RequestFailedResponse
-            {
-                Message = "OpenIddict request cannot be retrieved"
-            });
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                new RequestFailedResponse { Message = "OpenIddict request cannot be retrieved" }
+            );
         }
 
         var reqUsername = request.Username;
@@ -47,20 +47,14 @@ public class AuthenticationController(
         if (string.IsNullOrEmpty(reqUsername) || string.IsNullOrEmpty(reqPassword))
         {
             logger.LogError("Username or password was empty or null");
-            return BadRequest(new RequestFailedResponse
-            {
-                Message = "The username or password was null or empty"
-            });
+            return BadRequest(new RequestFailedResponse { Message = "The username or password was null or empty" });
         }
 
         var user = await userManager.FindByNameAsync(reqUsername);
         if (user?.UserName is null || !await userManager.CheckPasswordAsync(user, reqPassword))
         {
             logger.LogWarning("Wrong credentials on login, username: {Username}", reqUsername);
-            return BadRequest(new RequestFailedResponse
-            {
-                Message = "The username or password is incorrect."
-            });
+            return BadRequest(new RequestFailedResponse { Message = "The username or password is incorrect." });
         }
 
         var claims = new List<Claim>
