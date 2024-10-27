@@ -1,6 +1,21 @@
-version: '3.8'
+version: "3.8"
 
 services:
+  backend:
+    image: ${ENV}-backend
+    container_name: ${ENV}-backend
+    build:
+      context: ./MapServer
+      dockerfile: Dockerfile
+    environment:
+      ConnectionsStrings__MapApplication: ${CONNECTION_STRING}
+    ports:
+      - 5000:5000
+    depends_on:
+      - sql-server
+    networks:
+      - app-network
+
   frontend:
     image: ${ENV}-react-client-image
     container_name: ${ENV}-react-client
@@ -16,11 +31,13 @@ services:
         VITE_FALLBACK_THEME: ${VITE_FALLBACK_THEME}
         VITE_GEOCODING_API_KEY: ${VITE_GEOCODING_API_KEY}
     ports:
-      - '80:80'
+      - "80:80"
+    depends_on:
+      - backend
     networks:
       - app-network
     extra_hosts:
-      - 'host.docker.internal:host-gateway'
+      - "host.docker.internal:host-gateway"
 
   sql-server:
     container_name: ${ENV}-sql-server
@@ -38,4 +55,4 @@ services:
 
 networks:
   app-network:
-    name: linkedin-map-copy-network
+    name: ${ENV}-linkedin-map-copy-network
