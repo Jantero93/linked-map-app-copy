@@ -1,9 +1,11 @@
 using MapServer;
+using MapServer.Data;
 using MapServer.Middlewares;
 using MapServer.OpenIddict;
 using MapServer.Utilities;
 using MapServer.Utilities.Constants;
 using MapServer.Utilities.CustomConsole;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment.EnvironmentName;
@@ -34,6 +36,25 @@ var app = builder.Build();
 
 await OpenIddictInitializer.RegisterOpenIddictClientsAsync(app);
 
+// Auto update ef on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        logger.LogInformation("Starting migration on app startup");
+        var context = services.GetRequiredService<ApplicationContext>();
+        await context.Database.MigrateAsync();
+        logger.LogInformation("Migration completed successfully");
+    }
+    catch (Exception e)
+    {
+        logger.LogCritical(e, "Error occured while migrating the database on app startup");
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -45,8 +66,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors(options =>
 {
     options.AllowAnyOrigin()
-    .AllowAnyHeader()
-    .AllowAnyHeader();
+        .AllowAnyHeader()
+        .AllowAnyHeader();
 });
 
 app.UseMiddleware<RequestLoggerMiddleware>();
@@ -66,7 +87,8 @@ static void ConfigureAppSettings(ConfigurationManager configuration)
     ApplicationSettings.ConnectionString = GetRequiredConfiguration<string>(
         configuration, "ConnectionStrings:MapApplication"
     );
-    ApplicationSettings.OpenIddictTokenLifetime = GetRequiredConfiguration<int>(configuration, "OpenIddictTokenLifetime");
+    ApplicationSettings.OpenIddictTokenLifetime =
+        GetRequiredConfiguration<int>(configuration, "OpenIddictTokenLifetime");
     ApplicationSettings.OpenIddictClientId = GetRequiredConfiguration<string>(configuration, "OpenIddictClientId");
 }
 
@@ -76,4 +98,3 @@ static T GetRequiredConfiguration<T>(IConfiguration configuration, string key)
     ArgumentException.ThrowIfNullOrEmpty(value);
     return configuration.GetValue<T>(key)!;
 }
-
