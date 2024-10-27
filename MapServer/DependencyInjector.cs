@@ -2,9 +2,9 @@ using System.Data;
 using System.Data.SqlClient;
 using MapServer.Data.Interfaces;
 using MapServer.Data.Repositories;
+using MapServer.Data.Stores;
 using MapServer.Services;
 using MapServer.Services.Interfaces;
-using MapServer.Store.Repositories;
 
 namespace MapServer;
 

@@ -31,13 +31,7 @@ public class CompanyStore(IDbConnection dbConnection) : ICompanyStore
            ,[LocationId])
             OUTPUT INSERTED.[Id]
             VALUES (@CompanyName, @EstablishmentDate, @ClosureDate, @LocationId)",
-            new
-            {
-                company.Name,
-                company.EstablishmentDate,
-                company.ClosureDate,
-                company.LocationId
-            });
+            new { company.Name, company.EstablishmentDate, company.ClosureDate, company.LocationId });
 
         return company with { Id = newGuid };
     }

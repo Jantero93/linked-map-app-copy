@@ -3,7 +3,7 @@ using Dapper;
 using MapServer.Data.Interfaces;
 using MapServer.Store.Models;
 
-namespace MapServer.Store.Repositories;
+namespace MapServer.Data.Stores;
 
 public class LocationStore(IDbConnection dbConnection, ILogger<ILocationStore> logger) : ILocationStore
 {
@@ -33,11 +33,7 @@ public class LocationStore(IDbConnection dbConnection, ILogger<ILocationStore> l
             SELECT [Id]
             FROM [map].[Location]
             WHERE [Street] = @Street AND [StreetNumber] = @StreetNumber",
-            new
-            {
-                location.Street,
-                location.StreetNumber,
-            });
+            new { location.Street, location.StreetNumber, });
 
         if (existingLocationId.HasValue)
         {

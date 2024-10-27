@@ -80,7 +80,7 @@ public class AuthenticationController(
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] RegisterRequest req)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest req)
     {
         var userExists = await userManager.FindByNameAsync(req.Username);
 
@@ -133,11 +133,13 @@ public class AuthenticationController(
             var timeMonthAgo = DateTime.UtcNow.AddMonths(-1);
             var isTokenOlderThanMonth = tokenExpirationDate < timeMonthAgo;
 
-            if (tokenStatus is OpenIddictConstants.Statuses.Revoked && isTokenOlderThanMonth)
+            if (tokenStatus is not OpenIddictConstants.Statuses.Revoked || !isTokenOlderThanMonth)
             {
-                await tokenManager.DeleteAsync(token);
-                logger.LogInformation("Deleting {Token} for userId: {UserId}", token, userId);
+                return;
             }
+
+            await tokenManager.DeleteAsync(token);
+            logger.LogInformation("Deleting {Token} for userId: {UserId}", token, userId);
         });
 
         return NoContent();

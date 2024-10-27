@@ -12,7 +12,7 @@ public class CompanyService(
     ILogger<ICompanyService> logger,
     ICompanyStore companyStore,
     ILocationStore locationStore
-    ) : ICompanyService
+) : ICompanyService
 {
     public async Task<CompanyDto> AddNewCompany(AddNewCompanyRequest request)
     {
@@ -29,9 +29,9 @@ public class CompanyService(
 
         var location = await locationStore.InsertLocation(companyLocation);
 
-        logger.LogInformation("Added to db new Location with Id: {Id}", location.Id);
+        logger.LogInformation("Added to db new Location with id: {Id}", location.Id);
 
-        // Reset Datetime 
+        // Reset Datetime
         var establishmentDate = request.EstablishmentDate.ToUniversalTime().Date;
 
         Company newCompany = new()
@@ -48,7 +48,6 @@ public class CompanyService(
 
         var dto = CompanyMapper.MapLocationAndCompanyToDto(location, company);
 
-        logger.LogInformation("Returning new CompanyDto: {@CompanyDto}", dto);
 
         return dto;
     }
@@ -64,7 +63,7 @@ public class CompanyService(
             c => c.LocationId,
             l => l.Id,
             (c, l) => CompanyMapper.MapLocationAndCompanyToDto(l, c)
-            ).ToList();
+        ).ToList();
 
         logger.LogInformation("Found {Count} company dtos", dtos.Count);
 

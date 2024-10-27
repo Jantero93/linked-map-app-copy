@@ -17,11 +17,11 @@ public class ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandling
 
             var result = JsonConvert.SerializeObject(new { Message = $"Uncaught internal server error, {ex.Message}" }, Formatting.Indented);
 
+
             context.Response.ContentType = MediaTypeNames.Application.Json;
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
             await context.Response.WriteAsync(result);
-
         }
     }
 }
