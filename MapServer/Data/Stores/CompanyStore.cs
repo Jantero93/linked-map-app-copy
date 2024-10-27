@@ -2,38 +2,24 @@ using System.Data;
 using Dapper;
 using MapServer.Data.Interfaces;
 using MapServer.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MapServer.Data.Stores;
 
-public class CompanyStore(IDbConnection dbConnection) : ICompanyStore
+public class CompanyStore(ApplicationContext ctx, ILogger<CompanyStore> logger) : ICompanyStore
 {
-    public async Task<List<Company>> GetAllCompanies()
-    {
-        var companies = await dbConnection.QueryAsync<Company>("""
-                                                               SELECT [Id]
-                                                                   ,[Name]
-                                                                   ,[EstablishmentDate]
-                                                                   ,[ClosureDate]
-                                                                   ,[LocationId]
-                                                               FROM [MapApplication].[work].[Company]
-                                                               """);
-
-        return companies.ToList();
-    }
+    public async Task<List<Company>> GetAllCompanies() =>
+        await ctx.Companies
+            .Include(c => c.Location)
+            .ToListAsync();
 
     public async Task<Company> InsertCompany(Company company)
     {
-        var newGuid = await dbConnection.QuerySingleOrDefaultAsync<Guid>("""
-                                                                         INSERT INTO [work].[Company] (
-                                                                          [Name]
-                                                                         ,[EstablishmentDate]
-                                                                         ,[ClosureDate]
-                                                                         ,[LocationId])
-                                                                          OUTPUT INSERTED.[Id]
-                                                                          VALUES (@Name, @EstablishmentDate, @ClosureDate, @LocationId)
-                                                                         """,
-            new { company.Name, company.EstablishmentDate, company.ClosureDate, company.LocationId });
+        ctx.Companies.Add(company);
+        await ctx.SaveChangesAsync();
 
-        return company with { Id = newGuid };
+        logger.LogInformation("Inserted company with ID {CompanyId}", company.Id);
+
+        return company;
     }
 }

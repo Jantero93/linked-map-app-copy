@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -6,13 +6,19 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MapServer.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateOpenIddictIdenityTables : Migration
+    public partial class UseEntityFrameworkForEverythingInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
                 name: "openiddict");
+
+            migrationBuilder.EnsureSchema(
+                name: "company");
+
+            migrationBuilder.EnsureSchema(
+                name: "map");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
@@ -53,6 +59,25 @@ namespace MapServer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Locations",
+                schema: "map",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    StreetNumber = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Suburb = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    PostalCode = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,6 +245,29 @@ namespace MapServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Companies",
+                schema: "company",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    EstablishmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClosureDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Companies_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalSchema: "map",
+                        principalTable: "Locations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictAuthorizations",
                 schema: "openiddict",
                 columns: table => new
@@ -243,6 +291,39 @@ namespace MapServer.Migrations
                         principalSchema: "openiddict",
                         principalTable: "OpenIddictApplications",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkExperiences",
+                schema: "company",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Position = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PartTime = table.Column<bool>(type: "bit", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkExperiences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkExperiences_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "openiddict",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WorkExperiences_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalSchema: "company",
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -328,6 +409,12 @@ namespace MapServer.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Companies_LocationId",
+                schema: "company",
+                table: "Companies",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 schema: "openiddict",
                 table: "OpenIddictApplications",
@@ -339,7 +426,7 @@ namespace MapServer.Migrations
                 name: "IX_OpenIddictAuthorizations_ApplicationId_Status_Subject_Type",
                 schema: "openiddict",
                 table: "OpenIddictAuthorizations",
-                columns: ["ApplicationId", "Status", "Subject", "Type"]);
+                columns: new[] { "ApplicationId", "Status", "Subject", "Type" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictScopes_Name",
@@ -353,7 +440,7 @@ namespace MapServer.Migrations
                 name: "IX_OpenIddictTokens_ApplicationId_Status_Subject_Type",
                 schema: "openiddict",
                 table: "OpenIddictTokens",
-                columns: ["ApplicationId", "Status", "Subject", "Type"]);
+                columns: new[] { "ApplicationId", "Status", "Subject", "Type" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictTokens_AuthorizationId",
@@ -368,6 +455,18 @@ namespace MapServer.Migrations
                 column: "ReferenceId",
                 unique: true,
                 filter: "[ReferenceId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkExperiences_CompanyId",
+                schema: "company",
+                table: "WorkExperiences",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkExperiences_UserId",
+                schema: "company",
+                table: "WorkExperiences",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -402,11 +501,11 @@ namespace MapServer.Migrations
                 schema: "openiddict");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles",
-                schema: "openiddict");
+                name: "WorkExperiences",
+                schema: "company");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers",
+                name: "AspNetRoles",
                 schema: "openiddict");
 
             migrationBuilder.DropTable(
@@ -414,8 +513,20 @@ namespace MapServer.Migrations
                 schema: "openiddict");
 
             migrationBuilder.DropTable(
+                name: "AspNetUsers",
+                schema: "openiddict");
+
+            migrationBuilder.DropTable(
+                name: "Companies",
+                schema: "company");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictApplications",
                 schema: "openiddict");
+
+            migrationBuilder.DropTable(
+                name: "Locations",
+                schema: "map");
         }
     }
 }

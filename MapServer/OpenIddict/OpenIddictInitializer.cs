@@ -1,3 +1,4 @@
+using MapServer.Data;
 using MapServer.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ public static class OpenIddictInitializer
 {
     public static void SetOpenIddictIdentityConfiguration(IServiceCollection services)
     {
-        services.AddDbContext<OpenIddictContext>(options =>
+        services.AddDbContext<ApplicationContext>(options =>
         {
             options.UseSqlServer(ApplicationSettings.ConnectionString);
             options.UseOpenIddict<Guid>();
@@ -24,14 +25,14 @@ public static class OpenIddictInitializer
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 1;
         })
-          .AddEntityFrameworkStores<OpenIddictContext>()
+          .AddEntityFrameworkStores<ApplicationContext>()
           .AddDefaultTokenProviders();
 
         services.AddOpenIddict()
           .AddCore(options =>
           {
               options.UseEntityFrameworkCore()
-              .UseDbContext<OpenIddictContext>()
+              .UseDbContext<ApplicationContext>()
               .ReplaceDefaultEntities<Guid>();
           })
           .AddServer(options =>

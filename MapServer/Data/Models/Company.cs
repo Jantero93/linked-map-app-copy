@@ -1,14 +1,16 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MapServer.Data.Models;
 
-public record Company
+[Table("Companies", Schema = "company")]
+public class Company
 {
     public Guid Id { get; init; }
-
-    public required string Name { get; init; }
-
-    public required DateTime EstablishmentDate { get; init; }
-
+    [MaxLength(255)] public string Name { get; init; } = string.Empty;
+    public DateTime EstablishmentDate { get; init; }
     public DateTime? ClosureDate { get; init; }
-
     public Guid LocationId { get; init; }
+    // Navigation properties
+    public Location Location { get; init; } = new();
 }

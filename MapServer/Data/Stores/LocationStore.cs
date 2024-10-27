@@ -2,71 +2,21 @@ using System.Data;
 using Dapper;
 using MapServer.Data.Interfaces;
 using MapServer.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MapServer.Data.Stores;
 
-public class LocationStore(IDbConnection dbConnection, ILogger<ILocationStore> logger) : ILocationStore
+public class LocationStore(ApplicationContext ctx, ILogger<ILocationStore> logger) : ILocationStore
 {
-    public async Task<List<Location>> GetAllLocations()
-    {
-        logger.LogInformation("Getting all location from database");
-
-        var locations = await dbConnection.QueryAsync<Location>("""
-                                                                SELECT [Id]
-                                                                    ,[Street]
-                                                                    ,[StreetNumber]
-                                                                    ,[Longitude]
-                                                                    ,[Latitude]
-                                                                    ,[Suburb]
-                                                                    ,[City]
-                                                                    ,[PostalCode]
-                                                                FROM [MapApplication].[map].[Location]
-                                                                """);
-
-        return locations.ToList();
-    }
+    public async Task<List<Location>> GetAllLocations() => await ctx.Locations.ToListAsync();
 
     public async Task<Location> InsertLocation(Location location)
     {
-        // Check if the location already exists
-        var existingLocationId = await dbConnection.QuerySingleOrDefaultAsync<Guid?>("""
-                            SELECT [Id]
-                            FROM [map].[Location]
-                            WHERE [Street] = @Street AND [StreetNumber] = @StreetNumber
-                """,
-            new { location.Street, location.StreetNumber });
+        ctx.Locations.Add(location);
+        await ctx.SaveChangesAsync();
 
-        if (existingLocationId.HasValue)
-        {
-            return location with { Id = existingLocationId.Value };
-        }
+        logger.LogInformation("Inserted location with ID {LocationId}", location.Id);
 
-        // If the location does not exist, insert it
-        var newGuid = await dbConnection.QuerySingleAsync<Guid>("""
-                                                                INSERT INTO [map].[Location] (
-                                                                    [Street],
-                                                                    [StreetNumber],
-                                                                    [City],
-                                                                    [Longitude],
-                                                                    [Latitude],
-                                                                    [Suburb],
-                                                                    [PostalCode])
-                                                                OUTPUT INSERTED.[Id]
-                                                                VALUES (@Street, @StreetNumber, @City, @Longitude, @Latitude, @Suburb, @PostalCode)
-                                                                """,
-            new
-            {
-                location.Street,
-                location.StreetNumber,
-                location.City,
-                location.Longitude,
-                location.Latitude,
-                location.Suburb,
-                location.PostalCode
-            });
-
-        logger.LogInformation("Added new location to database, id: {Id}", newGuid);
-
-        return location with { Id = newGuid };
+        return location;
     }
 }
