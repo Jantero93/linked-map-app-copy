@@ -23,15 +23,15 @@ public class CompanyStore(IDbConnection dbConnection) : ICompanyStore
 
     public async Task<Company> InsertCompany(Company company)
     {
-        var newGuid = await dbConnection.QuerySingleAsync<Guid>("""
-                                                                INSERT INTO [work].[Company] (
-                                                                 [Name]
-                                                                ,[EstablishmentDate]
-                                                                ,[ClosureDate]
-                                                                ,[LocationId])
-                                                                 OUTPUT INSERTED.[Id]
-                                                                 VALUES (@CompanyName, @EstablishmentDate, @ClosureDate, @LocationId)
-                                                                """,
+        var newGuid = await dbConnection.QuerySingleOrDefaultAsync<Guid>("""
+                                                                         INSERT INTO [work].[Company] (
+                                                                          [Name]
+                                                                         ,[EstablishmentDate]
+                                                                         ,[ClosureDate]
+                                                                         ,[LocationId])
+                                                                          OUTPUT INSERTED.[Id]
+                                                                          VALUES (@Name, @EstablishmentDate, @ClosureDate, @LocationId)
+                                                                         """,
             new { company.Name, company.EstablishmentDate, company.ClosureDate, company.LocationId });
 
         return company with { Id = newGuid };

@@ -42,17 +42,18 @@ public class LocationStore(IDbConnection dbConnection, ILogger<ILocationStore> l
         }
 
         // If the location does not exist, insert it
-        var newGuid = await dbConnection.QuerySingleAsync<Guid>(@"
-            INSERT INTO [map].[Location] (
-                [Street],
-                [StreetNumber],
-                [City],
-                [Longitude],
-                [Latitude],
-                [Suburb],
-                [PostalCode])
-            OUTPUT INSERTED.[Id]
-            VALUES (@Street, @StreetNumber, @City, @Longitude, @Latitude, @Suburb, @PostalCode)",
+        var newGuid = await dbConnection.QuerySingleAsync<Guid>("""
+                                                                INSERT INTO [map].[Location] (
+                                                                    [Street],
+                                                                    [StreetNumber],
+                                                                    [City],
+                                                                    [Longitude],
+                                                                    [Latitude],
+                                                                    [Suburb],
+                                                                    [PostalCode])
+                                                                OUTPUT INSERTED.[Id]
+                                                                VALUES (@Street, @StreetNumber, @City, @Longitude, @Latitude, @Suburb, @PostalCode)
+                                                                """,
             new
             {
                 location.Street,
