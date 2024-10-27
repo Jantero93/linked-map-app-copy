@@ -1,4 +1,4 @@
-namespace MapServer.Store.Models;
+namespace MapServer.Data.Models;
 
 public record Location
 {

@@ -1,6 +1,5 @@
 using MapServer.Data.DTOs;
 using MapServer.Data.Models;
-using MapServer.Store.Models;
 
 namespace MapServer.Mappers;
 

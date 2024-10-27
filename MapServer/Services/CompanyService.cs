@@ -4,7 +4,6 @@ using MapServer.Data.Interfaces;
 using MapServer.Data.Models;
 using MapServer.Mappers;
 using MapServer.Services.Interfaces;
-using MapServer.Store.Models;
 
 namespace MapServer.Services;
 

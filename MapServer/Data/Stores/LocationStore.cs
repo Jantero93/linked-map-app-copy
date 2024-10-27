@@ -1,7 +1,7 @@
 using System.Data;
 using Dapper;
 using MapServer.Data.Interfaces;
-using MapServer.Store.Models;
+using MapServer.Data.Models;
 
 namespace MapServer.Data.Stores;
 
@@ -11,17 +11,17 @@ public class LocationStore(IDbConnection dbConnection, ILogger<ILocationStore> l
     {
         logger.LogInformation("Getting all location from database");
 
-        var locations = await dbConnection.QueryAsync<Location>(@"
-           SELECT [Id]
-                 ,[Street]
-                 ,[StreetNumber]
-                 ,[Longitude]
-                 ,[Latitude]
-                 ,[Suburb]
-                 ,[City]
-                 ,[PostalCode]
-             FROM [MapApplication].[map].[Location]
-        ");
+        var locations = await dbConnection.QueryAsync<Location>("""
+                                                                SELECT [Id]
+                                                                    ,[Street]
+                                                                    ,[StreetNumber]
+                                                                    ,[Longitude]
+                                                                    ,[Latitude]
+                                                                    ,[Suburb]
+                                                                    ,[City]
+                                                                    ,[PostalCode]
+                                                                FROM [MapApplication].[map].[Location]
+                                                                """);
 
         return locations.ToList();
     }
@@ -29,11 +29,12 @@ public class LocationStore(IDbConnection dbConnection, ILogger<ILocationStore> l
     public async Task<Location> InsertLocation(Location location)
     {
         // Check if the location already exists
-        var existingLocationId = await dbConnection.QuerySingleOrDefaultAsync<Guid?>(@"
-            SELECT [Id]
-            FROM [map].[Location]
-            WHERE [Street] = @Street AND [StreetNumber] = @StreetNumber",
-            new { location.Street, location.StreetNumber, });
+        var existingLocationId = await dbConnection.QuerySingleOrDefaultAsync<Guid?>("""
+                            SELECT [Id]
+                            FROM [map].[Location]
+                            WHERE [Street] = @Street AND [StreetNumber] = @StreetNumber
+                """,
+            new { location.Street, location.StreetNumber });
 
         if (existingLocationId.HasValue)
         {

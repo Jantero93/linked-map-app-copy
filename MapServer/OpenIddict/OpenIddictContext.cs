@@ -7,7 +7,7 @@ namespace MapServer.OpenIddict;
 
 public class OpenIddictContext(DbContextOptions<OpenIddictContext> options) : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
-    public DbSet<OpenIddictEntityFrameworkCoreToken<Guid>> OpenIddictTokens { get; set; }
+    public DbSet<OpenIddictEntityFrameworkCoreToken<Guid>> OpenIddictTokens { get; init; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

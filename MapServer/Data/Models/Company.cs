@@ -2,7 +2,7 @@ namespace MapServer.Data.Models;
 
 public record Company
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
     public required string Name { get; init; }
 

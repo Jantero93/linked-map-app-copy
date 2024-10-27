@@ -1,4 +1,4 @@
-using MapServer.Store.Models;
+using MapServer.Data.Models;
 
 namespace MapServer.Data.Interfaces;
 
