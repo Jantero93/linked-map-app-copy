@@ -22,7 +22,7 @@ const StyledTextField = styled(({ ...otherProps }: TextFieldProps) => (
 
 const FormButton = styled(({ ...otherProps }: ButtonProps) => (
   <Button {...otherProps} fullWidth />
-))(({ theme: _theme }) => ({}));
+))();
 
 interface Props {
   isOpen: boolean;
