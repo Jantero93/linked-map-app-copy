@@ -13,7 +13,7 @@ public static class OpenIddictInitializer
     {
         services.AddDbContext<ApplicationContext>(options =>
         {
-            options.UseSqlServer(ApplicationSettings.ConnectionString);
+            options.UseNpgsql(ApplicationSettings.ConnectionString).UseSnakeCaseNamingConvention();
             options.UseOpenIddict<Guid>();
         });
 

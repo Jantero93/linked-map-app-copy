@@ -17,7 +17,6 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options)
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.UseCollation("Finnish_Swedish_CI_AS");
         builder.HasDefaultSchema("openiddict");
         builder.UseOpenIddict<Guid>();
 
@@ -28,7 +27,7 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options)
 
         builder.Entity<WorkExperience>()
             .HasOne(w => w.User)
-            .WithMany(u => u.WorkExperiences) // Assuming User has ICollection<WorkExperience>
+            .WithMany(u => u.WorkExperiences)
             .HasForeignKey(w => w.UserId);
 
         base.OnModelCreating(builder);
