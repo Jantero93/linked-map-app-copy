@@ -1,9 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MapServer.Data.Models;
 
-[Table("Companies", Schema = "company")]
 public class Company
 {
     public Guid Id { get; init; }

@@ -1,10 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using MapServer.OpenIddict;
 
 namespace MapServer.Data.Models;
 
-[Table("WorkExperiences", Schema = "company")]
 public class WorkExperience
 {
     public required Guid Id { get; init; }

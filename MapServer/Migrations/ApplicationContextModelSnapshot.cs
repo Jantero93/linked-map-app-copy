@@ -17,8 +17,6 @@ namespace MapServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("openiddict")
-                .UseCollation("Finnish_Swedish_CI_AS")
                 .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -55,7 +53,7 @@ namespace MapServer.Migrations
                     b.HasIndex("LocationId")
                         .HasDatabaseName("ix_companies_location_id");
 
-                    b.ToTable("Companies", "company");
+                    b.ToTable("companies", (string)null);
                 });
 
             modelBuilder.Entity("MapServer.Data.Models.Location", b =>
@@ -104,7 +102,7 @@ namespace MapServer.Migrations
                     b.HasKey("Id")
                         .HasName("pk_locations");
 
-                    b.ToTable("Locations", "map");
+                    b.ToTable("locations", (string)null);
                 });
 
             modelBuilder.Entity("MapServer.Data.Models.WorkExperience", b =>
@@ -154,7 +152,7 @@ namespace MapServer.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_work_experiences_user_id");
 
-                    b.ToTable("WorkExperiences", "company");
+                    b.ToTable("work_experiences", (string)null);
                 });
 
             modelBuilder.Entity("MapServer.OpenIddict.ApplicationUser", b =>
@@ -235,7 +233,7 @@ namespace MapServer.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", "openiddict");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -267,7 +265,7 @@ namespace MapServer.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", "openiddict");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -297,7 +295,7 @@ namespace MapServer.Migrations
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_asp_net_role_claims_role_id");
 
-                    b.ToTable("AspNetRoleClaims", "openiddict");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -327,7 +325,7 @@ namespace MapServer.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_asp_net_user_claims_user_id");
 
-                    b.ToTable("AspNetUserClaims", "openiddict");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -354,7 +352,7 @@ namespace MapServer.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_asp_net_user_logins_user_id");
 
-                    b.ToTable("AspNetUserLogins", "openiddict");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -373,7 +371,7 @@ namespace MapServer.Migrations
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_asp_net_user_roles_role_id");
 
-                    b.ToTable("AspNetUserRoles", "openiddict");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -397,7 +395,7 @@ namespace MapServer.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name")
                         .HasName("pk_asp_net_user_tokens");
 
-                    b.ToTable("AspNetUserTokens", "openiddict");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreApplication<System.Guid>", b =>
@@ -480,7 +478,7 @@ namespace MapServer.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_open_iddict_applications_client_id");
 
-                    b.ToTable("OpenIddictApplications", "openiddict");
+                    b.ToTable("OpenIddictApplications", (string)null);
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreAuthorization<System.Guid>", b =>
@@ -533,7 +531,7 @@ namespace MapServer.Migrations
                     b.HasIndex("ApplicationId", "Status", "Subject", "Type")
                         .HasDatabaseName("ix_open_iddict_authorizations_application_id_status_subject_type");
 
-                    b.ToTable("OpenIddictAuthorizations", "openiddict");
+                    b.ToTable("OpenIddictAuthorizations", (string)null);
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreScope<System.Guid>", b =>
@@ -585,7 +583,7 @@ namespace MapServer.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_open_iddict_scopes_name");
 
-                    b.ToTable("OpenIddictScopes", "openiddict");
+                    b.ToTable("OpenIddictScopes", (string)null);
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreToken<System.Guid>", b =>
@@ -662,7 +660,7 @@ namespace MapServer.Migrations
                     b.HasIndex("ApplicationId", "Status", "Subject", "Type")
                         .HasDatabaseName("ix_open_iddict_tokens_application_id_status_subject_type");
 
-                    b.ToTable("OpenIddictTokens", "openiddict");
+                    b.ToTable("OpenIddictTokens", (string)null);
                 });
 
             modelBuilder.Entity("MapServer.Data.Models.Company", b =>

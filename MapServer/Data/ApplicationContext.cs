@@ -17,7 +17,6 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options)
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.HasDefaultSchema("openiddict");
         builder.UseOpenIddict<Guid>();
 
         builder.Entity<Company>()
